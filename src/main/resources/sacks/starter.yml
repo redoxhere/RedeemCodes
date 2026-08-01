@@ -1,0 +1,15 @@
+# Defines items given to the player's inventory.
+contents:
+  - ==: org.bukkit.inventory.ItemStack
+    v: 2586
+    type: STONE_SWORD
+  - ==: org.bukkit.inventory.ItemStack
+    v: 2586
+    type: STONE_PICKAXE
+  - ==: org.bukkit.inventory.ItemStack
+    v: 2586
+    type: BREAD
+    amount: 16
+  - ==: org.bukkit.inventory.ItemStack
+    v: 2586
+    type: LEATHER_CHESTPLATE

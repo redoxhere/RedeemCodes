@@ -1,0 +1,107 @@
+# ==============================================================================
+#                           REDEEM CODES CONFIGURATION
+# ==============================================================================
+# This file contains all the redemption codes and their settings.
+# You can create codes using the in-game GUI command: /rc gui
+# ==============================================================================
+
+Codes:
+  # Example Code: "welcome_gift"
+  # Users redeem this by typing: /redeem welcome_gift
+  welcome_gift:
+
+    # Enable or disable the code instantly.
+    enabled: true
+
+    # Permission Settings [Requires a permission plugin like LuckPerms]
+    # If required is true, the player must have one of the listed permissions.
+    permisson:
+      required: false
+      list:
+        - code.redeem.welcome
+
+    # Redemption Limits
+    # Type:
+    #   PLAYER -> Limits how many times a single player can redeem.
+    #   CODE   -> Limits the total global uses of the code (e.g., first 10 people).
+    redeem-limit:
+      Type: PLAYER
+      Count: 1 # Number of times allowed (Set to -1 for infinite).
+      Cooldown: 0 # Cooldown in minutes between uses (0 to disable).
+      Cooldown-message: "&cYou must wait %Cooldown% before redeeming again!"
+
+    # Expiration time in seconds. -1 means it never expires.
+    expire-time: -1
+
+    # Player Data & Blacklisting
+    Playerlist:
+      Used: [] # Do not edit manually. Stores UUIDs of players who used the code.
+
+      # Blacklist Control
+      # Type:
+      #   ENABLED  -> Players in the list CANNOT use the code.
+      #   REVERSE  -> Only players in the list CAN use the code (Whitelist mode).
+      #   DISABLED -> The list is ignored.
+      Blacklist:
+        Type: ENABLED
+        List:
+          - notch
+          - herobrine
+
+    # ==========================================================================
+    #                                 REWARDS
+    # ==========================================================================
+    # The reward system allows you to mix and match different types of rewards.
+    #
+    # Distribution Types (rewards.type):
+    #   ALL    -> The player receives EVERY reward defined below.
+    #   RANDOM -> The player receives ONE reward selected randomly from all defined packs.
+    #   DRAW   -> The player receives ONE reward based on a weighted chance system.
+    #
+    # Reward Categories:
+    #   1. Commands: A list of console commands to execute.
+    #   2. Sacks: A collection of items given directly to the inventory (defined in /sacks/).
+    #   3. Premades: Reusable command lists defined in premades.yml.
+    #   4. Events: Special visual/audio effects defined in /events/.
+    #
+    # Placeholders for commands:
+    #   %player%      -> Player Name
+    #   %uuid%        -> Player UUID
+    #   %world%       -> World Name
+    #   %displayname% -> Display Name
+    #   %random-x-y%  -> Random number between x and y
+    # ==========================================================================
+
+    rewards:
+      type: ALL
+
+      # --- Events ---
+      # Trigger visual/sound effects from files in the 'events' folder.
+      events:
+        - celebration # Plays 'events/celebration.yml'
+
+      # --- Command Packs ---
+      # Custom groups of commands specific to this code.
+      commands:
+        basic_stuff:
+          - "say Welcome %player%!"
+          - "give %player% apple 5"
+          - "weight: 10" # Used if type is DRAW (higher weight = higher chance)
+
+        lucky_roll:
+          - "eco give %player% %random-50-100%"
+          - "msg %player% &aYou got some lucky cash!"
+          - "weight: 5"
+
+      # --- Sacks ---
+      # Items defined in the 'sacks' folder. Format: "sackname:weight"
+      # If type is ALL, weight is ignored.
+      sacks:
+        - starter: 1
+        - miner: 1
+
+      # --- Premades ---
+      # Reusable rewards defined in 'premades.yml'. Format: "premadename:weight"
+      premades:
+        - vip_rank: 1
+        - money_small: 2

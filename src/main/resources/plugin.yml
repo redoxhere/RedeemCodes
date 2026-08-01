@@ -1,0 +1,25 @@
+name: RedeemCodes
+version: 3.1
+main: xyz.redoxlabs.redeemcodes.Main
+api-version: 1.26
+description: "A minecraft server plugin to manage redeem codes"
+author: 'DrkVo1d'
+commands:
+  redeem:
+    description: Redeem a code to claim your reward.
+    usage: /redeem <code>
+    aliases: [claim, redeemcode]
+
+  redeemcodes:
+    description: Manage redeem codes.
+    usage: /redeemcodes <action> [args...]
+    aliases: [rc, codes, code, redeemc, rcodes, RC, REDEEMCODES]
+
+permissions:
+  redeemcodes.admin:
+    description: Allows access to all admin commands.
+    default: op
+
+
+
+

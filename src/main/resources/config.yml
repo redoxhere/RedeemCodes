@@ -1,0 +1,30 @@
+# Prefix displayed before every log from this plugin.
+prefix: "&d&l[&bRedeemCodes&d&l] &r"
+
+# Sounds played for success and failure events.
+# You can change these to different sounds. Visit https://gist.github.com/Andre601/1ab3b4fabd0010ae241156333491c379 to find more.
+sounds:
+  success: ENTITY_PLAYER_LEVELUP
+  failure: BLOCK_ANVIL_LAND
+
+# Customizable message logs for the plugin. Feel free to modify these as needed.
+messages:
+  usage: "&cUsage: /redeem <code>"
+  not-exist: "&cThis code doesn't exist!"
+  blacklisted: "&cYou are not allowed to redeem this code."
+  already-used: "&eYou have already redeemed this code."
+  redeem-success: "&aSuccessfully redeemed the code!"
+  reload-success: "&aAll configuration files reloaded!"
+  no-permission: "&cYou don't have permission to use this."
+  code-exists: "&cCode already exists!"
+  code-created: "&aCreated new code: %code%"
+  code-removed: "&aRemoved code: %code%"
+  reward-added: "&aAdded reward to %code% with ID %id%"
+  reward-removed: "&aRemoved reward ID %id%"
+  reward-not-found: "&cThat reward ID doesn't exist!"
+  invalid-reward-id: "&cInvalid reward ID!"
+  command-usage: "&cUsage: /redeemcodes <command> [arguments]"
+  unknown-action: "&cUnknown action: %action%"
+  code-disabled: "&cThis code is currently disabled."
+  out-of-stock: "&cThis code is out of stock!"
+  code-expired: "&cThis code has expired."

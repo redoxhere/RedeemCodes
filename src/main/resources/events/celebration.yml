@@ -1,0 +1,39 @@
+# This event plays a sound and launches a firework when triggered.
+fireworks:
+  - ==: org.bukkit.inventory.ItemStack
+    v: 2586
+    type: FIREWORK_ROCKET
+    meta:
+      ==: ItemMeta
+      meta-type: FIREWORK
+      firework-effect:
+        flight: 1
+        effects:
+          - ==: Firework
+            flicker: true
+            trail: true
+            colors:
+              - ==: Color
+                RED: 255
+                BLUE: 0
+                GREEN: 0
+            fade-colors:
+              - ==: Color
+                RED: 255
+                BLUE: 255
+                GREEN: 0
+            type: BALL_LARGE
+
+sounds:
+  unique_id_1:
+    sound: ENTITY_PLAYER_LEVELUP
+    delay: 0
+    pitch: 1.0
+  unique_id_2:
+    sound: ENTITY_FIREWORK_ROCKET_LAUNCH
+    delay: 5
+    pitch: 1.2
+
+commands:
+  - "title %player% title {\"text\":\"§6§lCONGRATULATIONS!\"}"
+  - "title %player% subtitle {\"text\":\"§eYou redeemed a legendary code!\"}"

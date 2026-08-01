@@ -1,0 +1,17 @@
+contents:
+  - ==: org.bukkit.inventory.ItemStack
+    v: 2586
+    type: IRON_SWORD
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: "§cWarrior's Blade"
+      enchants:
+        SHARPNESS: 2
+  - ==: org.bukkit.inventory.ItemStack
+    v: 2586
+    type: SHIELD
+  - ==: org.bukkit.inventory.ItemStack
+    v: 2586
+    type: GOLDEN_APPLE
+    amount: 3

@@ -1,0 +1,14 @@
+# This event plays a spooky sound and sends a message.
+sounds:
+  spooky_noise:
+    sound: AMBIENT_CAVE
+    delay: 0
+    pitch: 0.5
+  door_creak:
+    sound: BLOCK_WOODEN_DOOR_OPEN
+    delay: 10
+    pitch: 0.1
+
+commands:
+  - "tellraw %player% {\"text\":\"§c§oA chill runs down your spine as you redeem this code...\"}"
+  - "effect give %player% minecraft:blindness 3 1"

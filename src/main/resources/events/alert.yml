@@ -1,0 +1,10 @@
+# Simple alert event for broadcasts.
+sounds:
+  ding:
+    sound: BLOCK_NOTE_BLOCK_PLING
+    delay: 0
+    pitch: 2.0
+
+commands:
+  - "broadcast §8[§bRedeemCodes§8] §a%player% §7just redeemed a special code!"
+  - "execute in %world% run particle minecraft:totem_of_undying %x% %y% %z% 1 1 1 0.1 50 force @a"
