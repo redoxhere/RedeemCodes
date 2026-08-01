@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class VersionSupportChecker {
-   private static final List<String> SUPPORTED_VERSIONS = Arrays.asList("1.21.x", "1.20.x", "1.19.x", "1.18.x", "1.17.x", "1.16.5+");
+   private static final List<String> SUPPORTED_VERSIONS = Arrays.asList("26.x", "1.21.x", "1.20.x", "1.19.x", "1.18.x", "1.17.x", "1.16.5+");
    private final JavaPlugin plugin;
 
    public VersionSupportChecker(JavaPlugin plugin) {
@@ -57,39 +57,34 @@ public class VersionSupportChecker {
 
    private boolean matchesVersionPattern(String version, String pattern) {
       if (pattern.endsWith(".x")) {
-         String baseVersion = pattern.substring(0, pattern.length() - 2);
-         return version.startsWith(baseVersion);
+         String baseVersion = pattern.substring(0, pattern.length() - 1);
+         return version.startsWith(baseVersion) || version.equals(baseVersion.substring(0, baseVersion.length() - 1));
       } else if (pattern.endsWith("+")) {
          String basePattern = pattern.substring(0, pattern.length() - 1);
-         String[] baseParts = basePattern.split("\\.");
-         if (baseParts.length < 2) {
-            return false;
-         } else {
-            String[] versionParts = version.split("\\.");
-            if (versionParts.length < 2) {
-               return false;
-            } else if (versionParts[0].equals(baseParts[0]) && versionParts[1].equals(baseParts[1])) {
-               if (baseParts.length >= 3) {
-                  try {
-                     int minSubVersion = Integer.parseInt(baseParts[2]);
-                     if (versionParts.length >= 3) {
-                        int actualSubVersion = Integer.parseInt(versionParts[2]);
-                        return actualSubVersion >= minSubVersion;
-                     } else {
-                        return false;
-                     }
-                  } catch (NumberFormatException e) {
-                     return false;
-                  }
-               } else {
-                  return true;
-               }
-            } else {
-               return false;
-            }
-         }
+         return compareVersions(version, basePattern) >= 0;
       } else {
-         return version.equals(pattern);
+         return compareVersions(version, pattern) == 0;
+      }
+   }
+
+   private int compareVersions(String v1, String v2) {
+      String[] parts1 = v1.split("\\.");
+      String[] parts2 = v2.split("\\.");
+      int maxLen = Math.max(parts1.length, parts2.length);
+      for (int i = 0; i < maxLen; i++) {
+         int p1 = (i < parts1.length) ? parseInt(parts1[i]) : 0;
+         int p2 = (i < parts2.length) ? parseInt(parts2[i]) : 0;
+         if (p1 < p2) return -1;
+         if (p1 > p2) return 1;
+      }
+      return 0;
+   }
+
+   private int parseInt(String str) {
+      try {
+         return Integer.parseInt(str);
+      } catch (NumberFormatException e) {
+         return 0;
       }
    }
 }
