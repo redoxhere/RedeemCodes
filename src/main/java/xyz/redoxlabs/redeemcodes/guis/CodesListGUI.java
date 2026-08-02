@@ -4,6 +4,7 @@ import xyz.redoxlabs.redeemcodes.CodeExpirationManager;
 import xyz.redoxlabs.redeemcodes.Main;
 import xyz.redoxlabs.redeemcodes.managers.HeadManager;
 import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
+import xyz.redoxlabs.redeemcodes.utils.GUIUtils;
 import xyz.redoxlabs.redeemcodes.utils.SoundUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.ItemFlag;
 
 public class CodesListGUI {
    private final Main plugin;
@@ -53,21 +53,7 @@ public class CodesListGUI {
       Inventory inv = Bukkit.createInventory(holder, 54, GUI_TITLE);
       holder.setInventory(inv);
 
-      ItemStack border = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
-      ItemMeta borderMeta = border.getItemMeta();
-      if (borderMeta != null) {
-         borderMeta.setDisplayName(" ");
-         borderMeta.addItemFlags(ItemFlag.values());
-      }
-      border.setItemMeta(borderMeta);
-
-      for(int start = 0; start < 54; ++start) {
-         int end = start / 9;
-         int index = start % 9;
-         if (end == 0 || end == 5 || index == 0 || index == 8) {
-            inv.setItem(start, border);
-         }
-      }
+      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
 
       int startIndex = page * 28;
       int end = Math.min(startIndex + 28, codes.size());
@@ -76,7 +62,7 @@ public class CodesListGUI {
       for(int row = 1; row <= 4 && startIndex + index < end; ++row) {
          for(int col = 1; col <= 7 && startIndex + index < end; ++col) {
             int slot = row * 9 + col;
-            inv.setItem(slot, createCodeHead(codes.get(startIndex + index)));
+            inv.setItem(slot, GUIUtils.createCodeHead(plugin, codes.get(startIndex + index)));
             ++index;
          }
       }
@@ -100,46 +86,11 @@ public class CodesListGUI {
       }
       inv.setItem(48, pageDisplay);
 
-      for (int i = 0; i < inv.getSize(); i++) {
-         ItemStack item = inv.getItem(i);
-         if (item != null && item.hasItemMeta()) {
-             ItemMeta meta = item.getItemMeta();
-             meta.addItemFlags(ItemFlag.values());
-             item.setItemMeta(meta);
-         }
-      }
+      GUIUtils.applyFlags(inv);
 
       player.openInventory(inv);
    }
 
-   private ItemStack createCodeHead(String code) {
-      boolean isExpired = plugin.getExpirationManager().isExpired(code);
-      String currentPro = isExpired ? "§x§F§F§7§0§7§0§l| " : "§x§2§D§9§D§F§F§l| ";
-      String currentTitleColor = isExpired ? "§c" : "§x§2§D§9§D§F§F";
-      String currentValueColor = isExpired ? "§e" : "§b";
-      String headKey = isExpired ? "EXPIRED_CODE_ITEM" : "CODE_ITEM";
-      ItemStack head = HeadManager.getHead(headKey, currentTitleColor + code.toUpperCase());
-      ItemMeta meta = head.getItemMeta();
-      if (meta != null) {
-         List<String> lore = new ArrayList<>();
-         String gray = ChatColor.GRAY.toString();
-         lore.add("");
-         lore.add(currentPro + gray + "ᴇɴᴀʙʟᴇᴅ: " + (plugin.getCodesConfig().getBoolean("Codes." + code + ".enabled", true) ? ChatColor.GREEN + "Yes" : ChatColor.RED + "No"));
-         lore.add(currentPro + gray + "ᴘᴇʀᴍɪꜱꜱɪᴏɴ ʀᴇQᴜɪʀᴇᴅ: " + (plugin.getCodesConfig().getBoolean("Codes." + code + ".permisson.required", false) ? ChatColor.GREEN + "Yes" : ChatColor.RED + "No"));
-         lore.add(currentPro + gray + "ᴄᴏᴏʟᴅᴏᴡɴ: " + currentValueColor + plugin.getCodesConfig().getInt("Codes." + code + ".redeem-limit.Cooldown", 0) + " min");
-         lore.add(currentPro + gray + "ʀᴇᴅᴇᴇᴍ ᴛʏᴘᴇ: " + currentValueColor + plugin.getCodesConfig().getString("Codes." + code + ".redeem-limit.Type", "PLAYER"));
-         lore.add(currentPro + gray + "ʀᴇᴅᴇᴇᴍ ʟɪᴍɪᴛ: " + currentValueColor + plugin.getCodesConfig().getInt("Codes." + code + ".redeem-limit.Count", 1));
-         if (isExpired) {
-            lore.add(currentPro + "§cEXPIRED");
-         }
-
-         meta.setLore(lore);
-         meta.addItemFlags(ItemFlag.values());
-         head.setItemMeta(meta);
-      }
-
-      return head;
-   }
 
    public void handleClick(InventoryClickEvent event, Player player) {
       event.setCancelled(true);

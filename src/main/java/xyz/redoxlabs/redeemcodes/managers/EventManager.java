@@ -43,7 +43,7 @@ public class EventManager {
 
    public void reloadEvents() {
       eventConfigs.clear();
-      Set<String> loadedNames = new HashSet();
+      Set<String> loadedNames = new HashSet<>();
       File[] files = eventsFolder.listFiles((dir, namex) -> namex.endsWith(".yml"));
       if (files != null) {
          for(File file : files) {

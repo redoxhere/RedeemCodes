@@ -21,8 +21,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.ItemFlag;
 import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
+import xyz.redoxlabs.redeemcodes.utils.GUIUtils;
 import xyz.redoxlabs.redeemcodes.utils.SoundUtil;
 
 public class RewardGUI {
@@ -60,7 +60,7 @@ public class RewardGUI {
       GUIHolder holder = new GUIHolder("REWARD_GUI");
       Inventory inv = Bukkit.createInventory(holder, 27, ChatColor.translateAlternateColorCodes('&', "&8🎁 ʀᴇᴡᴀʀᴅꜱ"));
       holder.setInventory(inv);
-      fillBorder(inv);
+      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
       inv.setItem(11, HeadManager.getHead("REWARD_ADD", "§x§F§B§E§2§D§EA§x§F§C§E§0§D§9d§x§F§C§D§E§D§3d §x§F§D§D§C§C§ER§x§F§D§D§A§C§8e§x§F§E§D§7§C§3w§x§F§E§D§5§B§Da§x§F§F§D§3§B§8r§x§F§F§D§1§B§2d", " ", "§x§F§B§E§2§D§E§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴀᴅᴅ ᴀ ɴᴇᴡ ʀᴇᴡᴀʀᴅ"));
       List<String> events = plugin.getCodesConfig().getStringList(rewardPath + ".events");
       String currentEvent = events.isEmpty() ? "None" : (String)events.get(0);
@@ -68,7 +68,7 @@ public class RewardGUI {
       String type = plugin.getCodesConfig().getString(rewardPath + ".type", "RANDOM");
       inv.setItem(15, HeadManager.getHead("REWARD_TYPE", "§x§2§B§8§6§D§7Distribution Type", " ", "§x§2§B§8§6§D§7§l| §fᴄᴜʀʀᴇɴᴛ: §x§2§B§8§6§D§7" + type, "§x§2§B§8§6§D§7§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴛᴏɢɢʟᴇ ᴛʏᴘᴇ"));
       inv.setItem(22, HeadManager.getHead("BACK", "§cGo Back", "§7Return to Code Editor"));
-      applyFlags(inv);
+      GUIUtils.applyFlags(inv);
       player.openInventory(inv);
    }
 
@@ -77,12 +77,12 @@ public class RewardGUI {
       GUIHolder holder = new GUIHolder("REWARD_GUI");
       Inventory inv = Bukkit.createInventory(holder, 27, ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴀᴅᴅ ʀᴇᴡᴀʀᴅ"));
       holder.setInventory(inv);
-      fillBorder(inv);
+      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
       inv.setItem(11, HeadManager.getHead("REWARD_COMMAND", "§x§F§B§9§D§4§ECommand Pack", " ", "§x§F§B§9§D§4§E§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ᴄᴏᴍᴍᴀɴᴅ ᴘᴀᴄᴋꜱ"));
       inv.setItem(13, HeadManager.getHead("REWARD_SACK", "§x§4§5§D§1§5§8Sack", " ", "§x§4§5§D§1§5§8§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ꜱᴀᴄᴋꜱ"));
       inv.setItem(15, HeadManager.getHead("REWARD_PREMADE", "§x§6§E§B§1§D§4Premade", " ", "§x§6§E§B§1§D§4§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ᴘʀᴇᴍᴀᴅᴇꜱ"));
       inv.setItem(22, HeadManager.getHead("BACK", "§cGo Back", "§7Return to Main Reward Menu"));
-      applyFlags(inv);
+      GUIUtils.applyFlags(inv);
       player.openInventory(inv);
    }
 
@@ -92,7 +92,7 @@ public class RewardGUI {
       GUIHolder holder = new GUIHolder("REWARD_GUI");
       Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴄᴏᴍᴍᴀɴᴅ ᴘᴀᴄᴋꜱ"));
       holder.setInventory(inv);
-      fillBorder(inv);
+      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
       ConfigurationSection section = plugin.getCodesConfig().getConfigurationSection(rewardPath + ".commands");
       List<String> packs = section != null ? new ArrayList<>(section.getKeys(false)) : new ArrayList<>();
       addPagination(inv, packs, page, "COMMAND_PACK", (item, packName) -> {
@@ -119,7 +119,7 @@ public class RewardGUI {
       });
       inv.setItem(49, HeadManager.getHead("GENERIC_ADD", "§aAdd New Pack", "§7Click to create a new command pack"));
       inv.setItem(45, HeadManager.getHead("BACK", "§cGo Back", "§7Return to Add Selection"));
-      applyFlags(inv);
+      GUIUtils.applyFlags(inv);
       player.openInventory(inv);
    }
 
@@ -129,7 +129,7 @@ public class RewardGUI {
       GUIHolder holder = new GUIHolder("REWARD_GUI");
       Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎁 ꜱᴀᴄᴋ ʀᴇᴡᴀʀᴅꜱ"));
       holder.setInventory(inv);
-      fillBorder(inv);
+      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
       List<String> sacks = plugin.getCodesConfig().getStringList(rewardPath + ".sacks");
       addPagination(inv, sacks, page, "REWARD_SACK", (item, entry) -> {
          String[] parts = entry.split(":");
@@ -149,7 +149,7 @@ public class RewardGUI {
       });
       inv.setItem(49, HeadManager.getHead("GENERIC_ADD", "§aAdd Sack", "§7Click to add existing sack"));
       inv.setItem(45, HeadManager.getHead("BACK", "§cGo Back", "§7Return to Add Selection"));
-      applyFlags(inv);
+      GUIUtils.applyFlags(inv);
       player.openInventory(inv);
    }
 
@@ -159,7 +159,7 @@ public class RewardGUI {
       GUIHolder holder = new GUIHolder("REWARD_GUI");
       Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴘʀᴇᴍᴀᴅᴇ ʀᴇᴡᴀʀᴅꜱ"));
       holder.setInventory(inv);
-      fillBorder(inv);
+      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
       List<String> premades = plugin.getCodesConfig().getStringList(rewardPath + ".premades");
       addPagination(inv, premades, page, "REWARD_PREMADE", (item, entry) -> {
          String[] parts = entry.split(":");
@@ -179,7 +179,7 @@ public class RewardGUI {
       });
       inv.setItem(49, HeadManager.getHead("GENERIC_ADD", "§aAdd Premade", "§7Click to add existing premade"));
       inv.setItem(45, HeadManager.getHead("BACK", "§cGo Back", "§7Return to Add Selection"));
-      applyFlags(inv);
+      GUIUtils.applyFlags(inv);
       player.openInventory(inv);
    }
 
@@ -190,7 +190,7 @@ public class RewardGUI {
       GUIHolder holder = new GUIHolder("REWARD_GUI");
       Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', title));
       holder.setInventory(inv);
-      fillBorder(inv);
+      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
       List<String> available;
       String headKey;
       if (view == RewardGUI.View.EVENT_SELECTOR) {
@@ -211,53 +211,10 @@ public class RewardGUI {
          item.setItemMeta(meta);
       });
       inv.setItem(45, HeadManager.getHead("BACK", "§cGo Back", "§7Return to List"));
-      applyFlags(inv);
+      GUIUtils.applyFlags(inv);
       player.openInventory(inv);
    }
 
-   private void fillBorder(Inventory inv) {
-      ItemStack border = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
-      ItemMeta meta = border.getItemMeta();
-      if (meta != null) {
-         meta.setDisplayName(" ");
-      }
-
-      border.setItemMeta(meta);
-      int size = inv.getSize();
-      if (size == 27) {
-         for(int i : new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 23, 24, 25, 26}) {
-            inv.setItem(i, border);
-         }
-      } else {
-         for(int i = 0; i < 9; ++i) {
-            inv.setItem(i, border);
-         }
-
-         for(int i = size - 9; i < size; ++i) {
-            inv.setItem(i, border);
-         }
-
-         for(int i = 9; i < size - 9; i += 9) {
-            inv.setItem(i, border);
-         }
-
-         for(int i = 17; i < size - 9; i += 9) {
-            inv.setItem(i, border);
-         }
-      }
-
-   }
-
-   private void applyFlags(Inventory inv) {
-      for (int i = 0; i < inv.getSize(); i++) {
-         ItemStack item = inv.getItem(i);
-         if (item != null && item.hasItemMeta()) {
-             ItemMeta meta = item.getItemMeta();
-             meta.addItemFlags(ItemFlag.values());
-             item.setItemMeta(meta);
-         }
-      }
-   }
 
    private void addPagination(Inventory inv, List<String> items, int page, String headKey, ItemConfigurator configurator) {
       int start = page * 28;
@@ -534,7 +491,7 @@ public class RewardGUI {
       SACK_SELECTOR,
       PREMADE_SELECTOR;
 
-      // $FF: synthetic method
+
       private static View[] $values() {
          return new View[]{MAIN, ADD_SELECTION, COMMAND_LIST, SACK_LIST, PREMADE_LIST, EVENT_SELECTOR, SACK_SELECTOR, PREMADE_SELECTOR};
       }

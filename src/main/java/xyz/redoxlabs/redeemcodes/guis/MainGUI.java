@@ -6,6 +6,7 @@ import xyz.redoxlabs.redeemcodes.Main;
 import xyz.redoxlabs.redeemcodes.managers.CreateCodeHandler;
 import xyz.redoxlabs.redeemcodes.managers.HeadManager;
 import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
+import xyz.redoxlabs.redeemcodes.utils.GUIUtils;
 import xyz.redoxlabs.redeemcodes.utils.SoundUtil;
 import java.util.Arrays;
 import java.util.Base64;
@@ -19,10 +20,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.inventory.ItemFlag;
 
 public class MainGUI {
-   private static final String GUI_TITLE = ChatColor.translateAlternateColorCodes('&', "&8🛠️ ᴍᴀɪɴ ᴍᴇɴᴜ");
+   private static final String GUI_TITLE = ChatColor.translateAlternateColorCodes('&', "&8🛠 ᴍᴀɪɴ ᴍᴇɴᴜ");
 
    public static void open(Player player) {
       GUIHolder holder = new GUIHolder("MAIN_GUI");
@@ -33,14 +33,7 @@ public class MainGUI {
       inv.setItem(13, HeadManager.getHead("LIST", "§x§F§B§2§9§5§EC§x§F§C§3§1§6§9o§x§F§C§3§9§7§3d§x§F§D§4§1§7§Ee§x§F§D§4§A§8§9s §x§F§E§5§2§9§3L§x§F§E§5§A§9§Ei§x§F§F§6§2§A§8s§x§F§F§6§A§B§3t", "", "§x§F§B§8§E§2§F§l| §x§F§B§C§F§3§Eᴠ§x§F§B§D§1§4§0ɪ§x§F§B§D§3§4§1ᴇ§x§F§C§D§5§4§3ᴡ §x§F§C§D§7§4§5ᴀ§x§F§C§D§A§4§7ʟ§x§F§C§D§C§4§8ʟ §x§F§C§D§E§4§Aᴇ§x§F§D§E§0§4§Cx§x§F§D§E§2§4§Eɪ§x§F§D§E§4§4§Fꜱ§x§F§D§E§6§5§1ᴛ§x§F§E§E§8§5§3ɪ§x§F§E§E§A§5§5ɴ§x§F§E§E§C§5§6ɢ §x§F§E§E§F§5§8ᴄ§x§F§E§F§1§5§Aᴏ§x§F§F§F§3§5§Cᴅ§x§F§F§F§5§5§Dᴇ§x§F§F§F§7§5§Fꜱ", "§x§F§B§8§E§2§F§l| §x§F§B§C§F§3§Eᴄ§x§F§B§D§2§4§0ʟ§x§F§C§D§4§4§2ɪ§x§F§C§D§7§4§4ᴄ§x§F§C§D§9§4§6ᴋ §x§F§C§D§C§4§8ᴏ§x§F§D§D§E§4§Aɴ §x§F§D§E§1§4§Cᴛ§x§F§D§E§3§4§Fʜ§x§F§D§E§6§5§1ᴇ§x§F§E§E§8§5§3ᴍ §x§F§E§E§B§5§5ᴛ§x§F§E§E§D§5§7ᴏ §x§F§E§F§0§5§9ᴇ§x§F§F§F§2§5§Bᴅ§x§F§F§F§5§5§Dɪ§x§F§F§F§7§5§Fᴛ"));
       inv.setItem(15, HeadManager.getHead("ADMIN", ChatColor.GOLD + "§x§C§A§E§1§F§BA§x§C§5§D§D§F§Bd§x§C§0§D§A§F§Cm§x§B§B§D§6§F§Ci§x§B§6§D§2§F§Dn §x§B§2§C§F§F§DP§x§A§D§C§B§F§Ea§x§A§8§C§7§F§En§x§A§3§C§4§F§Fe§x§9§E§C§0§F§Fl", "", "§x§F§B§8§E§2§F§l| §x§F§B§C§F§3§Eᴀ§x§F§B§D§2§4§0ᴅ§x§F§C§D§5§4§3ᴍ§x§F§C§D§8§4§5ɪ§x§F§C§D§A§4§7ɴ§x§F§C§D§D§4§A-§x§F§D§E§0§4§Cᴏ§x§F§D§E§3§4§Fɴ§x§F§D§E§6§5§1ʟ§x§F§E§E§9§5§3ʏ §x§F§E§E§C§5§6ᴛ§x§F§E§E§E§5§8ᴏ§x§F§E§F§1§5§Aᴏ§x§F§F§F§4§5§Dʟ§x§F§F§F§7§5§Fꜱ", "§x§F§B§8§E§2§F§l| §x§F§F§F§3§1§Eᴄ§x§F§F§E§E§1§Fʟ§x§F§F§E§9§2§0ɪ§x§F§F§E§5§2§1ᴄ§x§F§F§E§0§2§2ᴋ §x§F§F§D§B§2§4ᴛ§x§F§F§D§6§2§5ᴏ §x§F§F§D§1§2§6ᴏ§x§F§F§C§D§2§7ᴘ§x§F§F§C§8§2§8ᴇ§x§F§F§C§3§2§9ɴ §x§F§F§B§E§2§Aᴀ§x§F§F§B§9§2§Bᴅ§x§F§F§B§5§2§Cᴍ§x§F§F§B§0§2§Dɪ§x§F§F§A§B§2§Fɴ §x§F§F§A§6§3§0ᴘ§x§F§F§A§1§3§1ᴀ§x§F§F§9§D§3§2ɴ§x§F§F§9§8§3§3ᴇ§x§F§F§9§3§3§4ʟ"));
 
-      for (int i = 0; i < inv.getSize(); i++) {
-         ItemStack item = inv.getItem(i);
-         if (item != null && item.hasItemMeta()) {
-             ItemMeta meta = item.getItemMeta();
-             meta.addItemFlags(ItemFlag.values());
-             item.setItemMeta(meta);
-         }
-      }
+      GUIUtils.applyFlags(inv);
 
       player.openInventory(inv);
    }

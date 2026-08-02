@@ -13,8 +13,8 @@ import org.bukkit.scheduler.BukkitTask;
 public class CodeExpirationManager {
    private final Main plugin;
    private final RedeemDataManager dataManager;
-   private final Map<String, Long> activeTimers = new ConcurrentHashMap();
-   private final Set<String> expiredCodes = new HashSet();
+   private final Map<String, Long> activeTimers = new ConcurrentHashMap<>();
+   private final Set<String> expiredCodes = new HashSet<>();
    private BukkitTask timerTask;
 
    public CodeExpirationManager(Main plugin) {

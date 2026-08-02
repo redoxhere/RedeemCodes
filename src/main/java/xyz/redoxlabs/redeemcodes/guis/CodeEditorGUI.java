@@ -3,14 +3,14 @@ package xyz.redoxlabs.redeemcodes.guis;
 import xyz.redoxlabs.redeemcodes.CodeExpirationManager;
 import xyz.redoxlabs.redeemcodes.Main;
 import xyz.redoxlabs.redeemcodes.managers.HeadManager;
+import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
+import xyz.redoxlabs.redeemcodes.utils.GUIUtils;
 import xyz.redoxlabs.redeemcodes.utils.TimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,24 +20,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
 
 public class CodeEditorGUI implements Listener {
    private final Main plugin;
    private final String codeName;
    private final CodesListGUI parentGUI;
    private Inventory inv;
-   private final Set<UUID> awaitingCooldownInput = new HashSet();
-   private final Set<UUID> awaitingLimitMessageInput = new HashSet();
-   private final Set<UUID> awaitingRemoveConfirm = new HashSet();
-   private final Set<UUID> awaitingBlacklistInput = new HashSet();
-   private final Set<UUID> awaitingExpireTimeInput = new HashSet();
-   private final Set<UUID> awaitingPermissionInput = new HashSet();
+   private final Set<UUID> awaitingCooldownInput = new HashSet<>();
+   private final Set<UUID> awaitingLimitMessageInput = new HashSet<>();
+   private final Set<UUID> awaitingRemoveConfirm = new HashSet<>();
+   private final Set<UUID> awaitingBlacklistInput = new HashSet<>();
+   private final Set<UUID> awaitingExpireTimeInput = new HashSet<>();
+   private final Set<UUID> awaitingPermissionInput = new HashSet<>();
    private static final int TOTAL_SIZE = 54;
    private static final String pro = "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§F";
    private static final String pre = "§x§2§B§8§6§D§7";
@@ -52,7 +50,7 @@ public class CodeEditorGUI implements Listener {
    public void open(final Player player) {
       cancelUpdateTask();
       GUIHolder holder = new GUIHolder("CODE_EDITOR");
-      this.inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8✏ ᴇᴅɪᴛɪɴɢ ᴄᴏᴅᴇ: &7" + codeName.toUpperCase()));
+      this.inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8✏ ᴇᴅɪᴛɪɴɢ ᴄᴏᴅᴇ: &9" + codeName.toUpperCase()));
       holder.setInventory(inv);
 
       ItemStack border = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
@@ -327,7 +325,7 @@ public class CodeEditorGUI implements Listener {
                player.sendMessage(String.valueOf(ChatColor.RED) + "Cooldown setup cancelled.");
                open(player);
             } else {
-               long minutes = parseTimeToMinutes(msg);
+               long minutes = TimeFormatter.parseTimeToMinutes(msg);
                if (minutes < 0L) {
                   player.sendMessage(String.valueOf(ChatColor.RED) + "Invalid format. Use 1s, 3m, 1h, 1d, 1w, 1mn, 1y.");
                   awaitingCooldownInput.add(playerUUID);
@@ -373,7 +371,7 @@ public class CodeEditorGUI implements Listener {
                plugin.getExpirationManager().setExpiration(codeName, -1L);
                player.sendMessage(ChatColor.AQUA + "Expire time disabled (never expires).");
             } else {
-               long seconds = parseTimeToSeconds(input);
+               long seconds = TimeFormatter.parseTimeToSeconds(input);
                if (seconds < 0L) {
                   player.sendMessage(ChatColor.RED + "Invalid format. Use 1s, 3m, 1h, 1d, 1w, 1mn, 1y.");
                   awaitingExpireTimeInput.add(playerUUID);
@@ -423,78 +421,6 @@ public class CodeEditorGUI implements Listener {
             }
 
          });
-      }
-   }
-
-   private long parseTimeToMinutes(String input) {
-      Pattern p = Pattern.compile("(\\d+)\\s*(s|m|h|d|w|mn|y)", 2);
-      Matcher m = p.matcher(input.toLowerCase().trim());
-      if (!m.matches()) {
-         return -1L;
-      } else {
-         long value = Long.parseLong(m.group(1));
-         switch (m.group(2)) {
-            case "s" -> {
-               return value / 60L;
-            }
-            case "m" -> {
-               return value;
-            }
-            case "h" -> {
-               return value * 60L;
-            }
-            case "d" -> {
-               return value * 60L * 24L;
-            }
-            case "w" -> {
-               return value * 60L * 24L * 7L;
-            }
-            case "mn" -> {
-               return value * 60L * 24L * 30L;
-            }
-            case "y" -> {
-               return value * 60L * 24L * 365L;
-            }
-            default -> {
-               return -1L;
-            }
-         }
-      }
-   }
-
-   private long parseTimeToSeconds(String input) {
-      Pattern p = Pattern.compile("(\\d+)\\s*(s|m|h|d|w|mn|y)", 2);
-      Matcher m = p.matcher(input.toLowerCase().trim());
-      if (!m.matches()) {
-         return -1L;
-      } else {
-         long value = Long.parseLong(m.group(1));
-         switch (m.group(2)) {
-            case "s" -> {
-               return value;
-            }
-            case "m" -> {
-               return value * 60L;
-            }
-            case "h" -> {
-               return value * 60L * 60L;
-            }
-            case "d" -> {
-               return value * 60L * 60L * 24L;
-            }
-            case "w" -> {
-               return value * 60L * 60L * 24L * 7L;
-            }
-            case "mn" -> {
-               return value * 60L * 60L * 24L * 30L;
-            }
-            case "y" -> {
-               return value * 60L * 60L * 24L * 365L;
-            }
-            default -> {
-               return -1L;
-            }
-         }
       }
    }
 }

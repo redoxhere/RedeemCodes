@@ -286,7 +286,7 @@ public class RedeemCommand implements CommandExecutor {
       PREMADE,
       EVENT;
 
-      // $FF: synthetic method
+
       private static RewardType[] $values() {
          return new RewardType[]{COMMAND_PACK, SACK, PREMADE, EVENT};
       }

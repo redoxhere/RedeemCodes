@@ -3,6 +3,7 @@ package xyz.redoxlabs.redeemcodes.guis;
 import xyz.redoxlabs.redeemcodes.Main;
 import xyz.redoxlabs.redeemcodes.managers.HeadManager;
 import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
+import xyz.redoxlabs.redeemcodes.utils.GUIUtils;
 import xyz.redoxlabs.redeemcodes.utils.SoundUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.ItemFlag;
 
 public class ExpiredCodesListGUI {
    private final Main plugin;
@@ -37,21 +37,7 @@ public class ExpiredCodesListGUI {
       Inventory inv = Bukkit.createInventory(holder, 54, GUI_TITLE);
       holder.setInventory(inv);
       
-      ItemStack border = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
-      ItemMeta borderMeta = border.getItemMeta();
-      if (borderMeta != null) {
-         borderMeta.setDisplayName(" ");
-         borderMeta.addItemFlags(ItemFlag.values());
-      }
-      border.setItemMeta(borderMeta);
-
-      for(int start = 0; start < 54; ++start) {
-         int end = start / 9;
-         int index = start % 9;
-         if (end == 0 || end == 5 || index == 0 || index == 8) {
-            inv.setItem(start, border);
-         }
-      }
+      GUIUtils.fillBorder(inv, Material.RED_STAINED_GLASS_PANE);
 
       int start = page * 28;
       int end = Math.min(start + 28, codes.size());
@@ -60,7 +46,7 @@ public class ExpiredCodesListGUI {
       for(int row = 1; row <= 4; ++row) {
          for(int col = 1; col <= 7 && start + index < end; ++col) {
             int slot = row * 9 + col;
-            inv.setItem(slot, createCodeHead(codes.get(start + index)));
+            inv.setItem(slot, GUIUtils.createCodeHead(plugin, codes.get(start + index)));
             ++index;
          }
       }
@@ -83,30 +69,9 @@ public class ExpiredCodesListGUI {
       }
       inv.setItem(48, pageDisplay);
 
-      for (int i = 0; i < inv.getSize(); i++) {
-         ItemStack item = inv.getItem(i);
-         if (item != null && item.hasItemMeta()) {
-             ItemMeta meta = item.getItemMeta();
-             meta.addItemFlags(ItemFlag.values());
-             item.setItemMeta(meta);
-         }
-      }
+      GUIUtils.applyFlags(inv);
 
       player.openInventory(inv);
-   }
-
-   private ItemStack createCodeHead(String code) {
-      ItemStack head = HeadManager.getHead("EXPIRED_CODE_ITEM", "§c" + code.toUpperCase());
-      ItemMeta meta = head.getItemMeta();
-      if (meta != null) {
-         List<String> lore = new ArrayList<>();
-         lore.add("§7ᴄʟɪᴄᴋ ᴛᴏ ᴇᴅɪᴛ ᴀɴᴅ ʀᴇᴀᴄᴛɪᴠᴀᴛᴇ");
-         meta.setLore(lore);
-         meta.addItemFlags(ItemFlag.values());
-         head.setItemMeta(meta);
-      }
-
-      return head;
    }
 
    public void handleClick(InventoryClickEvent event, Player player) {

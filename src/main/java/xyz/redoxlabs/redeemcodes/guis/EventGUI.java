@@ -26,8 +26,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.ItemFlag;
 import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
+import xyz.redoxlabs.redeemcodes.utils.GUIUtils;
 import xyz.redoxlabs.redeemcodes.utils.SoundUtil;
 
 public class EventGUI implements Listener {
@@ -92,7 +92,7 @@ public class EventGUI implements Listener {
       }
 
       GUIHolder holder = new GUIHolder("EVENT_FIREWORKS");
-      Inventory inv = Bukkit.createInventory(holder, size, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴇᴠᴇɴᴛ ꜰɪʀᴇᴡᴏʀᴋꜱ: ") + eventName);
+      Inventory inv = Bukkit.createInventory(holder, size, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴇᴠᴇɴᴛ ꜰɪʀᴇᴡᴏʀᴋꜱ: &b" + eventName));
       holder.setInventory(inv);
       if (existing != null) {
          ItemStack[] contents = (ItemStack[])existing.toArray(new ItemStack[0]);
@@ -110,23 +110,9 @@ public class EventGUI implements Listener {
    public void openSoundList(Player player, String eventName) {
       int page = (Integer)soundListPage.getOrDefault(player.getUniqueId(), 0);
       GUIHolder holder = new GUIHolder("EVENT_SOUNDS");
-      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴇᴠᴇɴᴛ ꜱᴏᴜɴᴅꜱ: ") + eventName);
+      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴇᴠᴇɴᴛ ꜱᴏᴜɴᴅꜱ: &b" + eventName));
       holder.setInventory(inv);
-      ItemStack border = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
-      ItemMeta borderMeta = border.getItemMeta();
-      if (borderMeta != null) {
-         borderMeta.setDisplayName(" ");
-         borderMeta.addItemFlags(ItemFlag.values());
-      }
-      border.setItemMeta(borderMeta);
-
-      for(int i = 0; i < 54; ++i) {
-         int row = i / 9;
-         int col = i % 9;
-         if (row == 0 || row == 5 || col == 0 || col == 8) {
-            inv.setItem(i, border);
-         }
-      }
+      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
 
       FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
       ConfigurationSection section = config.getConfigurationSection("sounds");
@@ -172,14 +158,7 @@ public class EventGUI implements Listener {
          inv.setItem(53, HeadManager.getHead("NEXT_PAGE", ChatColor.GRAY + "Next Page"));
       }
 
-      for (int i = 0; i < inv.getSize(); i++) {
-         ItemStack item = inv.getItem(i);
-         if (item != null && item.hasItemMeta()) {
-             ItemMeta meta = item.getItemMeta();
-             meta.addItemFlags(ItemFlag.values());
-             item.setItemMeta(meta);
-         }
-      }
+      GUIUtils.applyFlags(inv);
 
       editingSounds.put(player.getUniqueId(), eventName);
       player.openInventory(inv);
@@ -190,7 +169,7 @@ public class EventGUI implements Listener {
       if (eventName != null) {
          soundPickerPage.put(player.getUniqueId(), page);
          GUIHolder holder = new GUIHolder("PICK_SOUND");
-         Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴘɪᴄᴋ ꜱᴏᴜɴᴅ: ") + eventName);
+         Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴘɪᴄᴋ ꜱᴏᴜɴᴅ: &b" + eventName));
          holder.setInventory(inv);
          int start = page * 45;
          int end = Math.min(start + 45, allSounds.size());
@@ -218,14 +197,7 @@ public class EventGUI implements Listener {
 
          inv.setItem(49, HeadManager.getHead("BACK", ChatColor.RED + "Back to List"));
 
-         for (int i = 0; i < inv.getSize(); i++) {
-            ItemStack item = inv.getItem(i);
-            if (item != null && item.hasItemMeta()) {
-                ItemMeta meta = item.getItemMeta();
-                meta.addItemFlags(ItemFlag.values());
-                item.setItemMeta(meta);
-            }
-         }
+         GUIUtils.applyFlags(inv);
 
          player.openInventory(inv);
       }
@@ -362,9 +334,7 @@ public class EventGUI implements Listener {
                   player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
                }
             } else if ("EVENT_FIREWORKS".equals(id)) {
-               // Only cancel if clicking outside the inventory or on restricted slots, 
-               // but actually, they need to add items. We don't want to cancel their event editing completely.
-               // We only care about saving on close. 
+
             }
          }
       }

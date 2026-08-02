@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -17,7 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 public class SackManager implements Listener {
@@ -66,7 +64,7 @@ public class SackManager implements Listener {
          File file = new File(sacksFolder, name + ".yml");
          FileConfiguration config = YamlConfiguration.loadConfiguration(file);
          xyz.redoxlabs.redeemcodes.utils.GUIHolder holder = new xyz.redoxlabs.redeemcodes.utils.GUIHolder("SACK_EDITOR");
-         Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎒 ꜱᴀᴄᴋ: ") + name);
+         Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎒 ꜱᴀᴄᴋ: &e" + name));
          holder.setInventory(inv);
          if (config.contains("contents")) {
             List<?> list = config.getList("contents");

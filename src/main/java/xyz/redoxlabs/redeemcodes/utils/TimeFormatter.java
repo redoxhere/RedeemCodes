@@ -34,6 +34,78 @@ public class TimeFormatter {
          return sb.toString().trim();
       }
    }
+
+   public static long parseTimeToMinutes(String input) {
+      java.util.regex.Pattern p = java.util.regex.Pattern.compile("(\\d+)\\s*(s|m|h|d|w|mn|y)", 2);
+      java.util.regex.Matcher m = p.matcher(input.toLowerCase().trim());
+      if (!m.matches()) {
+         return -1L;
+      } else {
+         long value = Long.parseLong(m.group(1));
+         switch (m.group(2)) {
+            case "s" -> {
+               return value / 60L;
+            }
+            case "m" -> {
+               return value;
+            }
+            case "h" -> {
+               return value * 60L;
+            }
+            case "d" -> {
+               return value * 60L * 24L;
+            }
+            case "w" -> {
+               return value * 60L * 24L * 7L;
+            }
+            case "mn" -> {
+               return value * 60L * 24L * 30L;
+            }
+            case "y" -> {
+               return value * 60L * 24L * 365L;
+            }
+            default -> {
+               return -1L;
+            }
+         }
+      }
+   }
+
+   public static long parseTimeToSeconds(String input) {
+      java.util.regex.Pattern p = java.util.regex.Pattern.compile("(\\d+)\\s*(s|m|h|d|w|mn|y)", 2);
+      java.util.regex.Matcher m = p.matcher(input.toLowerCase().trim());
+      if (!m.matches()) {
+         return -1L;
+      } else {
+         long value = Long.parseLong(m.group(1));
+         switch (m.group(2)) {
+            case "s" -> {
+               return value;
+            }
+            case "m" -> {
+               return value * 60L;
+            }
+            case "h" -> {
+               return value * 60L * 60L;
+            }
+            case "d" -> {
+               return value * 60L * 60L * 24L;
+            }
+            case "w" -> {
+               return value * 60L * 60L * 24L * 7L;
+            }
+            case "mn" -> {
+               return value * 60L * 60L * 24L * 30L;
+            }
+            case "y" -> {
+               return value * 60L * 60L * 24L * 365L;
+            }
+            default -> {
+               return -1L;
+            }
+         }
+      }
+   }
 }
 
 

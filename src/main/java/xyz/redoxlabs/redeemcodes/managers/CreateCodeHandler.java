@@ -22,9 +22,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class CreateCodeHandler implements Listener {
    private final Main plugin;
-   private final Set<UUID> awaitingInput = new HashSet();
-   private final Set<UUID> awaitingDuplicationInput = new HashSet();
-   private final Set<UUID> awaitingReviewInput = new HashSet();
+   private final Set<UUID> awaitingInput = new HashSet<>();
+   private final Set<UUID> awaitingDuplicationInput = new HashSet<>();
+   private final Set<UUID> awaitingReviewInput = new HashSet<>();
    private final Map<UUID, String> selectedCodeForDuplication = new HashMap<>();
 
    public CreateCodeHandler(Main plugin) {
