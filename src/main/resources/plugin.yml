@@ -1,7 +1,7 @@
 name: RedeemCodes
 version: '${project.version}'
 main: xyz.redoxlabs.redeemcodes.Main
-api-version: 1.26
+api-version: '1.21'
 description: "A minecraft server plugin to manage redeem codes"
 author: 'DrkVo1d'
 commands:

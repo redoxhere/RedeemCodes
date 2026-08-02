@@ -109,13 +109,25 @@ public final class Main extends JavaPlugin {
          new Metrics(this, pluginId);
          getLogger().info("bStats metrics initialized successfully!");
       } catch (Exception e) {
-         // bStats not found or failed to initialize, ignore
       }
 
       Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[RedeemCodes] Plugin Enabled!");
    }
 
    public void onDisable() {
+      for (Player player : Bukkit.getOnlinePlayers()) {
+         if (openCodeGUIs.containsKey(player) || openEditorGUIs.containsKey(player) ||
+             openExpiredCodeGUIs.containsKey(player) || openSelectCodeGUIs.containsKey(player) ||
+             openRewardGUIs.containsKey(player)) {
+            player.closeInventory();
+         }
+      }
+      openCodeGUIs.clear();
+      openEditorGUIs.clear();
+      openExpiredCodeGUIs.clear();
+      openSelectCodeGUIs.clear();
+      openRewardGUIs.clear();
+
       if (redeemDataManager != null) {
          redeemDataManager.saveFile();
       }
@@ -123,6 +135,8 @@ public final class Main extends JavaPlugin {
       if (expirationManager != null) {
          expirationManager.stopTimer();
       }
+
+      Bukkit.getScheduler().cancelTasks(this);
 
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[RedeemCodes] Plugin Disabled!");
    }
