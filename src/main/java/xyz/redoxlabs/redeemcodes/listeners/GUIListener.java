@@ -28,57 +28,76 @@ public class GUIListener implements Listener {
    @EventHandler
    public void onInventoryClick(InventoryClickEvent event) {
       Player player = (Player)event.getWhoClicked();
-      String title = event.getView().getTitle();
-      if (title.contains("Redeem Codes") && !title.contains("Expired")) {
-         CodesListGUI gui = (CodesListGUI)plugin.openCodeGUIs.get(player);
-         if (gui != null) {
-            gui.handleClick(event, player);
-         }
-      } else if (title.contains("Edit Code:")) {
-         CodeEditorGUI editor = (CodeEditorGUI)plugin.openEditorGUIs.get(player);
-         if (editor != null) {
-            editor.handleClick(event, player);
-         }
-      } else if (title.contains("Expired Redeem Codes")) {
-         ExpiredCodesListGUI gui = (ExpiredCodesListGUI)plugin.openExpiredCodeGUIs.get(player);
-         if (gui != null) {
-            gui.handleClick(event, player);
-         }
-      } else if (title.contains("Select: Code List")) {
-         SelectCodeListGUI gui = (SelectCodeListGUI)plugin.openSelectCodeGUIs.get(player);
-         if (gui != null) {
-            gui.handleClick(event, player);
-         }
-      } else if (title.equals(ChatColor.DARK_PURPLE + "Admin Panel")) {
-         AdminPanelGUI.handleClick(event, plugin);
-      } else if (title.equals(ChatColor.DARK_PURPLE + "RedeemCodes Menu")) {
-         MainGUI.handleClick(event, plugin, createHandler);
-      }
+      if (event.getInventory().getHolder() instanceof xyz.redoxlabs.redeemcodes.utils.GUIHolder) {
+         xyz.redoxlabs.redeemcodes.utils.GUIHolder holder = (xyz.redoxlabs.redeemcodes.utils.GUIHolder) event.getInventory().getHolder();
+         String id = holder.getGuiType();
 
-      RewardGUI rewardGUI = (RewardGUI)plugin.openRewardGUIs.get(player);
-      if (rewardGUI != null && (title.startsWith("Reward Editor:") || title.startsWith("Add Reward:") || title.startsWith("Command Packs:") || title.startsWith("Sack Rewards:") || title.startsWith("Premade Rewards:") || title.startsWith("Select Sack:") || title.startsWith("Select Premade:") || title.startsWith("Select Event:"))) {
-         rewardGUI.handleClick(event, player);
+         switch (id) {
+            case "MAIN_GUI":
+               MainGUI.handleClick(event, plugin, createHandler);
+               break;
+            case "ADMIN_PANEL":
+               AdminPanelGUI.handleClick(event, plugin);
+               break;
+            case "CODES_LIST":
+               CodesListGUI codesGui = (CodesListGUI)plugin.openCodeGUIs.get(player);
+               if (codesGui != null) {
+                  codesGui.handleClick(event, player);
+               }
+               break;
+            case "CODE_EDITOR":
+               CodeEditorGUI editor = (CodeEditorGUI)plugin.openEditorGUIs.get(player);
+               if (editor != null) {
+                  editor.handleClick(event, player);
+               }
+               break;
+            case "EXPIRED_CODES_LIST":
+               ExpiredCodesListGUI expiredGui = (ExpiredCodesListGUI)plugin.openExpiredCodeGUIs.get(player);
+               if (expiredGui != null) {
+                  expiredGui.handleClick(event, player);
+               }
+               break;
+            case "SELECT_CODE_LIST":
+               SelectCodeListGUI selectGui = (SelectCodeListGUI)plugin.openSelectCodeGUIs.get(player);
+               if (selectGui != null) {
+                  selectGui.handleClick(event, player);
+               }
+               break;
+            case "REWARD_GUI":
+               RewardGUI rewardGUI = (RewardGUI)plugin.openRewardGUIs.get(player);
+               if (rewardGUI != null) {
+                  rewardGUI.handleClick(event, player);
+               }
+               break;
+         }
       }
-
    }
 
    @EventHandler
    public void onInventoryClose(InventoryCloseEvent event) {
       Player player = (Player)event.getPlayer();
-      String title = event.getView().getTitle();
-      if (title.contains("Edit Code:")) {
-         CodeEditorGUI editor = (CodeEditorGUI)plugin.openEditorGUIs.get(player);
-         if (editor != null) {
-            editor.cancelUpdateTask();
-         }
-      } else if (title.contains("Redeem Codes") && !title.contains("Expired")) {
-         plugin.openCodeGUIs.remove(player);
-      } else if (title.contains("Expired Redeem Codes")) {
-         plugin.openExpiredCodeGUIs.remove(player);
-      } else if (title.contains("Select: Code List")) {
-         plugin.openSelectCodeGUIs.remove(player);
-      }
+      if (event.getInventory().getHolder() instanceof xyz.redoxlabs.redeemcodes.utils.GUIHolder) {
+         xyz.redoxlabs.redeemcodes.utils.GUIHolder holder = (xyz.redoxlabs.redeemcodes.utils.GUIHolder) event.getInventory().getHolder();
+         String id = holder.getGuiType();
 
+         switch (id) {
+            case "CODE_EDITOR":
+               CodeEditorGUI editor = (CodeEditorGUI)plugin.openEditorGUIs.get(player);
+               if (editor != null) {
+                  editor.cancelUpdateTask();
+               }
+               break;
+            case "CODES_LIST":
+               plugin.openCodeGUIs.remove(player);
+               break;
+            case "EXPIRED_CODES_LIST":
+               plugin.openExpiredCodeGUIs.remove(player);
+               break;
+            case "SELECT_CODE_LIST":
+               plugin.openSelectCodeGUIs.remove(player);
+               break;
+         }
+      }
    }
 }
 

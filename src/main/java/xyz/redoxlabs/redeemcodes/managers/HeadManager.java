@@ -147,6 +147,8 @@ public class HeadManager {
          if (lore != null && lore.length > 0) {
             meta.setLore(Arrays.asList(lore));
          }
+         
+         meta.addItemFlags(org.bukkit.inventory.ItemFlag.values());
 
          clone.setItemMeta(meta);
       }

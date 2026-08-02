@@ -24,9 +24,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemFlag;
+import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
+import xyz.redoxlabs.redeemcodes.utils.SoundUtil;
 
 public class EventGUI implements Listener {
    private final Main plugin;
@@ -89,7 +91,9 @@ public class EventGUI implements Listener {
          size = 9;
       }
 
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, size, "Event Fireworks: " + eventName);
+      GUIHolder holder = new GUIHolder("EVENT_FIREWORKS");
+      Inventory inv = Bukkit.createInventory(holder, size, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴇᴠᴇɴᴛ ꜰɪʀᴇᴡᴏʀᴋꜱ: ") + eventName);
+      holder.setInventory(inv);
       if (existing != null) {
          ItemStack[] contents = (ItemStack[])existing.toArray(new ItemStack[0]);
 
@@ -105,13 +109,15 @@ public class EventGUI implements Listener {
 
    public void openSoundList(Player player, String eventName) {
       int page = (Integer)soundListPage.getOrDefault(player.getUniqueId(), 0);
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 54, "Event Sounds: " + eventName);
-      ItemStack border = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+      GUIHolder holder = new GUIHolder("EVENT_SOUNDS");
+      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴇᴠᴇɴᴛ ꜱᴏᴜɴᴅꜱ: ") + eventName);
+      holder.setInventory(inv);
+      ItemStack border = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
       ItemMeta borderMeta = border.getItemMeta();
       if (borderMeta != null) {
          borderMeta.setDisplayName(" ");
+         borderMeta.addItemFlags(ItemFlag.values());
       }
-
       border.setItemMeta(borderMeta);
 
       for(int i = 0; i < 54; ++i) {
@@ -166,6 +172,15 @@ public class EventGUI implements Listener {
          inv.setItem(53, HeadManager.getHead("NEXT_PAGE", ChatColor.GRAY + "Next Page"));
       }
 
+      for (int i = 0; i < inv.getSize(); i++) {
+         ItemStack item = inv.getItem(i);
+         if (item != null && item.hasItemMeta()) {
+             ItemMeta meta = item.getItemMeta();
+             meta.addItemFlags(ItemFlag.values());
+             item.setItemMeta(meta);
+         }
+      }
+
       editingSounds.put(player.getUniqueId(), eventName);
       player.openInventory(inv);
    }
@@ -174,7 +189,9 @@ public class EventGUI implements Listener {
       String eventName = (String)editingSounds.get(player.getUniqueId());
       if (eventName != null) {
          soundPickerPage.put(player.getUniqueId(), page);
-         Inventory inv = Bukkit.createInventory((InventoryHolder)null, 54, "Pick Sound: " + eventName);
+         GUIHolder holder = new GUIHolder("PICK_SOUND");
+         Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴘɪᴄᴋ ꜱᴏᴜɴᴅ: ") + eventName);
+         holder.setInventory(inv);
          int start = page * 45;
          int end = Math.min(start + 45, allSounds.size());
 
@@ -200,6 +217,16 @@ public class EventGUI implements Listener {
          }
 
          inv.setItem(49, HeadManager.getHead("BACK", ChatColor.RED + "Back to List"));
+
+         for (int i = 0; i < inv.getSize(); i++) {
+            ItemStack item = inv.getItem(i);
+            if (item != null && item.hasItemMeta()) {
+                ItemMeta meta = item.getItemMeta();
+                meta.addItemFlags(ItemFlag.values());
+                item.setItemMeta(meta);
+            }
+         }
+
          player.openInventory(inv);
       }
    }
@@ -211,22 +238,24 @@ public class EventGUI implements Listener {
          UUID uuid = player.getUniqueId();
          if (editingFirework.containsKey(uuid)) {
             String eventName = (String)editingFirework.remove(uuid);
-            if (event.getView().getTitle().startsWith("Event Fireworks:")) {
-               List<ItemStack> content = new ArrayList<>();
-
-               for(ItemStack item : event.getInventory().getContents()) {
-                  if (item != null && item.getType() == Material.FIREWORK_ROCKET) {
-                     content.add(item);
+            if (event.getInventory().getHolder() instanceof GUIHolder) {
+               GUIHolder holder = (GUIHolder) event.getInventory().getHolder();
+               if ("EVENT_FIREWORKS".equals(holder.getGuiType())) {
+                  List<ItemStack> content = new ArrayList<>();
+   
+                  for(ItemStack item : event.getInventory().getContents()) {
+                     if (item != null && item.getType() == Material.FIREWORK_ROCKET) {
+                        content.add(item);
+                     }
                   }
+   
+                  FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
+                  config.set("fireworks", content);
+                  plugin.getEventManager().saveEvent(eventName);
+                  player.sendMessage(ChatColor.GREEN + "Fireworks saved for event '" + eventName + "'.");
                }
-
-               FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
-               config.set("fireworks", content);
-               plugin.getEventManager().saveEvent(eventName);
-               player.sendMessage(ChatColor.GREEN + "Fireworks saved for event '" + eventName + "'.");
             }
          }
-
       }
    }
 
@@ -234,100 +263,110 @@ public class EventGUI implements Listener {
    public void onInventoryClick(InventoryClickEvent event) {
       if (event.getWhoClicked() instanceof Player) {
          Player player = (Player)event.getWhoClicked();
-         String title = event.getView().getTitle();
-         if (title.startsWith("Event Sounds:")) {
-            event.setCancelled(true);
-            String eventName = (String)editingSounds.get(player.getUniqueId());
-            if (eventName == null) {
-               return;
-            }
-
-            ItemStack clicked = event.getCurrentItem();
-            if (clicked == null || !clicked.hasItemMeta()) {
-               return;
-            }
-
-            String displayName = clicked.getItemMeta().getDisplayName();
-            String strippedName = ChatColor.stripColor(displayName);
-            if (strippedName.equals("Add New Sound")) {
-               openSoundPicker(player, 0);
-            } else if (strippedName.equals("Next Page")) {
-               int page = (Integer)soundListPage.getOrDefault(player.getUniqueId(), 0);
-               soundListPage.put(player.getUniqueId(), page + 1);
-               openSoundList(player, eventName);
-            } else if (strippedName.equals("Previous Page")) {
-               int page = (Integer)soundListPage.getOrDefault(player.getUniqueId(), 0);
-               if (page > 0) {
-                  soundListPage.put(player.getUniqueId(), page - 1);
+         if (event.getInventory().getHolder() instanceof GUIHolder) {
+            GUIHolder holder = (GUIHolder) event.getInventory().getHolder();
+            String id = holder.getGuiType();
+            
+            if ("EVENT_SOUNDS".equals(id)) {
+               event.setCancelled(true);
+               String eventName = (String)editingSounds.get(player.getUniqueId());
+               if (eventName == null) return;
+   
+               ItemStack clicked = event.getCurrentItem();
+               if (clicked == null || !clicked.hasItemMeta()) return;
+   
+               String strippedName = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
+               if (strippedName.equals("Add New Sound")) {
+                  SoundUtil.playClick(plugin, player);
+                  openSoundPicker(player, 0);
+               } else if (strippedName.equals("Next Page")) {
+                  SoundUtil.playPageTurn(plugin, player);
+                  int page = (Integer)soundListPage.getOrDefault(player.getUniqueId(), 0);
+                  soundListPage.put(player.getUniqueId(), page + 1);
                   openSoundList(player, eventName);
-               }
-            } else {
-               List<String> lore = clicked.getItemMeta().getLore();
-               String id = null;
-               if (lore != null) {
-                  for(String line : lore) {
-                     if (line.contains("id:")) {
-                        id = ChatColor.stripColor(line).replace("id:", "").trim();
-                        break;
+               } else if (strippedName.equals("Previous Page")) {
+                  int page = (Integer)soundListPage.getOrDefault(player.getUniqueId(), 0);
+                  if (page > 0) {
+                     SoundUtil.playPageTurn(plugin, player);
+                     soundListPage.put(player.getUniqueId(), page - 1);
+                     openSoundList(player, eventName);
+                  } else {
+                     SoundUtil.playError(plugin, player);
+                  }
+               } else {
+                  List<String> lore = clicked.getItemMeta().getLore();
+                  String soundId = null;
+                  if (lore != null) {
+                     for(String line : lore) {
+                        if (line.contains("id:")) {
+                           soundId = ChatColor.stripColor(line).replace("id:", "").trim();
+                           break;
+                        }
+                     }
+                  }
+   
+                  if (soundId != null) {
+                     if (event.isLeftClick() && !event.isShiftClick()) {
+                        SoundUtil.playClick(plugin, player);
+                        player.closeInventory();
+                        awaitingDelayInput.put(player.getUniqueId(), new SoundEditSession(eventName, soundId));
+                        player.sendMessage(ChatColor.GREEN + "Type the wait time in ticks (integer) in chat:");
+                        player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
+                     } else if (event.isRightClick()) {
+                        SoundUtil.playClick(plugin, player);
+                        player.closeInventory();
+                        awaitingPitchInput.put(player.getUniqueId(), new SoundEditSession(eventName, soundId));
+                        player.sendMessage(ChatColor.GREEN + "Type the pitch (0.0 - 2.0) in chat:");
+                        player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
+                     } else if (event.isShiftClick() && event.isLeftClick()) {
+                        FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
+                        config.set("sounds." + soundId, (Object)null);
+                        plugin.getEventManager().saveEvent(eventName);
+                        openSoundList(player, eventName);
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
                      }
                   }
                }
-
-               if (id != null) {
-                  if (event.isLeftClick() && !event.isShiftClick()) {
-                     player.closeInventory();
-                     awaitingDelayInput.put(player.getUniqueId(), new SoundEditSession(eventName, id));
-                     player.sendMessage(ChatColor.GREEN + "Type the wait time in ticks (integer) in chat:");
-                     player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
-                  } else if (event.isRightClick()) {
-                     player.closeInventory();
-                     awaitingPitchInput.put(player.getUniqueId(), new SoundEditSession(eventName, id));
-                     player.sendMessage(ChatColor.GREEN + "Type the pitch (0.0 - 2.0) in chat:");
-                     player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
-                  } else if (event.isShiftClick() && event.isLeftClick()) {
-                     FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
-                     config.set("sounds." + id, (Object)null);
-                     plugin.getEventManager().saveEvent(eventName);
-                     openSoundList(player, eventName);
-                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+            } else if ("PICK_SOUND".equals(id)) {
+               event.setCancelled(true);
+               String eventName = (String)editingSounds.get(player.getUniqueId());
+               if (eventName == null) return;
+   
+               ItemStack clicked = event.getCurrentItem();
+               if (clicked == null || !clicked.hasItemMeta()) return;
+   
+               String name = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
+               if (name.equals("Next Page")) {
+                  SoundUtil.playPageTurn(plugin, player);
+                  int page = (Integer)soundPickerPage.getOrDefault(player.getUniqueId(), 0);
+                  openSoundPicker(player, page + 1);
+               } else if (name.equals("Previous Page")) {
+                  int page = (Integer)soundPickerPage.getOrDefault(player.getUniqueId(), 0);
+                  if (page > 0) {
+                     SoundUtil.playPageTurn(plugin, player);
+                     openSoundPicker(player, page - 1);
+                  } else {
+                     SoundUtil.playError(plugin, player);
                   }
+               } else if (name.equals("Back to List")) {
+                  SoundUtil.playClick(plugin, player);
+                  openSoundList(player, eventName);
+               } else if (clicked.getType() == Material.PAPER) {
+                  FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
+                  String soundId = UUID.randomUUID().toString();
+                  config.set("sounds." + soundId + ".sound", name);
+                  config.set("sounds." + soundId + ".delay", 1);
+                  config.set("sounds." + soundId + ".pitch", (double)1.0F);
+                  plugin.getEventManager().saveEvent(eventName);
+                  openSoundList(player, eventName);
+                  player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
                }
-            }
-         } else if (title.startsWith("Pick Sound:")) {
-            event.setCancelled(true);
-            String eventName = (String)editingSounds.get(player.getUniqueId());
-            if (eventName == null) {
-               return;
-            }
-
-            ItemStack clicked = event.getCurrentItem();
-            if (clicked == null || !clicked.hasItemMeta()) {
-               return;
-            }
-
-            String name = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
-            if (name.equals("Next Page")) {
-               int page = (Integer)soundPickerPage.getOrDefault(player.getUniqueId(), 0);
-               openSoundPicker(player, page + 1);
-            } else if (name.equals("Previous Page")) {
-               int page = (Integer)soundPickerPage.getOrDefault(player.getUniqueId(), 0);
-               if (page > 0) {
-                  openSoundPicker(player, page - 1);
-               }
-            } else if (name.equals("Back to List")) {
-               openSoundList(player, eventName);
-            } else if (clicked.getType() == Material.PAPER) {
-               FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
-               String id = UUID.randomUUID().toString();
-               config.set("sounds." + id + ".sound", name);
-               config.set("sounds." + id + ".delay", 1);
-               config.set("sounds." + id + ".pitch", (double)1.0F);
-               plugin.getEventManager().saveEvent(eventName);
-               openSoundList(player, eventName);
-               player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
+            } else if ("EVENT_FIREWORKS".equals(id)) {
+               // Only cancel if clicking outside the inventory or on restricted slots, 
+               // but actually, they need to add items. We don't want to cancel their event editing completely.
+               // We only care about saving on close. 
             }
          }
-
       }
    }
 

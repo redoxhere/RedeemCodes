@@ -3,6 +3,8 @@ package xyz.redoxlabs.redeemcodes.guis;
 import xyz.redoxlabs.redeemcodes.CodeExpirationManager;
 import xyz.redoxlabs.redeemcodes.Main;
 import xyz.redoxlabs.redeemcodes.managers.HeadManager;
+import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
+import xyz.redoxlabs.redeemcodes.utils.SoundUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -12,9 +14,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemFlag;
 
 public class SelectCodeListGUI {
    private final Main plugin;
@@ -25,6 +27,7 @@ public class SelectCodeListGUI {
    private static final int ROW_START = 1;
    private static final int ROW_END = 4;
    private static final int CODES_PER_PAGE = 28;
+   private static final String GUI_TITLE = ChatColor.translateAlternateColorCodes('&', "&8📜 ꜱᴇʟᴇᴄᴛ ᴄᴏᴅᴇ");
    private static final String pro = "§x§2§D§9§D§F§F§l| ";
    private static final String titleColor = "§x§2§D§9§D§F§F";
    private static final String pro_expired = "§x§F§F§7§0§7§0§l| ";
@@ -38,19 +41,21 @@ public class SelectCodeListGUI {
       plugin.reloadCodesConfig();
       Set<String> codeKeys = plugin.getCodesConfig().getConfigurationSection("Codes").getKeys(false);
       this.codes = new ArrayList<>();
-      CodeExpirationManager expManager = plugin.getExpirationManager();
 
       for(String code : codeKeys) {
          codes.add(code);
       }
 
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 54, ChatColor.DARK_PURPLE + "Select: Code List");
-      ItemStack border = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+      GUIHolder holder = new GUIHolder("SELECT_CODE_LIST");
+      Inventory inv = Bukkit.createInventory(holder, 54, GUI_TITLE);
+      holder.setInventory(inv);
+
+      ItemStack border = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
       ItemMeta borderMeta = border.getItemMeta();
       if (borderMeta != null) {
          borderMeta.setDisplayName(" ");
+         borderMeta.addItemFlags(ItemFlag.values());
       }
-
       border.setItemMeta(borderMeta);
 
       for(int start = 0; start < 54; ++start) {
@@ -89,8 +94,17 @@ public class SelectCodeListGUI {
          pageMeta.setDisplayName("Page: §x§2§D§9§D§F§F" + (page + 1) + "/" + maxPage);
          pageDisplay.setItemMeta(pageMeta);
       }
-
       inv.setItem(48, pageDisplay);
+
+      for (int i = 0; i < inv.getSize(); i++) {
+         ItemStack item = inv.getItem(i);
+         if (item != null && item.hasItemMeta()) {
+             ItemMeta meta = item.getItemMeta();
+             meta.addItemFlags(ItemFlag.values());
+             item.setItemMeta(meta);
+         }
+      }
+
       player.openInventory(inv);
    }
 
@@ -100,7 +114,7 @@ public class SelectCodeListGUI {
       String currentTitleColor = isExpired ? "§c" : "§x§2§D§9§D§F§F";
       String currentValueColor = isExpired ? "§e" : "§b";
       String headKey = isExpired ? "EXPIRED_CODE_ITEM" : "CODE_ITEM";
-      ItemStack head = HeadManager.getHead(headKey, currentTitleColor + code);
+      ItemStack head = HeadManager.getHead(headKey, currentTitleColor + code.toUpperCase());
       ItemMeta meta = head.getItemMeta();
       if (meta != null) {
          List<String> lore = new ArrayList<>();
@@ -113,6 +127,7 @@ public class SelectCodeListGUI {
          lore.add(currentPro + gray + "ʀᴇᴅᴇᴇᴍ ᴛʏᴘᴇ: " + currentValueColor + plugin.getCodesConfig().getString("Codes." + code + ".redeem-limit.Type", "PLAYER"));
          lore.add(currentPro + gray + "ʀᴇᴅᴇᴇᴍ ʟɪᴍɪᴛ: " + currentValueColor + plugin.getCodesConfig().getInt("Codes." + code + ".redeem-limit.Count", 1));
          meta.setLore(lore);
+         meta.addItemFlags(ItemFlag.values());
          head.setItemMeta(meta);
       }
 
@@ -120,29 +135,43 @@ public class SelectCodeListGUI {
    }
 
    public void handleClick(InventoryClickEvent event, Player player) {
-      if (event.getView().getTitle().contains("Select: Code List")) {
-         event.setCancelled(true);
-         ItemStack clickedItem = event.getCurrentItem();
-         if (clickedItem != null && clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName()) {
-            String itemName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
-            if (itemName.equals("Go Back")) {
-               player.closeInventory();
-               AdminPanelGUI.open(player, plugin);
-            } else if (itemName.equals("Next Page")) {
-               if ((page + 1) * 28 < codes.size()) {
-                  ++page;
-                  open(player);
-               }
-            } else if (itemName.equals("Previous Page")) {
-               if (page > 0) {
-                  --page;
-                  open(player);
-               }
-            } else if (codes.contains(itemName)) {
-               plugin.openSelectCodeGUIs.put(player, this);
-               plugin.getDuplicationHandler().startDuplication(player, itemName);
+      event.setCancelled(true);
+      ItemStack clickedItem = event.getCurrentItem();
+      if (clickedItem != null && clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName()) {
+         String itemName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
+         if (itemName.equals("Go Back")) {
+            SoundUtil.playClick(plugin, player);
+            player.closeInventory();
+            AdminPanelGUI.open(player, plugin);
+         } else if (itemName.equals("Next Page")) {
+            if ((page + 1) * 28 < codes.size()) {
+               SoundUtil.playPageTurn(plugin, player);
+               ++page;
+               open(player);
+            } else {
+               SoundUtil.playError(plugin, player);
             }
-
+         } else if (itemName.equals("Previous Page")) {
+            if (page > 0) {
+               SoundUtil.playPageTurn(plugin, player);
+               --page;
+               open(player);
+            } else {
+               SoundUtil.playError(plugin, player);
+            }
+         } else {
+            String matchedCode = null;
+            for (String code : codes) {
+               if (code.equalsIgnoreCase(itemName)) {
+                  matchedCode = code;
+                  break;
+               }
+            }
+            if (matchedCode != null) {
+               SoundUtil.playClick(plugin, player);
+               plugin.openSelectCodeGUIs.put(player, this);
+               plugin.getDuplicationHandler().startDuplication(player, matchedCode);
+            }
          }
       }
    }

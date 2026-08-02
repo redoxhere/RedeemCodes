@@ -65,7 +65,9 @@ public class SackManager implements Listener {
       } else {
          File file = new File(sacksFolder, name + ".yml");
          FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-         Inventory inv = Bukkit.createInventory((InventoryHolder)null, 54, "Edit Sack: " + name);
+         xyz.redoxlabs.redeemcodes.utils.GUIHolder holder = new xyz.redoxlabs.redeemcodes.utils.GUIHolder("SACK_EDITOR");
+         Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎒 ꜱᴀᴄᴋ: ") + name);
+         holder.setInventory(inv);
          if (config.contains("contents")) {
             List<?> list = config.getList("contents");
             if (list != null) {
@@ -110,13 +112,15 @@ public class SackManager implements Listener {
       Player player = (Player)event.getPlayer();
       if (editors.containsKey(player.getUniqueId())) {
          String sackName = (String)editors.remove(player.getUniqueId());
-         if (event.getView().getTitle().equals("Edit Sack: " + sackName)) {
-            saveSack(sackName, event.getInventory());
-            player.sendMessage(ChatColor.GREEN + "Sack '" + sackName + "' updated and saved!");
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 2.0F);
+         if (event.getInventory().getHolder() instanceof xyz.redoxlabs.redeemcodes.utils.GUIHolder) {
+            xyz.redoxlabs.redeemcodes.utils.GUIHolder holder = (xyz.redoxlabs.redeemcodes.utils.GUIHolder) event.getInventory().getHolder();
+            if ("SACK_EDITOR".equals(holder.getGuiType())) {
+               saveSack(sackName, event.getInventory());
+               player.sendMessage(ChatColor.GREEN + "Sack '" + sackName + "' updated and saved!");
+               xyz.redoxlabs.redeemcodes.utils.SoundUtil.playClick(plugin, player);
+            }
          }
       }
-
    }
 
    private void saveSack(String name, Inventory inv) {

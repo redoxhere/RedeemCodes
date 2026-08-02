@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
 
 public class CodeEditorGUI implements Listener {
    private final Main plugin;
@@ -50,11 +51,15 @@ public class CodeEditorGUI implements Listener {
 
    public void open(final Player player) {
       cancelUpdateTask();
-      this.inv = Bukkit.createInventory((InventoryHolder)null, 54, "§x§0§0§0§0§0§0Edit Code: §x§2§B§8§6§D§7" + codeName);
+      GUIHolder holder = new GUIHolder("CODE_EDITOR");
+      this.inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8✏ ᴇᴅɪᴛɪɴɢ ᴄᴏᴅᴇ: &7" + codeName.toUpperCase()));
+      holder.setInventory(inv);
+
       ItemStack border = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
       ItemMeta borderMeta = border.getItemMeta();
       if (borderMeta != null) {
          borderMeta.setDisplayName(" ");
+         borderMeta.addItemFlags(org.bukkit.inventory.ItemFlag.values());
       }
 
       border.setItemMeta(borderMeta);
@@ -142,7 +147,7 @@ public class CodeEditorGUI implements Listener {
             expireDisplay = TimeFormatter.formatDuration(remaining);
             this.updateTask = (new BukkitRunnable() {
                public void run() {
-                  if (player != null && player.isOnline() && player.getOpenInventory().getTitle().contains(codeName)) {
+                  if (player != null && player.isOnline() && player.getOpenInventory().getTitle().contains(codeName.toUpperCase())) {
                      long newRemaining = plugin.getExpirationManager().getRemainingTime(codeName);
                      if (newRemaining <= 0L) {
                         cancel();
@@ -172,6 +177,16 @@ public class CodeEditorGUI implements Listener {
       )));
       ItemStack backButton = HeadManager.getHead("BACK", "§cGo Back", "§7ᴄʟɪᴄᴋ ᴛᴏ ɢᴏ ʙᴀᴄᴋ ᴛᴏ ᴄᴏᴅᴇ ʟɪꜱᴛ");
       inv.setItem(49, backButton);
+
+      for (int i = 0; i < inv.getSize(); i++) {
+         ItemStack item = inv.getItem(i);
+         if (item != null && item.hasItemMeta()) {
+             ItemMeta meta = item.getItemMeta();
+             meta.addItemFlags(org.bukkit.inventory.ItemFlag.values());
+             item.setItemMeta(meta);
+         }
+      }
+
       player.openInventory(inv);
    }
 
@@ -196,105 +211,106 @@ public class CodeEditorGUI implements Listener {
    }
 
    public void handleClick(InventoryClickEvent event, Player player) {
-      if (event.getView().getTitle().contains("Edit Code:")) {
-         event.setCancelled(true);
-         if (event.getClickedInventory() != null && event.getClickedInventory().equals(inv)) {
-            ItemStack clicked = event.getCurrentItem();
-            if (clicked != null && clicked.hasItemMeta() && !clicked.getItemMeta().getDisplayName().isEmpty()) {
-               String name = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
-               if (name.equals("Go Back")) {
-                  cancelUpdateTask();
-                  player.closeInventory();
-                  plugin.openEditorGUIs.remove(player);
-                  if (parentGUI != null) {
-                     plugin.openCodeGUIs.put(player, parentGUI);
-                     parentGUI.open(player);
-                  }
-               } else if (!name.equals("Enabled") && !name.equals("Disabled")) {
-                  if (name.equals("Permission Required")) {
-                     if (event.isRightClick()) {
-                        FileConfiguration config = plugin.getCodesConfig();
-                        boolean permRequired = config.getBoolean("Codes." + codeName + ".permisson.required", false);
-                        config.set("Codes." + codeName + ".permisson.required", !permRequired);
-                        plugin.saveCodesConfig();
-                        open(player);
-                     } else if (event.isLeftClick() && event.isShiftClick()) {
-                        plugin.getCodesConfig().set("Codes." + codeName + ".permisson.list", new ArrayList<>());
-                        plugin.saveCodesConfig();
-                        player.sendMessage(ChatColor.GREEN + "All permissions removed from code '" + codeName + "'.");
-                        open(player);
-                     } else if (event.isLeftClick()) {
-                        awaitingPermissionInput.add(player.getUniqueId());
-                        player.closeInventory();
-                        player.sendMessage(ChatColor.GREEN + "Please type the permission in chat. (e.g., 'code.redeem.example')");
-                        player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
-                     }
-                  } else if (name.equals("Manage Rewards")) {
-                     RewardGUI rewardGUI = new RewardGUI(plugin, codeName, this);
-                     plugin.openRewardGUIs.put(player, rewardGUI);
-                     rewardGUI.openMain(player);
-                  } else if (name.equals("Redeem Limit")) {
-                     int current = plugin.getCodesConfig().getInt("Codes." + codeName + ".redeem-limit.Count", 1);
-                     if (event.isRightClick()) {
-                        ++current;
-                     } else if (event.isLeftClick()) {
-                        current = Math.max(1, current - 1);
-                     }
-
-                     plugin.getCodesConfig().set("Codes." + codeName + ".redeem-limit.Count", current);
-                     plugin.saveCodesConfig();
-                     open(player);
-                  } else if (name.equals("Redeem Type")) {
+      event.setCancelled(true);
+      if (event.getClickedInventory() != null && event.getClickedInventory().equals(inv)) {
+         ItemStack clicked = event.getCurrentItem();
+         if (clicked != null && clicked.hasItemMeta() && !clicked.getItemMeta().getDisplayName().isEmpty()) {
+            String name = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
+            if (name.equals("Go Back")) {
+               xyz.redoxlabs.redeemcodes.utils.SoundUtil.playClick(plugin, player);
+               cancelUpdateTask();
+               player.closeInventory();
+               plugin.openEditorGUIs.remove(player);
+               if (parentGUI != null) {
+                  plugin.openCodeGUIs.put(player, parentGUI);
+                  parentGUI.open(player);
+               }
+            } else if (!name.equals("Enabled") && !name.equals("Disabled")) {
+               xyz.redoxlabs.redeemcodes.utils.SoundUtil.playClick(plugin, player);
+               if (name.equals("Permission Required")) {
+                  if (event.isRightClick()) {
                      FileConfiguration config = plugin.getCodesConfig();
-                     String type = config.getString("Codes." + codeName + ".redeem-limit.Type", "PLAYER");
-                     type = type.equalsIgnoreCase("PLAYER") ? "CODE" : "PLAYER";
-                     config.set("Codes." + codeName + ".redeem-limit.Type", type);
+                     boolean permRequired = config.getBoolean("Codes." + codeName + ".permisson.required", false);
+                     config.set("Codes." + codeName + ".permisson.required", !permRequired);
                      plugin.saveCodesConfig();
                      open(player);
-                  } else if (name.equals("Cooldown")) {
-                     awaitingCooldownInput.add(player.getUniqueId());
-                     player.closeInventory();
-                     player.sendMessage(ChatColor.GREEN + "Type the cooldown in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).");
-                     player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
-                  } else if (name.equals("Expire Time")) {
-                     awaitingExpireTimeInput.add(player.getUniqueId());
-                     player.closeInventory();
-                     player.sendMessage(ChatColor.GREEN + "Type the expire time in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).");
-                     player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort. Type 'never' to disable expiration.");
-                  } else if (name.equals("Reactivate Code")) {
-                     plugin.getExpirationManager().reactivate(codeName);
-                     player.sendMessage(ChatColor.GREEN + "Code '" + codeName + "' has been reactivated.");
-                     open(player);
-                  } else if (name.equals("Blacklist Toggle")) {
-                     String bl = plugin.getCodesConfig().getString("Codes." + codeName + ".Playerlist.Blacklist.Type", "ENABLED");
-                     bl = bl.equalsIgnoreCase("ENABLED") ? "DISABLED" : (bl.equalsIgnoreCase("DISABLED") ? "REVERSED" : "ENABLED");
-                     plugin.getCodesConfig().set("Codes." + codeName + ".Playerlist.Blacklist.Type", bl);
+                  } else if (event.isLeftClick() && event.isShiftClick()) {
+                     plugin.getCodesConfig().set("Codes." + codeName + ".permisson.list", new ArrayList<>());
                      plugin.saveCodesConfig();
+                     player.sendMessage(ChatColor.GREEN + "All permissions removed from code '" + codeName + "'.");
                      open(player);
-                  } else if (name.equals("Players Redeemed")) {
+                  } else if (event.isLeftClick()) {
+                     awaitingPermissionInput.add(player.getUniqueId());
                      player.closeInventory();
-                     player.performCommand("rc redeemed " + codeName);
-                  } else if (name.equals("Add to Blacklist")) {
-                     awaitingBlacklistInput.add(player.getUniqueId());
-                     player.closeInventory();
-                     player.sendMessage(ChatColor.GREEN + "Please type the username to add to the blacklist.");
+                     player.sendMessage(ChatColor.GREEN + "Please type the permission in chat. (e.g., 'code.redeem.example')");
                      player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
-                  } else if (name.equals("Remove Code")) {
-                     awaitingRemoveConfirm.add(player.getUniqueId());
-                     player.closeInventory();
-                     player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "WARNING: You are about to remove the code '" + codeName + "'.");
-                     player.sendMessage(ChatColor.YELLOW + "This action is permanent. Type 'confirm' in chat to proceed.");
-                     player.sendMessage(ChatColor.GRAY + "Type anything else to cancel.");
                   }
-               } else {
-                  FileConfiguration config = plugin.getCodesConfig();
-                  boolean enabled = config.getBoolean("Codes." + codeName + ".enabled", true);
-                  config.set("Codes." + codeName + ".enabled", !enabled);
+               } else if (name.equals("Manage Rewards")) {
+                  RewardGUI rewardGUI = new RewardGUI(plugin, codeName, this);
+                  plugin.openRewardGUIs.put(player, rewardGUI);
+                  rewardGUI.openMain(player);
+               } else if (name.equals("Redeem Limit")) {
+                  int current = plugin.getCodesConfig().getInt("Codes." + codeName + ".redeem-limit.Count", 1);
+                  if (event.isRightClick()) {
+                     ++current;
+                  } else if (event.isLeftClick()) {
+                     current = Math.max(1, current - 1);
+                  }
+
+                  plugin.getCodesConfig().set("Codes." + codeName + ".redeem-limit.Count", current);
                   plugin.saveCodesConfig();
                   open(player);
+               } else if (name.equals("Redeem Type")) {
+                  FileConfiguration config = plugin.getCodesConfig();
+                  String type = config.getString("Codes." + codeName + ".redeem-limit.Type", "PLAYER");
+                  type = type.equalsIgnoreCase("PLAYER") ? "CODE" : "PLAYER";
+                  config.set("Codes." + codeName + ".redeem-limit.Type", type);
+                  plugin.saveCodesConfig();
+                  open(player);
+               } else if (name.equals("Cooldown")) {
+                  awaitingCooldownInput.add(player.getUniqueId());
+                  player.closeInventory();
+                  player.sendMessage(ChatColor.GREEN + "Type the cooldown in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).");
+                  player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
+               } else if (name.equals("Expire Time")) {
+                  awaitingExpireTimeInput.add(player.getUniqueId());
+                  player.closeInventory();
+                  player.sendMessage(ChatColor.GREEN + "Type the expire time in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).");
+                  player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort. Type 'never' to disable expiration.");
+               } else if (name.equals("Reactivate Code")) {
+                  plugin.getExpirationManager().reactivate(codeName);
+                  player.sendMessage(ChatColor.GREEN + "Code '" + codeName + "' has been reactivated.");
+                  open(player);
+               } else if (name.equals("Blacklist Toggle")) {
+                  String bl = plugin.getCodesConfig().getString("Codes." + codeName + ".Playerlist.Blacklist.Type", "ENABLED");
+                  bl = bl.equalsIgnoreCase("ENABLED") ? "DISABLED" : (bl.equalsIgnoreCase("DISABLED") ? "REVERSED" : "ENABLED");
+                  plugin.getCodesConfig().set("Codes." + codeName + ".Playerlist.Blacklist.Type", bl);
+                  plugin.saveCodesConfig();
+                  open(player);
+               } else if (name.equals("Players Redeemed")) {
+                  player.closeInventory();
+                  player.performCommand("rc redeemed " + codeName);
+               } else if (name.equals("Add to Blacklist")) {
+                  awaitingBlacklistInput.add(player.getUniqueId());
+                  player.closeInventory();
+                  player.sendMessage(ChatColor.GREEN + "Please type the username to add to the blacklist.");
+                  player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
+               } else if (name.equals("Remove Code")) {
+                  awaitingRemoveConfirm.add(player.getUniqueId());
+                  player.closeInventory();
+                  player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "WARNING: You are about to remove the code '" + codeName + "'.");
+                  player.sendMessage(ChatColor.YELLOW + "This action is permanent. Type 'confirm' in chat to proceed.");
+                  player.sendMessage(ChatColor.GRAY + "Type anything else to cancel.");
                }
-
+            } else {
+               xyz.redoxlabs.redeemcodes.utils.SoundUtil.playClick(plugin, player);
+               FileConfiguration config = plugin.getCodesConfig();
+               boolean enabled = config.getBoolean("Codes." + codeName + ".enabled", true);
+               config.set("Codes." + codeName + ".enabled", !enabled);
+               plugin.saveCodesConfig();
+               open(player);
             }
+
          }
       }
    }

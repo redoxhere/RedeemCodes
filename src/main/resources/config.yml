@@ -6,6 +6,10 @@ prefix: "&d&l[&bRedeemCodes&d&l] &r"
 sounds:
   success: ENTITY_PLAYER_LEVELUP
   failure: BLOCK_ANVIL_LAND
+  click: UI_BUTTON_CLICK
+  page-turn: ITEM_BOOK_PAGE_TURN
+  error: ENTITY_VILLAGER_NO
+  close: BLOCK_CHEST_CLOSE
 
 # Customizable message logs for the plugin. Feel free to modify these as needed.
 messages:

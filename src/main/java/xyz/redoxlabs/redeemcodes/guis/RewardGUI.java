@@ -19,9 +19,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemFlag;
+import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
+import xyz.redoxlabs.redeemcodes.utils.SoundUtil;
 
 public class RewardGUI {
    private final Main plugin;
@@ -55,7 +57,9 @@ public class RewardGUI {
 
    public void openMain(Player player) {
       this.currentView = RewardGUI.View.MAIN;
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 27, "Reward Editor: §x§2§B§8§6§D§7" + codeName);
+      GUIHolder holder = new GUIHolder("REWARD_GUI");
+      Inventory inv = Bukkit.createInventory(holder, 27, ChatColor.translateAlternateColorCodes('&', "&8🎁 ʀᴇᴡᴀʀᴅꜱ"));
+      holder.setInventory(inv);
       fillBorder(inv);
       inv.setItem(11, HeadManager.getHead("REWARD_ADD", "§x§F§B§E§2§D§EA§x§F§C§E§0§D§9d§x§F§C§D§E§D§3d §x§F§D§D§C§C§ER§x§F§D§D§A§C§8e§x§F§E§D§7§C§3w§x§F§E§D§5§B§Da§x§F§F§D§3§B§8r§x§F§F§D§1§B§2d", " ", "§x§F§B§E§2§D§E§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴀᴅᴅ ᴀ ɴᴇᴡ ʀᴇᴡᴀʀᴅ"));
       List<String> events = plugin.getCodesConfig().getStringList(rewardPath + ".events");
@@ -64,24 +68,30 @@ public class RewardGUI {
       String type = plugin.getCodesConfig().getString(rewardPath + ".type", "RANDOM");
       inv.setItem(15, HeadManager.getHead("REWARD_TYPE", "§x§2§B§8§6§D§7Distribution Type", " ", "§x§2§B§8§6§D§7§l| §fᴄᴜʀʀᴇɴᴛ: §x§2§B§8§6§D§7" + type, "§x§2§B§8§6§D§7§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴛᴏɢɢʟᴇ ᴛʏᴘᴇ"));
       inv.setItem(22, HeadManager.getHead("BACK", "§cGo Back", "§7Return to Code Editor"));
+      applyFlags(inv);
       player.openInventory(inv);
    }
 
    public void openAddSelection(Player player) {
       this.currentView = RewardGUI.View.ADD_SELECTION;
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 27, "Add Reward: §x§2§B§8§6§D§7" + codeName);
+      GUIHolder holder = new GUIHolder("REWARD_GUI");
+      Inventory inv = Bukkit.createInventory(holder, 27, ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴀᴅᴅ ʀᴇᴡᴀʀᴅ"));
+      holder.setInventory(inv);
       fillBorder(inv);
       inv.setItem(11, HeadManager.getHead("REWARD_COMMAND", "§x§F§B§9§D§4§ECommand Pack", " ", "§x§F§B§9§D§4§E§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ᴄᴏᴍᴍᴀɴᴅ ᴘᴀᴄᴋꜱ"));
       inv.setItem(13, HeadManager.getHead("REWARD_SACK", "§x§4§5§D§1§5§8Sack", " ", "§x§4§5§D§1§5§8§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ꜱᴀᴄᴋꜱ"));
       inv.setItem(15, HeadManager.getHead("REWARD_PREMADE", "§x§6§E§B§1§D§4Premade", " ", "§x§6§E§B§1§D§4§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ᴘʀᴇᴍᴀᴅᴇꜱ"));
       inv.setItem(22, HeadManager.getHead("BACK", "§cGo Back", "§7Return to Main Reward Menu"));
+      applyFlags(inv);
       player.openInventory(inv);
    }
 
    public void openCommandList(Player player, int page) {
       this.currentView = RewardGUI.View.COMMAND_LIST;
       this.page = page;
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 54, "Command Packs: §x§2§B§8§6§D§7" + codeName);
+      GUIHolder holder = new GUIHolder("REWARD_GUI");
+      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴄᴏᴍᴍᴀɴᴅ ᴘᴀᴄᴋꜱ"));
+      holder.setInventory(inv);
       fillBorder(inv);
       ConfigurationSection section = plugin.getCodesConfig().getConfigurationSection(rewardPath + ".commands");
       List<String> packs = section != null ? new ArrayList<>(section.getKeys(false)) : new ArrayList<>();
@@ -109,13 +119,16 @@ public class RewardGUI {
       });
       inv.setItem(49, HeadManager.getHead("GENERIC_ADD", "§aAdd New Pack", "§7Click to create a new command pack"));
       inv.setItem(45, HeadManager.getHead("BACK", "§cGo Back", "§7Return to Add Selection"));
+      applyFlags(inv);
       player.openInventory(inv);
    }
 
    public void openSackList(Player player, int page) {
       this.currentView = RewardGUI.View.SACK_LIST;
       this.page = page;
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 54, "Sack Rewards: §x§2§B§8§6§D§7" + codeName);
+      GUIHolder holder = new GUIHolder("REWARD_GUI");
+      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎁 ꜱᴀᴄᴋ ʀᴇᴡᴀʀᴅꜱ"));
+      holder.setInventory(inv);
       fillBorder(inv);
       List<String> sacks = plugin.getCodesConfig().getStringList(rewardPath + ".sacks");
       addPagination(inv, sacks, page, "REWARD_SACK", (item, entry) -> {
@@ -136,13 +149,16 @@ public class RewardGUI {
       });
       inv.setItem(49, HeadManager.getHead("GENERIC_ADD", "§aAdd Sack", "§7Click to add existing sack"));
       inv.setItem(45, HeadManager.getHead("BACK", "§cGo Back", "§7Return to Add Selection"));
+      applyFlags(inv);
       player.openInventory(inv);
    }
 
    public void openPremadeList(Player player, int page) {
       this.currentView = RewardGUI.View.PREMADE_LIST;
       this.page = page;
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 54, "Premade Rewards: §x§2§B§8§6§D§7" + codeName);
+      GUIHolder holder = new GUIHolder("REWARD_GUI");
+      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴘʀᴇᴍᴀᴅᴇ ʀᴇᴡᴀʀᴅꜱ"));
+      holder.setInventory(inv);
       fillBorder(inv);
       List<String> premades = plugin.getCodesConfig().getStringList(rewardPath + ".premades");
       addPagination(inv, premades, page, "REWARD_PREMADE", (item, entry) -> {
@@ -163,14 +179,17 @@ public class RewardGUI {
       });
       inv.setItem(49, HeadManager.getHead("GENERIC_ADD", "§aAdd Premade", "§7Click to add existing premade"));
       inv.setItem(45, HeadManager.getHead("BACK", "§cGo Back", "§7Return to Add Selection"));
+      applyFlags(inv);
       player.openInventory(inv);
    }
 
    public void openSelector(Player player, View view, int page) {
       this.currentView = view;
       this.page = page;
-      String title = view == RewardGUI.View.EVENT_SELECTOR ? "Select Event" : (view == RewardGUI.View.SACK_SELECTOR ? "Select Sack" : "Select Premade");
-      Inventory inv = Bukkit.createInventory((InventoryHolder)null, 54, title + ": " + codeName);
+      String title = view == RewardGUI.View.EVENT_SELECTOR ? "&8🎁 ꜱᴇʟᴇᴄᴛ ᴇᴠᴇɴᴛ" : (view == RewardGUI.View.SACK_SELECTOR ? "&8🎁 ꜱᴇʟᴇᴄᴛ ꜱᴀᴄᴋ" : "&8🎁 ꜱᴇʟᴇᴄᴛ ᴘʀᴇᴍᴀᴅᴇ");
+      GUIHolder holder = new GUIHolder("REWARD_GUI");
+      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', title));
+      holder.setInventory(inv);
       fillBorder(inv);
       List<String> available;
       String headKey;
@@ -192,11 +211,12 @@ public class RewardGUI {
          item.setItemMeta(meta);
       });
       inv.setItem(45, HeadManager.getHead("BACK", "§cGo Back", "§7Return to List"));
+      applyFlags(inv);
       player.openInventory(inv);
    }
 
    private void fillBorder(Inventory inv) {
-      ItemStack border = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+      ItemStack border = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
       ItemMeta meta = border.getItemMeta();
       if (meta != null) {
          meta.setDisplayName(" ");
@@ -226,6 +246,17 @@ public class RewardGUI {
          }
       }
 
+   }
+
+   private void applyFlags(Inventory inv) {
+      for (int i = 0; i < inv.getSize(); i++) {
+         ItemStack item = inv.getItem(i);
+         if (item != null && item.hasItemMeta()) {
+             ItemMeta meta = item.getItemMeta();
+             meta.addItemFlags(ItemFlag.values());
+             item.setItemMeta(meta);
+         }
+      }
    }
 
    private void addPagination(Inventory inv, List<String> items, int page, String headKey, ItemConfigurator configurator) {
@@ -260,6 +291,7 @@ public class RewardGUI {
          String name = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
          event.setCancelled(true);
          if (name.equals("Go Back")) {
+            SoundUtil.playClick(plugin, player);
             if (currentView == RewardGUI.View.MAIN) {
                plugin.openRewardGUIs.remove(player);
                parentGUI.open(player);
@@ -278,10 +310,13 @@ public class RewardGUI {
             }
 
          } else if (name.equals("Next Page")) {
+            SoundUtil.playPageTurn(plugin, player);
             refreshView(player, page + 1);
          } else if (name.equals("Previous Page")) {
+            SoundUtil.playPageTurn(plugin, player);
             refreshView(player, Math.max(0, page - 1));
          } else {
+            SoundUtil.playClick(plugin, player);
             if (currentView == RewardGUI.View.MAIN) {
                if (name.equals("Add Reward")) {
                   openAddSelection(player);
@@ -307,7 +342,7 @@ public class RewardGUI {
                   player.closeInventory();
                   awaitingCommandPackName.add(player.getUniqueId());
                   player.sendMessage("§aEnter name for new command pack:");
-               } else if (!clicked.getType().equals(Material.GRAY_STAINED_GLASS_PANE)) {
+               } else if (!clicked.getType().equals(Material.LIGHT_BLUE_STAINED_GLASS_PANE)) {
                   String packName = ChatColor.stripColor(name);
                   if (event.isShiftClick()) {
                      plugin.getCodesConfig().set(rewardPath + ".commands." + packName, (Object)null);
@@ -322,7 +357,7 @@ public class RewardGUI {
                }
             } else if (currentView != RewardGUI.View.SACK_LIST && currentView != RewardGUI.View.PREMADE_LIST) {
                if (currentView != RewardGUI.View.SACK_SELECTOR && currentView != RewardGUI.View.PREMADE_SELECTOR) {
-                  if (currentView == RewardGUI.View.EVENT_SELECTOR && !clicked.getType().equals(Material.GRAY_STAINED_GLASS_PANE)) {
+                  if (currentView == RewardGUI.View.EVENT_SELECTOR && !clicked.getType().equals(Material.LIGHT_BLUE_STAINED_GLASS_PANE)) {
                      String eventName = ChatColor.stripColor(name);
                      List<String> list = new ArrayList<>();
                      list.add(eventName);
@@ -330,7 +365,7 @@ public class RewardGUI {
                      plugin.saveCodesConfig();
                      openMain(player);
                   }
-               } else if (!clicked.getType().equals(Material.GRAY_STAINED_GLASS_PANE)) {
+               } else if (!clicked.getType().equals(Material.LIGHT_BLUE_STAINED_GLASS_PANE)) {
                   String itemName = ChatColor.stripColor(name);
                   boolean isSack = currentView == RewardGUI.View.SACK_SELECTOR;
                   String listKey = isSack ? "sacks" : "premades";
@@ -352,7 +387,7 @@ public class RewardGUI {
                boolean isSack = currentView == RewardGUI.View.SACK_LIST;
                String listKey = isSack ? "sacks" : "premades";
                if (!name.equals("Add Sack") && !name.equals("Add Premade")) {
-                  if (!clicked.getType().equals(Material.GRAY_STAINED_GLASS_PANE)) {
+                  if (!clicked.getType().equals(Material.LIGHT_BLUE_STAINED_GLASS_PANE)) {
                      String itemName = ChatColor.stripColor(name);
                      if (event.isRightClick()) {
                         player.closeInventory();

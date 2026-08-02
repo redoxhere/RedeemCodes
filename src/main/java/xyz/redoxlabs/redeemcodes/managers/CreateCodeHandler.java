@@ -64,7 +64,7 @@ public class CreateCodeHandler implements Listener {
             awaitingInput.remove(playerUUID);
             player.sendMessage("§cCode creation cancelled.");
          } else if (!isValidCodeName(input)) {
-            player.sendMessage("§cInvalid code name! Code names can only contain letters, numbers, and underscores.");
+            player.sendMessage("§cInvalid code name! Code names can only contain letters and numbers.");
          } else {
             Bukkit.getScheduler().runTask(plugin, () -> createCode(player, input));
             awaitingInput.remove(playerUUID);
@@ -78,7 +78,7 @@ public class CreateCodeHandler implements Listener {
             selectedCodeForDuplication.remove(playerUUID);
             player.sendMessage("§cCode duplication cancelled.");
          } else if (!isValidCodeName(input)) {
-            player.sendMessage("§cInvalid code name! Code names can only contain letters, numbers, and underscores.");
+            player.sendMessage("§cInvalid code name! Code names can only contain letters and numbers.");
          } else if (plugin.getCodesConfig().contains("Codes." + input)) {
             player.sendMessage("§cThat code name already exists!");
          } else {
@@ -164,7 +164,7 @@ public class CreateCodeHandler implements Listener {
    }
 
    private boolean isValidCodeName(String name) {
-      return name.matches("^[a-zA-Z0-9_]+$");
+      return name.matches("^[a-zA-Z0-9]+$");
    }
 
    private void sendReview(Player player, String reviewMessage) {
