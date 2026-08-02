@@ -123,7 +123,7 @@ public class CodesListGUI {
             plugin.openExpiredCodeGUIs.put(player, expiredGUI);
             expiredGUI.open(player);
          } else {
-            // Because code names are converted to uppercase in the display name, we need to find the matching original case.
+
             String matchedCode = null;
             for (String code : codes) {
                if (code.equalsIgnoreCase(itemName)) {

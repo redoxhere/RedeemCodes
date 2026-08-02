@@ -1,7 +1,7 @@
 # This file stores "Premade" reward packs.
 # Each entry under 'premades' is a list of commands.
 # Placeholders: %player%, %uuid%, %world%, %displayname%, %random-min-max%
-
+# PlaceholderAPI is also supported in all commands!
 premades:
   # 1. VIP Rank
   vip_rank:

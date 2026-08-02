@@ -1,3 +1,4 @@
+# PAPI supported
 # This event plays a spooky sound and sends a message.
 sounds:
   spooky_noise:

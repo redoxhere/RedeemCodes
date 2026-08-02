@@ -1,4 +1,5 @@
 # Simple alert event for broadcasts.
+# PlaceholderAPI is supported in commands!
 sounds:
   ding:
     sound: BLOCK_NOTE_BLOCK_PLING

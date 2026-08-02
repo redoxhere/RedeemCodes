@@ -12,6 +12,7 @@ sounds:
   close: BLOCK_CHEST_CLOSE
 
 # Customizable message logs for the plugin. Feel free to modify these as needed.
+# PlaceholderAPI placeholders (e.g. %player_name%) are fully supported!
 messages:
   usage: "&cUsage: /redeem <code>"
   not-exist: "&cThis code doesn't exist!"

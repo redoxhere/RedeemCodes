@@ -4,6 +4,8 @@
 # This file contains all the redemption codes and their settings.
 # You can create codes using the in-game GUI command: /rc gui
 # ==============================================================================
+# Built-in Placeholders: %player%, %uuid%, %world%, %displayname%, %random-min-max%
+# PlaceholderAPI is also supported in all commands and messages!
 
 Codes:
   # Example Code: "welcome_gift"

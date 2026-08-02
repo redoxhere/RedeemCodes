@@ -12,9 +12,6 @@ import java.util.List;
 
 public class GUIUtils {
 
-    /**
-     * Applies all item flags to hide attributes, enchants, etc. for all items in the inventory.
-     */
     public static void applyFlags(Inventory inv) {
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
@@ -26,10 +23,6 @@ public class GUIUtils {
         }
     }
 
-    /**
-     * Fills the top and bottom rows, and left and right columns with a border pane.
-     * Default border uses BLUE_STAINED_GLASS_PANE. Use the overloaded method for custom borders.
-     */
     public static void fillBorder(Inventory inv) {
         fillBorder(inv, Material.BLUE_STAINED_GLASS_PANE);
     }
@@ -55,9 +48,6 @@ public class GUIUtils {
         }
     }
 
-    /**
-     * Creates a standard item with a name and lore.
-     */
     public static ItemStack createItem(Material material, String name, List<String> lore) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();

@@ -45,7 +45,11 @@ public class RedeemCommand implements CommandExecutor {
       }
 
       matcher.appendTail(sb);
-      return sb.toString();
+      String resultText = sb.toString();
+      if (player != null && org.bukkit.Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+          resultText = xyz.redoxlabs.redeemcodes.utils.PAPIUtil.setPlaceholders(player, resultText);
+      }
+      return resultText;
    }
 
    

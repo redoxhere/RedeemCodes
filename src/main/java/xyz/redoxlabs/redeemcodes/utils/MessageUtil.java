@@ -16,12 +16,20 @@ public class MessageUtil {
     public static void sendMessage(Main plugin, CommandSender sender, String key) {
         if (sender == null) return;
         String message = plugin.getConfig().getString("messages." + key, "&cMessage not found: " + key);
-        sender.sendMessage(color(plugin.getPrefix() + message));
+        String fullMessage = plugin.getPrefix() + message;
+        if (sender instanceof Player player && org.bukkit.Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            fullMessage = xyz.redoxlabs.redeemcodes.utils.PAPIUtil.setPlaceholders(player, fullMessage);
+        }
+        sender.sendMessage(color(fullMessage));
     }
 
     public static void sendRawMessage(Main plugin, CommandSender sender, String message) {
         if (sender == null) return;
-        sender.sendMessage(color(plugin.getPrefix() + message));
+        String fullMessage = plugin.getPrefix() + message;
+        if (sender instanceof Player player && org.bukkit.Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            fullMessage = xyz.redoxlabs.redeemcodes.utils.PAPIUtil.setPlaceholders(player, fullMessage);
+        }
+        sender.sendMessage(color(fullMessage));
     }
 
     public static void playSound(Main plugin, Player player, String path) {

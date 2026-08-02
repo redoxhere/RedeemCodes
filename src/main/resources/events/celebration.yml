@@ -1,3 +1,4 @@
+# PlaceholderAPI is supported in commands!
 # This event plays a sound and launches a firework when triggered.
 fireworks:
   - ==: org.bukkit.inventory.ItemStack
