@@ -41,6 +41,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.tcoded.folialib.FoliaLib;
 
 public final class Main extends JavaPlugin {
    private FileConfiguration codesConfig;
@@ -58,8 +59,10 @@ public final class Main extends JavaPlugin {
    public final Map<Player, ExpiredCodesListGUI> openExpiredCodeGUIs = new HashMap<>();
    public final Map<Player, SelectCodeListGUI> openSelectCodeGUIs = new HashMap<>();
    public final Map<Player, RewardGUI> openRewardGUIs = new HashMap<>();
+   private FoliaLib foliaLib;
 
    public void onEnable() {
+      this.foliaLib = new FoliaLib(this);
       saveDefaultConfig();
       createCodesConfig();
       (new DefaultExampleGenerator(this)).generate();
@@ -136,13 +139,13 @@ public final class Main extends JavaPlugin {
          expirationManager.stopTimer();
       }
 
-      Bukkit.getScheduler().cancelTasks(this);
+      this.foliaLib.getImpl().cancelAllTasks();
 
       Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[RedeemCodes] Plugin Disabled!");
    }
 
    public void sendToWebhook(String webhookUrl, String jsonPayload) {
-      Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+      this.foliaLib.getImpl().runAsync((task) -> {
          try {
             URL url = new URL(webhookUrl);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -244,5 +247,9 @@ public final class Main extends JavaPlugin {
 
    public CreateCodeHandler getDuplicationHandler() {
       return createHandler;
+   }
+
+   public FoliaLib getFoliaLib() {
+      return foliaLib;
    }
 }

@@ -394,7 +394,7 @@ public class RewardGUI {
       if (msg.equalsIgnoreCase("cancel")) {
          player.sendMessage("§cOperation cancelled.");
          cleanupChat(uuid);
-         Bukkit.getScheduler().runTask(plugin, () -> {
+         plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             if (activeItemForWeight.containsKey(uuid)) {
                String type = ((String)activeItemForWeight.remove(uuid)).split(":")[0];
                if (type.equals("sack")) {
@@ -411,7 +411,7 @@ public class RewardGUI {
 
          });
       } else {
-         Bukkit.getScheduler().runTask(plugin, () -> {
+         plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             if (awaitingCommandPackName.contains(uuid)) {
                String packName = msg.replace(" ", "");
                if (!packName.matches("^[a-zA-Z0-9_]+$")) {

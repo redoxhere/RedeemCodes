@@ -8,36 +8,33 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
+import xyz.redoxlabs.redeemcodes.Main;
 import org.bukkit.ChatColor;
 
 public class PluginUpdateChecker {
    private static final String MODRINTH_API_URL = "https://api.modrinth.com/v2/project/redeemcodes/version";
    private static final String MODRINTH_PROJECT_URL = "https://modrinth.com/plugin/redeemcodes";
-   private final JavaPlugin plugin;
+   private final Main plugin;
    private final String currentVersion;
 
-   public PluginUpdateChecker(JavaPlugin plugin) {
+   public PluginUpdateChecker(Main plugin) {
       this.plugin = plugin;
       this.currentVersion = plugin.getDescription().getVersion();
    }
 
    public void checkForUpdates() {
-      (new BukkitRunnable() {
-         public void run() {
-            try {
-               String latestVersion = getLatestVersionFromModrinth();
-               if (latestVersion != null) {
-                  compareVersions(latestVersion);
-               } else {
-                  plugin.getLogger().warning("Could not check for plugin updates. Modrinth API unavailable.");
-               }
-            } catch (Exception e) {
-               plugin.getLogger().warning("Failed to check for plugin updates: " + e.getMessage());
+      plugin.getFoliaLib().getImpl().runAsync((task) -> {
+         try {
+            String latestVersion = getLatestVersionFromModrinth();
+            if (latestVersion != null) {
+               compareVersions(latestVersion);
+            } else {
+               plugin.getLogger().warning("Could not check for plugin updates. Modrinth API unavailable.");
             }
+         } catch (Exception e) {
+            plugin.getLogger().warning("Failed to check for plugin updates: " + e.getMessage());
          }
-      }).runTaskAsynchronously(plugin);
+      });
    }
 
    private String getLatestVersionFromModrinth() {
@@ -114,15 +111,13 @@ public class PluginUpdateChecker {
    }
 
    private void notifyOperators(final String latestVersion) {
-      (new BukkitRunnable() {
-         public void run() {
-            Bukkit.getOnlinePlayers().stream().filter((player) -> player.isOp() || player.hasPermission("redeemcodes.admin")).forEach((player) -> {
-               String prefix = plugin.getConfig().getString("prefix", "&7[RedeemCodes] ");
-               player.sendMessage(MessageUtil.color(prefix + "&eA new plugin update is available! (v" + latestVersion + ")"));
-               player.sendMessage(MessageUtil.color(prefix + "&eDownload: " + MODRINTH_PROJECT_URL));
-            });
-         }
-      }).runTask(plugin);
+      plugin.getFoliaLib().getImpl().runNextTick((task) -> {
+         Bukkit.getOnlinePlayers().stream().filter((player) -> player.isOp() || player.hasPermission("redeemcodes.admin")).forEach((player) -> {
+            String prefix = plugin.getConfig().getString("prefix", "&7[RedeemCodes] ");
+            player.sendMessage(MessageUtil.color(prefix + "&eA new plugin update is available! (v" + latestVersion + ")"));
+            player.sendMessage(MessageUtil.color(prefix + "&eDownload: " + MODRINTH_PROJECT_URL));
+         });
+      });
    }
 
    public String getCurrentVersion() {

@@ -7,15 +7,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
+import java.util.concurrent.TimeUnit;
 
 public class CodeExpirationManager {
    private final Main plugin;
    private final RedeemDataManager dataManager;
    private final Map<String, Long> activeTimers = new ConcurrentHashMap<>();
    private final Set<String> expiredCodes = new HashSet<>();
-   private BukkitTask timerTask;
+   private WrappedTask timerTask;
 
    public CodeExpirationManager(Main plugin) {
       this.plugin = plugin;
@@ -44,22 +44,20 @@ public class CodeExpirationManager {
    }
 
    private void startTimer() {
-      this.timerTask = (new BukkitRunnable() {
-         public void run() {
-            if (!activeTimers.isEmpty()) {
-               long now = System.currentTimeMillis();
-               activeTimers.entrySet().removeIf(entry -> {
-                  if (now >= entry.getValue()) {
-                     String codeName = entry.getKey();
-                     expiredCodes.add(codeName);
-                     plugin.getLogger().info("Code '" + codeName + "' has expired.");
-                     return true;
-                  }
-                  return false;
-               });
-            }
+      this.timerTask = plugin.getFoliaLib().getImpl().runTimerAsync(() -> {
+         if (!activeTimers.isEmpty()) {
+            long now = System.currentTimeMillis();
+            activeTimers.entrySet().removeIf(entry -> {
+               if (now >= entry.getValue()) {
+                  String codeName = entry.getKey();
+                  expiredCodes.add(codeName);
+                  plugin.getLogger().info("Code '" + codeName + "' has expired.");
+                  return true;
+               }
+               return false;
+            });
          }
-      }).runTaskTimerAsynchronously(plugin, 20L, 20L);
+      }, 20L * 50L, 20L * 50L, TimeUnit.MILLISECONDS);
    }
 
    public void stopTimer() {

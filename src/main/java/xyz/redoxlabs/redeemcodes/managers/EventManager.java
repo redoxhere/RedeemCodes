@@ -23,7 +23,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.scheduler.BukkitRunnable;
+import java.util.concurrent.TimeUnit;
 
 public class EventManager {
    private final Main plugin;
@@ -135,13 +135,11 @@ public class EventManager {
                   if (obj instanceof ItemStack) {
                      final ItemStack item = (ItemStack)obj;
                      currentDelay += 5L;
-                     (new BukkitRunnable() {
-                        public void run() {
-                           if (player.isOnline()) {
-                              spawnFirework(player.getLocation(), item);
-                           }
+                     plugin.getFoliaLib().getImpl().runAtEntityLater(player, (task) -> {
+                        if (player.isOnline()) {
+                           spawnFirework(player.getLocation(), item);
                         }
-                     }).runTaskLater(plugin, currentDelay);
+                     }, currentDelay * 50L, TimeUnit.MILLISECONDS);
                   }
                }
             }
@@ -157,13 +155,11 @@ public class EventManager {
 
                   try {
                      final Sound sound = Sound.valueOf(soundName);
-                     (new BukkitRunnable() {
-                        public void run() {
-                           if (player.isOnline()) {
-                              player.playSound(player.getLocation(), sound, 1.0F, pitch);
-                           }
+                     plugin.getFoliaLib().getImpl().runAtEntityLater(player, (task) -> {
+                        if (player.isOnline()) {
+                           player.playSound(player.getLocation(), sound, 1.0F, pitch);
                         }
-                     }).runTaskLater(plugin, (long)delay);
+                     }, delay * 50L, TimeUnit.MILLISECONDS);
                   } catch (IllegalArgumentException e) {
                   }
                }

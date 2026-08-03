@@ -3,8 +3,9 @@ version: '${project.version}'
 main: xyz.redoxlabs.redeemcodes.Main
 api-version: '1.21'
 description: "A minecraft server plugin to manage redeem codes"
-author: 'DrkVo1d'
+author: 'Redoxlabs'
 softdepend: [PlaceholderAPI]
+folia-supported: true
 commands:
   redeem:
     description: Redeem a code to claim your reward.

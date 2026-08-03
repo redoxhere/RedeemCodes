@@ -66,7 +66,7 @@ public class CreateCodeHandler implements Listener {
          } else if (!isValidCodeName(input)) {
             player.sendMessage("§cInvalid code name! Code names can only contain letters and numbers.");
          } else {
-            Bukkit.getScheduler().runTask(plugin, () -> createCode(player, input));
+            plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> createCode(player, input));
             awaitingInput.remove(playerUUID);
          }
       } else if (awaitingDuplicationInput.contains(playerUUID)) {
@@ -84,7 +84,7 @@ public class CreateCodeHandler implements Listener {
          } else {
             awaitingDuplicationInput.remove(playerUUID);
             selectedCodeForDuplication.remove(playerUUID);
-            Bukkit.getScheduler().runTask(plugin, () -> duplicateCode(player, sourceCode, input));
+            plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> duplicateCode(player, sourceCode, input));
          }
       } else if (awaitingReviewInput.contains(playerUUID)) {
          event.setCancelled(true);
@@ -93,7 +93,7 @@ public class CreateCodeHandler implements Listener {
             awaitingReviewInput.remove(playerUUID);
             player.sendMessage("§cReview cancelled.");
          } else {
-            Bukkit.getScheduler().runTask(plugin, () -> sendReview(player, input));
+            plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> sendReview(player, input));
             awaitingReviewInput.remove(playerUUID);
          }
       } else {

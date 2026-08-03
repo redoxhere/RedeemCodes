@@ -350,7 +350,7 @@ public class EventGUI implements Listener {
          SoundEditSession session = (SoundEditSession)awaitingDelayInput.remove(uuid);
          if (msg.equalsIgnoreCase("cancel")) {
             player.sendMessage(ChatColor.RED + "Cancelled.");
-            Bukkit.getScheduler().runTask(plugin, () -> openSoundList(player, session.eventName));
+            plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
             return;
          }
 
@@ -364,10 +364,10 @@ public class EventGUI implements Listener {
             config.set("sounds." + session.soundId + ".delay", delay);
             plugin.getEventManager().saveEvent(session.eventName);
             player.sendMessage(ChatColor.GREEN + "Delay set to " + delay + " ticks.");
-            Bukkit.getScheduler().runTask(plugin, () -> openSoundList(player, session.eventName));
+            plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
          } catch (NumberFormatException e) {
             player.sendMessage(ChatColor.RED + "Invalid number. Operation cancelled.");
-            Bukkit.getScheduler().runTask(plugin, () -> openSoundList(player, session.eventName));
+            plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
          }
       } else if (awaitingPitchInput.containsKey(uuid)) {
          event.setCancelled(true);
@@ -375,7 +375,7 @@ public class EventGUI implements Listener {
          SoundEditSession session = (SoundEditSession)awaitingPitchInput.remove(uuid);
          if (msg.equalsIgnoreCase("cancel")) {
             player.sendMessage(ChatColor.RED + "Cancelled.");
-            Bukkit.getScheduler().runTask(plugin, () -> openSoundList(player, session.eventName));
+            plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
             return;
          }
 
@@ -393,10 +393,10 @@ public class EventGUI implements Listener {
             config.set("sounds." + session.soundId + ".pitch", pitch);
             plugin.getEventManager().saveEvent(session.eventName);
             player.sendMessage(ChatColor.GREEN + "Pitch set to " + pitch + ".");
-            Bukkit.getScheduler().runTask(plugin, () -> openSoundList(player, session.eventName));
+            plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
          } catch (NumberFormatException e) {
             player.sendMessage(ChatColor.RED + "Invalid number. Operation cancelled.");
-            Bukkit.getScheduler().runTask(plugin, () -> openSoundList(player, session.eventName));
+            plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
          }
       }
 

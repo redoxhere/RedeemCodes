@@ -40,6 +40,10 @@
                             <pattern>org.bstats</pattern>
                             <shadedPattern>com.redeem.redeemcodes.shaded.org.bstats</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>com.tcoded.folialib</pattern>
+                            <shadedPattern>xyz.redoxlabs.redeemcodes.shaded.folialib</shadedPattern>
+                        </relocation>
                     </relocations>
                     <filters>
                         <filter>
@@ -84,6 +88,14 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>tcoded-releases</id>
+            <url>https://repo.tcoded.com/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -105,12 +117,16 @@
             <version>3.0.2</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
+    <dependency>
         <groupId>com.github.javaparser</groupId>
         <artifactId>javaparser-core</artifactId>
         <version>3.25.7</version>
     </dependency>
-        
+        <dependency>
+            <groupId>com.tcoded</groupId>
+            <artifactId>FoliaLib</artifactId>
+            <version>0.4.3</version>
+        </dependency>
     </dependencies>
 </project>
 

@@ -22,8 +22,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
+import java.util.concurrent.TimeUnit;
 
 public class CodeEditorGUI implements Listener {
    private final Main plugin;
@@ -39,7 +39,7 @@ public class CodeEditorGUI implements Listener {
    private static final int TOTAL_SIZE = 54;
    private static final String pro = "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§F";
    private static final String pre = "§x§2§B§8§6§D§7";
-   private BukkitTask updateTask;
+   private WrappedTask updateTask;
 
    public CodeEditorGUI(Main plugin, String codeName, CodesListGUI parentGUI) {
       this.plugin = plugin;
@@ -143,22 +143,20 @@ public class CodeEditorGUI implements Listener {
          String expireDisplay;
          if (remaining > 0L) {
             expireDisplay = TimeFormatter.formatDuration(remaining);
-            this.updateTask = (new BukkitRunnable() {
-               public void run() {
+            this.updateTask = plugin.getFoliaLib().getImpl().runAtEntityTimer(player, () -> {
                   if (player != null && player.isOnline() && player.getOpenInventory().getTitle().contains(codeName.toUpperCase())) {
                      long newRemaining = plugin.getExpirationManager().getRemainingTime(codeName);
                      if (newRemaining <= 0L) {
-                        cancel();
+                        this.cancelUpdateTask();
                         open(player);
                      } else {
                         ItemStack item = HeadManager.getHead("EXPIRE_TIME", "§x§F§B§D§7§6§5E§x§F§B§D§B§6§Dx§x§F§C§D§F§7§5p§x§F§C§E§3§7§Di§x§F§D§E§7§8§5r§x§F§D§E§A§8§De §x§F§E§E§E§9§5T§x§F§E§F§2§9§Di§x§F§F§F§6§A§5m§x§F§F§F§A§A§De", "§7ᴄʟɪᴄᴋ ᴛᴏ ꜱᴇᴛ ᴇxᴘɪʀᴇ ᴛɪᴍᴇ", " ", "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§Fᴇxᴘɪʀɪɴɢ ɪɴ: §x§2§B§8§6§D§7" + TimeFormatter.formatDuration(newRemaining));
                         inv.setItem(31, item);
                      }
                   } else {
-                     cancel();
+                     this.cancelUpdateTask();
                   }
-               }
-            }).runTaskTimer(plugin, 20L, 20L);
+            }, 20L * 50L, 20L * 50L, TimeUnit.MILLISECONDS);
          } else {
             int duration = plugin.getCodesConfig().getInt("Codes." + codeName + ".expire-time", -1);
             expireDisplay = duration == -1 ? "Never" : TimeFormatter.formatDuration((long)duration * 1000L);
@@ -319,7 +317,7 @@ public class CodeEditorGUI implements Listener {
       if (awaitingCooldownInput.contains(playerUUID)) {
          event.setCancelled(true);
          String msg = event.getMessage();
-         Bukkit.getScheduler().runTask(plugin, () -> {
+         plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingCooldownInput.remove(playerUUID);
             if (msg.equalsIgnoreCase("cancel")) {
                player.sendMessage(String.valueOf(ChatColor.RED) + "Cooldown setup cancelled.");
@@ -342,7 +340,7 @@ public class CodeEditorGUI implements Listener {
       } else if (awaitingBlacklistInput.contains(playerUUID)) {
          event.setCancelled(true);
          String playerName = event.getMessage().trim();
-         Bukkit.getScheduler().runTask(plugin, () -> {
+         plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingBlacklistInput.remove(playerUUID);
             if (playerName.equalsIgnoreCase("cancel")) {
                player.sendMessage(ChatColor.RED + "Blacklist addition cancelled.");
@@ -363,7 +361,7 @@ public class CodeEditorGUI implements Listener {
       } else if (awaitingExpireTimeInput.contains(playerUUID)) {
          event.setCancelled(true);
          String input = event.getMessage().trim();
-         Bukkit.getScheduler().runTask(plugin, () -> {
+         plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingExpireTimeInput.remove(playerUUID);
             if (input.equalsIgnoreCase("cancel")) {
                player.sendMessage(ChatColor.RED + "Expire time setup cancelled.");
@@ -388,7 +386,7 @@ public class CodeEditorGUI implements Listener {
       } else if (awaitingPermissionInput.contains(playerUUID)) {
          event.setCancelled(true);
          String permission = event.getMessage().trim();
-         Bukkit.getScheduler().runTask(plugin, () -> {
+         plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingPermissionInput.remove(playerUUID);
             if (permission.equalsIgnoreCase("cancel")) {
                player.sendMessage(ChatColor.RED + "Permission addition cancelled.");
@@ -409,7 +407,7 @@ public class CodeEditorGUI implements Listener {
       } else if (awaitingRemoveConfirm.contains(playerUUID)) {
          event.setCancelled(true);
          String confirmation = ChatColor.stripColor(event.getMessage()).trim();
-         Bukkit.getScheduler().runTask(plugin, () -> {
+         plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingRemoveConfirm.remove(playerUUID);
             if (confirmation.equalsIgnoreCase("confirm")) {
                player.sendMessage(ChatColor.GREEN + "Executing removal command...");
