@@ -13,12 +13,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import com.cryptomorin.xseries.XSound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -154,12 +152,14 @@ public class EventManager {
                   final float pitch = (float)sounds.getDouble(key + ".pitch", (double)1.0F);
 
                   try {
-                     final Sound sound = Sound.valueOf(soundName);
-                     plugin.getFoliaLib().getImpl().runAtEntityLater(player, (task) -> {
-                        if (player.isOnline()) {
-                           player.playSound(player.getLocation(), sound, 1.0F, pitch);
-                        }
-                     }, delay * 50L, TimeUnit.MILLISECONDS);
+                     final XSound sound = XSound.matchXSound(soundName).orElse(null);
+                     if (sound != null) {
+                        plugin.getFoliaLib().getImpl().runAtEntityLater(player, (task) -> {
+                           if (player.isOnline()) {
+                              sound.play(player, 1.0F, pitch);
+                           }
+                        }, delay * 50L, TimeUnit.MILLISECONDS);
+                     }
                   } catch (IllegalArgumentException e) {
                   }
                }
@@ -177,8 +177,8 @@ public class EventManager {
    }
 
    private void spawnFirework(Location loc, ItemStack item) {
-      if (item.getType() == Material.FIREWORK_ROCKET) {
-         Firework fw = (Firework)loc.getWorld().spawnEntity(loc, EntityType.FIREWORK_ROCKET);
+      if (com.cryptomorin.xseries.XMaterial.matchXMaterial(item) == com.cryptomorin.xseries.XMaterial.FIREWORK_ROCKET) {
+         Firework fw = loc.getWorld().spawn(loc, Firework.class);
          FireworkMeta meta = (FireworkMeta)item.getItemMeta();
          if (meta != null) {
             fw.setFireworkMeta(meta);
@@ -191,7 +191,7 @@ public class EventManager {
       input = input.replace("%player%", player.getName());
       input = input.replace("%uuid%", player.getUniqueId().toString());
       input = input.replace("%displayname%", player.getDisplayName());
-      input = input.replace("%world%", player.getWorld().getKey().toString());
+      input = input.replace("%world%", player.getWorld().getName());
       input = input.replace("%x%", String.valueOf(player.getLocation().getX()));
       input = input.replace("%y%", String.valueOf(player.getLocation().getY()));
       input = input.replace("%z%", String.valueOf(player.getLocation().getZ()));

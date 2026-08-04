@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -47,10 +47,10 @@ public class SelectCodeListGUI {
       }
 
       GUIHolder holder = new GUIHolder("SELECT_CODE_LIST");
-      Inventory inv = Bukkit.createInventory(holder, 54, GUI_TITLE);
+      Inventory inv = Bukkit.createInventory(holder, 54, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(GUI_TITLE));
       holder.setInventory(inv);
 
-      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+      GUIUtils.fillBorder(inv, XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE);
 
       int startIndex = page * 28;
       int end = Math.min(startIndex + 28, codes.size());
@@ -73,7 +73,7 @@ public class SelectCodeListGUI {
          inv.setItem(53, HeadManager.getHead("NEXT_PAGE", ChatColor.GRAY + "Next Page"));
       }
 
-      ItemStack pageDisplay = new ItemStack(Material.PAPER);
+      ItemStack pageDisplay = XMaterial.PAPER.parseItem();
       ItemMeta pageMeta = pageDisplay.getItemMeta();
       if (pageMeta != null) {
          int maxPage = codes.isEmpty() ? 1 : (codes.size() - 1) / 28 + 1;

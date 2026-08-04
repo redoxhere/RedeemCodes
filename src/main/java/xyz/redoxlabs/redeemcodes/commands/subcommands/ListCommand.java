@@ -22,7 +22,8 @@ public class ListCommand implements Subcommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) return true;
+        if (!(sender instanceof Player)) return true;
+        Player player = (Player) sender;
 
         FileConfiguration codes = plugin.getCodesConfig();
         Set<String> codeNames = codes.getConfigurationSection("Codes").getKeys(false);

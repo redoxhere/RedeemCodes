@@ -16,7 +16,8 @@ public class HelpCommand implements Subcommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) return true;
+        if (!(sender instanceof Player)) return true;
+        Player player = (Player) sender;
 
         List<String> helpCommands = Arrays.asList(
                 "&b/rc create <code> &7- Create a new code",

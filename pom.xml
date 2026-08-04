@@ -6,15 +6,16 @@
 
     <groupId>xyz.redoxlabs</groupId>
     <artifactId>redeemcodes</artifactId>
-    <version>26.1+Beta.1</version>
+    <version>26.1+Beta.2</version>
     <packaging>jar</packaging>
 
     <name>redeemcodes</name>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
     <build>
@@ -26,7 +27,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <release>21</release>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -43,6 +45,10 @@
                         <relocation>
                             <pattern>com.tcoded.folialib</pattern>
                             <shadedPattern>xyz.redoxlabs.redeemcodes.shaded.folialib</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.cryptomorin.xseries</pattern>
+                            <shadedPattern>xyz.redoxlabs.redeemcodes.shaded.xseries</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>
@@ -77,8 +83,8 @@
 
     <repositories>
         <repository>
-            <id>papermc-repo</id>
-            <url>https://repo.papermc.io/repository/maven-public/</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>sonatype</id>
@@ -106,9 +112,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.papermc.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>26.2.build.87-stable</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-chat</artifactId>
+            <version>1.16-R0.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -126,6 +138,11 @@
             <groupId>com.tcoded</groupId>
             <artifactId>FoliaLib</artifactId>
             <version>0.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>13.7.1</version>
         </dependency>
     </dependencies>
 </project>

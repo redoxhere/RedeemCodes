@@ -1,6 +1,6 @@
 package xyz.redoxlabs.redeemcodes.utils;
 
-import org.bukkit.Material;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,22 +17,24 @@ public class GUIUtils {
             ItemStack item = inv.getItem(i);
             if (item != null && item.hasItemMeta()) {
                 ItemMeta meta = item.getItemMeta();
-                meta.addItemFlags(ItemFlag.values());
+                meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
                 item.setItemMeta(meta);
+                inv.setItem(i, item);
             }
         }
     }
 
     public static void fillBorder(Inventory inv) {
-        fillBorder(inv, Material.BLUE_STAINED_GLASS_PANE);
+        fillBorder(inv, XMaterial.BLUE_STAINED_GLASS_PANE);
     }
 
-    public static void fillBorder(Inventory inv, Material borderMaterial) {
-        ItemStack border = new ItemStack(borderMaterial);
+    public static void fillBorder(Inventory inv, XMaterial borderMaterial) {
+        ItemStack border = borderMaterial.parseItem();
+        if (border == null) border = new ItemStack(org.bukkit.Material.DIRT);
         ItemMeta borderMeta = border.getItemMeta();
         if (borderMeta != null) {
             borderMeta.setDisplayName(" ");
-            borderMeta.addItemFlags(ItemFlag.values());
+            borderMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
             border.setItemMeta(borderMeta);
         }
 
@@ -48,13 +50,18 @@ public class GUIUtils {
         }
     }
 
-    public static ItemStack createItem(Material material, String name, List<String> lore) {
-        ItemStack item = new ItemStack(material);
+    public static ItemStack createItem(XMaterial material, String name, List<String> lore) {
+        ItemStack item = material.parseItem();
+        if (item == null) item = new ItemStack(org.bukkit.Material.DIRT);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            if (name != null) meta.setDisplayName(name);
-            if (lore != null) meta.setLore(lore);
-            meta.addItemFlags(ItemFlag.values());
+            if (name != null) meta.setDisplayName(MessageUtil.format(name));
+            if (lore != null) {
+                List<String> formattedLore = new java.util.ArrayList<>();
+                for (String l : lore) formattedLore.add(MessageUtil.format(l));
+                meta.setLore(formattedLore);
+            }
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
             item.setItemMeta(meta);
         }
         return item;
@@ -85,7 +92,7 @@ public class GUIUtils {
             }
 
             meta.setLore(lore);
-            meta.addItemFlags(ItemFlag.values());
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
             head.setItemMeta(meta);
         }
 

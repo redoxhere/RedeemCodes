@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -50,14 +50,15 @@ public class CodeEditorGUI implements Listener {
    public void open(final Player player) {
       cancelUpdateTask();
       GUIHolder holder = new GUIHolder("CODE_EDITOR");
-      this.inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8✏ ᴇᴅɪᴛɪɴɢ ᴄᴏᴅᴇ: &9" + codeName.toUpperCase()));
+      this.inv = Bukkit.createInventory(holder, 54, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', "&8✏ ᴇᴅɪᴛɪɴɢ ᴄᴏᴅᴇ: &9" + codeName.toUpperCase())));
       holder.setInventory(inv);
 
-      ItemStack border = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
+      ItemStack border = XMaterial.BLUE_STAINED_GLASS_PANE.parseItem();
+      if (border == null) border = new ItemStack(org.bukkit.Material.DIRT);
       ItemMeta borderMeta = border.getItemMeta();
       if (borderMeta != null) {
          borderMeta.setDisplayName(" ");
-         borderMeta.addItemFlags(org.bukkit.inventory.ItemFlag.values());
+         borderMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES, org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
       }
 
       border.setItemMeta(borderMeta);
@@ -71,18 +72,18 @@ public class CodeEditorGUI implements Listener {
       }
 
       Inventory inv_blacklist = inv;
-      Material mat_blacklist = Material.WRITABLE_BOOK;
+      XMaterial mat_blacklist = XMaterial.WRITABLE_BOOK;
       String name_blacklist = "§x§8§3§4§F§1§5A§x§8§5§5§3§1§Cd§x§8§7§5§8§2§2d §x§8§9§5§C§2§9t§x§8§A§6§1§2§Fo §x§8§C§6§5§3§6B§x§8§E§6§A§3§Cl§x§9§0§6§E§4§3a§x§9§2§7§3§4§9c§x§9§4§7§7§5§0k§x§9§5§7§C§5§6l§x§9§7§8§0§5§Di§x§9§9§8§5§6§3s§x§9§B§8§9§6§At";
       List<String> lore_blacklist = List.of("§7ᴄʟɪᴄᴋ ᴛᴏ ᴀᴅᴅ ᴀ ᴘʟᴀʏᴇʀ ᴛᴏ ʙʟᴀᴄᴋʟɪꜱᴛ");
       inv_blacklist.setItem(41, createItem(mat_blacklist, name_blacklist, lore_blacklist));
       Inventory inv_remove = inv;
-      Material mat_remove = Material.TNT;
+      XMaterial mat_remove = XMaterial.TNT;
       String name_remove = "§x§F§F§5§B§1§9R§x§F§F§6§1§1§De§x§F§F§6§6§2§1m§x§F§F§6§C§2§5o§x§F§F§7§1§2§9v§x§F§F§7§7§2§Ee §x§F§F§7§C§3§2C§x§F§F§8§2§3§6o§x§F§F§8§7§3§Ad§x§F§F§8§D§3§Ee";
       List<String> lore_remove = List.of("§7ᴄʟɪᴄᴋ ᴛᴏ ᴅᴇʟᴇᴛᴇ ᴛʜɪꜱ ᴄᴏᴅᴇ.");
       inv_remove.setItem(45, createItem(mat_remove, name_remove, lore_remove));
       FileConfiguration config = plugin.getCodesConfig();
       boolean enabled = config.getBoolean("Codes." + codeName + ".enabled", true);
-      Material enabledMat = enabled ? Material.LIME_DYE : Material.GRAY_DYE;
+      XMaterial enabledMat = enabled ? XMaterial.LIME_DYE : XMaterial.GRAY_DYE;
       String enabledName = enabled ? "§x§2§2§D§E§7§0E§x§2§2§D§E§7§0n§x§3§3§E§4§7§7a§x§4§4§E§B§7§Eb§x§5§4§F§2§8§5l§x§6§5§F§8§8§Ce§x§7§6§F§F§9§3d" : "§x§D§7§3§0§0§FD§x§D§D§3§4§1§5i§x§E§2§3§9§1§Bs§x§E§8§3§D§2§1a§x§E§E§4§1§2§7b§x§F§4§4§5§2§Dl§x§F§9§4§A§3§3e§x§F§F§4§E§3§9d";
       String clickToToggle = ChatColor.GRAY + "ᴄʟɪᴄᴋ ᴛᴏ ᴇɴᴀʙʟᴇ/ᴅɪꜱᴀʙʟᴇ ᴛʜɪꜱ ᴄᴏᴅᴇ";
       inv.setItem(12, createItem(enabledMat, enabledName, List.of(clickToToggle)));
@@ -101,35 +102,35 @@ public class CodeEditorGUI implements Listener {
             lore.add("§x§2§B§8§6§D§7- " + perm);
          }
       }
-      inv.setItem(14, createItem(Material.NAME_TAG, "§x§F§F§E§5§6§8Permission Required", lore));
+      inv.setItem(14, createItem(XMaterial.NAME_TAG, "§x§F§F§E§5§6§8Permission Required", lore));
 
       int limitCount = config.getInt("Codes." + codeName + ".redeem-limit.Count", 1);
       String limitType = config.getString("Codes." + codeName + ".redeem-limit.Type", "PLAYER");
-      inv.setItem(20, createItem(Material.EXPERIENCE_BOTTLE, "§x§D§4§F§F§1§9Redeem Limit", List.of(
+      inv.setItem(20, createItem(XMaterial.EXPERIENCE_BOTTLE, "§x§D§4§F§F§1§9Redeem Limit", List.of(
          ChatColor.GRAY + "ʟᴇꜰᴛ ᴄʟɪᴄᴋ: -1 | ʀɪɢʜᴛ ᴄʟɪᴄᴋ: +1", 
          " ", 
          "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§Fᴄᴜʀʀᴇɴᴛ ʟɪᴍɪᴛ: §x§2§B§8§6§D§7" + limitCount
       )));
 
-      inv.setItem(22, createItem(Material.COMPARATOR, "§x§F§F§5§1§2§DRedeem Type", List.of(
+      inv.setItem(22, createItem(XMaterial.COMPARATOR, "§x§F§F§5§1§2§DRedeem Type", List.of(
          ChatColor.GRAY + "ᴄʟɪᴄᴋ ᴛᴏ ᴛᴏɢɢʟᴇ ʟɪᴍɪᴛ ᴛʏᴘᴇ", 
          "", 
          "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§FType: §x§2§B§8§6§D§7" + limitType
       )));
 
       int cd = config.getInt("Codes." + codeName + ".redeem-limit.Cooldown", 0);
-      inv.setItem(24, createItem(Material.CLOCK, "§x§F§F§E§7§2§8Cooldown", List.of(
+      inv.setItem(24, createItem(XMaterial.CLOCK, "§x§F§F§E§7§2§8Cooldown", List.of(
          ChatColor.GRAY + "ᴄʟɪᴄᴋ ᴛᴏ ꜱᴇᴛ ʀᴇᴅᴇᴇᴍ ᴄᴏᴏʟᴅᴏᴡɴ", 
          " ", 
          "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§Fᴄᴜʀʀᴇɴᴛ ꜱᴛᴀᴛᴜꜱ: §x§2§B§8§6§D§7" + cd + " min"
       )));
 
-      inv.setItem(29, createItem(Material.ENDER_CHEST, "§x§9§D§2§6§F§FManage Rewards", List.of(
+      inv.setItem(29, createItem(XMaterial.ENDER_CHEST, "§x§9§D§2§6§F§FManage Rewards", List.of(
          ChatColor.GRAY + "ᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ʀᴇᴡᴀʀᴅꜱ (ᴀᴅᴅ/ᴇᴅɪᴛ/ᴇᴠᴇɴᴛꜱ/ᴛʏᴘᴇ)"
       )));
 
       String blacklistType = config.getString("Codes." + codeName + ".Playerlist.Blacklist.Type", "ENABLED");
-      inv.setItem(33, createItem(Material.BARRIER, "§x§F§F§0§0§0§0Blacklist Toggle", List.of(
+      inv.setItem(33, createItem(XMaterial.BARRIER, "§x§F§F§0§0§0§0Blacklist Toggle", List.of(
          ChatColor.GRAY + "ᴄʟɪᴄᴋ ᴛᴏ ᴛᴏɢɢʟᴇ ʙʟᴀᴄᴋʟɪꜱᴛ", 
          " ", 
          "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§Fᴄᴜʀʀᴇɴᴛ ꜱᴛᴀᴛᴜꜱ: §x§2§B§8§6§D§7" + blacklistType
@@ -166,7 +167,7 @@ public class CodeEditorGUI implements Listener {
       }
 
       List<String> usedPlayers = plugin.getRedeemDataManager().getRedeemedPlayers(codeName);
-      inv.setItem(39, createItem(Material.PLAYER_HEAD, "§x§1§9§F§4§F§FPlayers Redeemed", List.of(
+      inv.setItem(39, createItem(XMaterial.PLAYER_HEAD, "§x§1§9§F§4§F§FPlayers Redeemed", List.of(
          ChatColor.GRAY + "ᴄʟɪᴄᴋ ᴛᴏ ᴠɪᴇᴡ ʟɪꜱᴛ", 
          "", 
          "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§Fᴄᴏᴜɴᴛ: §x§2§B§8§6§D§7" + usedPlayers.size()
@@ -178,7 +179,7 @@ public class CodeEditorGUI implements Listener {
          ItemStack item = inv.getItem(i);
          if (item != null && item.hasItemMeta()) {
              ItemMeta meta = item.getItemMeta();
-             meta.addItemFlags(org.bukkit.inventory.ItemFlag.values());
+             meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES, org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
              item.setItemMeta(meta);
          }
       }
@@ -194,12 +195,17 @@ public class CodeEditorGUI implements Listener {
 
    }
 
-   private ItemStack createItem(Material material, String name, List<String> lore) {
-      ItemStack item = new ItemStack(material);
+   private ItemStack createItem(XMaterial material, String name, List<String> lore) {
+      ItemStack item = material.parseItem();
+      if (item == null) item = new ItemStack(org.bukkit.Material.DIRT);
       ItemMeta meta = item.getItemMeta();
       if (meta != null) {
-         meta.setDisplayName(name);
-         meta.setLore(lore);
+         meta.setDisplayName(xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(name));
+         if (lore != null) {
+             List<String> formattedLore = new java.util.ArrayList<>();
+             for (String l : lore) formattedLore.add(xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(l));
+             meta.setLore(formattedLore);
+         }
          item.setItemMeta(meta);
       }
 
@@ -237,7 +243,7 @@ public class CodeEditorGUI implements Listener {
                      open(player);
                   } else if (event.isLeftClick()) {
                      awaitingPermissionInput.add(player.getUniqueId());
-                     player.closeInventory();
+                     plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                      player.sendMessage(ChatColor.GREEN + "Please type the permission in chat. (e.g., 'code.redeem.example')");
                      player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
                   }
@@ -265,12 +271,12 @@ public class CodeEditorGUI implements Listener {
                   open(player);
                } else if (name.equals("Cooldown")) {
                   awaitingCooldownInput.add(player.getUniqueId());
-                  player.closeInventory();
+                  plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                   player.sendMessage(ChatColor.GREEN + "Type the cooldown in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).");
                   player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
                } else if (name.equals("Expire Time")) {
                   awaitingExpireTimeInput.add(player.getUniqueId());
-                  player.closeInventory();
+                  plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                   player.sendMessage(ChatColor.GREEN + "Type the expire time in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).");
                   player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort. Type 'never' to disable expiration.");
                } else if (name.equals("Reactivate Code")) {
@@ -284,16 +290,16 @@ public class CodeEditorGUI implements Listener {
                   plugin.saveCodesConfig();
                   open(player);
                } else if (name.equals("Players Redeemed")) {
-                  player.closeInventory();
+                  plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                   player.performCommand("rc redeemed " + codeName);
                } else if (name.equals("Add to Blacklist")) {
                   awaitingBlacklistInput.add(player.getUniqueId());
-                  player.closeInventory();
+                  plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                   player.sendMessage(ChatColor.GREEN + "Please type the username to add to the blacklist.");
                   player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
                } else if (name.equals("Remove Code")) {
                   awaitingRemoveConfirm.add(player.getUniqueId());
-                  player.closeInventory();
+                  plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                   player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "WARNING: You are about to remove the code '" + codeName + "'.");
                   player.sendMessage(ChatColor.YELLOW + "This action is permanent. Type 'confirm' in chat to proceed.");
                   player.sendMessage(ChatColor.GRAY + "Type anything else to cancel.");
@@ -316,6 +322,7 @@ public class CodeEditorGUI implements Listener {
       UUID playerUUID = player.getUniqueId();
       if (awaitingCooldownInput.contains(playerUUID)) {
          event.setCancelled(true);
+         event.getRecipients().clear();
          String msg = event.getMessage();
          plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingCooldownInput.remove(playerUUID);
@@ -339,6 +346,7 @@ public class CodeEditorGUI implements Listener {
          });
       } else if (awaitingBlacklistInput.contains(playerUUID)) {
          event.setCancelled(true);
+         event.getRecipients().clear();
          String playerName = event.getMessage().trim();
          plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingBlacklistInput.remove(playerUUID);
@@ -360,6 +368,7 @@ public class CodeEditorGUI implements Listener {
          });
       } else if (awaitingExpireTimeInput.contains(playerUUID)) {
          event.setCancelled(true);
+         event.getRecipients().clear();
          String input = event.getMessage().trim();
          plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingExpireTimeInput.remove(playerUUID);
@@ -385,20 +394,21 @@ public class CodeEditorGUI implements Listener {
          });
       } else if (awaitingPermissionInput.contains(playerUUID)) {
          event.setCancelled(true);
-         String permission = event.getMessage().trim();
+         event.getRecipients().clear();
+         String input = event.getMessage().trim();
          plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingPermissionInput.remove(playerUUID);
-            if (permission.equalsIgnoreCase("cancel")) {
+            if (input.equalsIgnoreCase("cancel")) {
                player.sendMessage(ChatColor.RED + "Permission addition cancelled.");
             } else {
                List<String> permList = plugin.getCodesConfig().getStringList("Codes." + codeName + ".permisson.list");
-               if (permList.contains(permission)) {
-                  player.sendMessage(ChatColor.YELLOW + "Permission '" + permission + "' is already in the list.");
+               if (permList.contains(input)) {
+                  player.sendMessage(ChatColor.YELLOW + "Permission '" + input + "' is already in the list.");
                } else {
-                  permList.add(permission);
+                  permList.add(input);
                   plugin.getCodesConfig().set("Codes." + codeName + ".permisson.list", permList);
                   plugin.saveCodesConfig();
-                  player.sendMessage(ChatColor.AQUA + "Permission '" + permission + "' added to the list.");
+                  player.sendMessage(ChatColor.AQUA + "Permission '" + input + "' added to the list.");
                }
             }
 

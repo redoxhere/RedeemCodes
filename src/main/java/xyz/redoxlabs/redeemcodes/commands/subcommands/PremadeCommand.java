@@ -17,7 +17,8 @@ public class PremadeCommand implements Subcommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) return true;
+        if (!(sender instanceof Player)) return true;
+        Player player = (Player) sender;
 
         if (args.length < 3) {
             player.sendMessage(plugin.color("&cUsage: /rc premade <add|remove|view> <name> [command/index]"));

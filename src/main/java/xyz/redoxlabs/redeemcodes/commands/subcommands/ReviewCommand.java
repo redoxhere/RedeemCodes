@@ -16,7 +16,8 @@ public class ReviewCommand implements Subcommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) return true;
+        if (!(sender instanceof Player)) return true;
+        Player player = (Player) sender;
 
         if (args.length < 2) {
             player.sendMessage("§cUsage: /rc review <message>");

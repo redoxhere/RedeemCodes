@@ -2,8 +2,7 @@
 # This event plays a sound and launches a firework when triggered.
 fireworks:
   - ==: org.bukkit.inventory.ItemStack
-    v: 2586
-    type: FIREWORK_ROCKET
+    type: FIREWORK
     meta:
       ==: ItemMeta
       meta-type: FIREWORK

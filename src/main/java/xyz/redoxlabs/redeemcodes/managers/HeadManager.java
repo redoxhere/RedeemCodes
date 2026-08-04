@@ -1,18 +1,17 @@
 package xyz.redoxlabs.redeemcodes.managers;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import com.cryptomorin.xseries.XMaterial;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
+import com.cryptomorin.xseries.profiles.builder.XSkull;
+import com.cryptomorin.xseries.profiles.objects.Profileable;
 public class HeadManager {
    private static final Map<String, ItemStack> cachedHeads = new HashMap<>();
    private static final Map<String, UUID> headUUIDs = new HashMap<>();
@@ -48,15 +47,15 @@ public class HeadManager {
    }
 
    private static void register(String key, String textureId) {
-      UUID consistentUUID = (UUID)headUUIDs.computeIfAbsent(key, (k) -> UUID.nameUUIDFromBytes(k.getBytes(StandardCharsets.UTF_8)));
-      ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+      UUID consistentUUID = headUUIDs.computeIfAbsent(key, (k) -> UUID.nameUUIDFromBytes(k.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+      ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
+      if (head == null) return;
       SkullMeta meta = (SkullMeta)head.getItemMeta();
       if (meta != null) {
          try {
-            PlayerProfile profile = Bukkit.createProfile(consistentUUID, (String)null);
-            ProfileProperty skinProperty = new ProfileProperty("textures", Base64.getEncoder().encodeToString(("{\"timestamp\":1,\"profileId\":\"00000000-0000-0000-0000-000000000000\",\"profileName\":\"NPC\",\"textures\":{\"SKIN\":{\"url\":\"https://textures.minecraft.net/texture/" + textureId + "\"}}}").getBytes()));
-            profile.setProperty(skinProperty);
-            meta.setPlayerProfile(profile);
+            String profileIdStr = consistentUUID.toString().replace("-", "");
+            String base64 = java.util.Base64.getEncoder().encodeToString(("{\"timestamp\":1,\"profileId\":\"" + profileIdStr + "\",\"profileName\":\"NPC\",\"textures\":{\"SKIN\":{\"url\":\"https://textures.minecraft.net/texture/" + textureId + "\"}}}").getBytes());
+            setHeadTexture(meta, base64, consistentUUID);
             head.setItemMeta(meta);
             System.out.println("[RedeemCodes] Successfully loaded head texture for key: " + key);
          } catch (Exception e) {
@@ -70,11 +69,12 @@ public class HeadManager {
    }
 
    private static void registerBase64(String key, String base64Texture) {
-      ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+      ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
+      if (head == null) return;
       SkullMeta meta = (SkullMeta)head.getItemMeta();
       if (meta != null) {
          try {
-            String decodedTexture = new String(Base64.getDecoder().decode(base64Texture));
+            String decodedTexture = new String(java.util.Base64.getDecoder().decode(base64Texture));
             System.out.println("[RedeemCodes] DEBUG: Decoded Base64 for '" + key + "': " + decodedTexture);
             String textureUrl = null;
             if (decodedTexture.contains("\"url\":\"")) {
@@ -97,11 +97,10 @@ public class HeadManager {
 
             if (textureUrl != null && !textureUrl.isEmpty()) {
                System.out.println("[RedeemCodes] DEBUG: Extracted texture URL for '" + key + "': " + textureUrl);
-               UUID consistentUUID = (UUID)headUUIDs.computeIfAbsent(key, (k) -> UUID.nameUUIDFromBytes(k.getBytes(StandardCharsets.UTF_8)));
-               PlayerProfile profile = Bukkit.createProfile(consistentUUID, (String)null);
-               ProfileProperty skinProperty = new ProfileProperty("textures", Base64.getEncoder().encodeToString(("{\"timestamp\":1,\"profileId\":\"00000000-0000-0000-0000-000000000000\",\"profileName\":\"NPC\",\"textures\":{\"SKIN\":{\"url\":\"" + textureUrl + "\"}}}").getBytes()));
-               profile.setProperty(skinProperty);
-               meta.setPlayerProfile(profile);
+               UUID consistentUUID = headUUIDs.computeIfAbsent(key, (k) -> UUID.nameUUIDFromBytes(k.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+               String profileIdStr = consistentUUID.toString().replace("-", "");
+               String base64 = java.util.Base64.getEncoder().encodeToString(("{\"timestamp\":1,\"profileId\":\"" + profileIdStr + "\",\"profileName\":\"NPC\",\"textures\":{\"SKIN\":{\"url\":\"" + textureUrl + "\"}}}").getBytes());
+               setHeadTexture(meta, base64, consistentUUID);
                head.setItemMeta(meta);
                System.out.println("[RedeemCodes] Successfully loaded Base64 head texture for key: " + key);
             } else {
@@ -136,24 +135,34 @@ public class HeadManager {
 
          if (base == null) {
             System.out.println("[RedeemCodes] WARN: Missing head texture for key: " + key);
-            return new ItemStack(Material.PLAYER_HEAD);
+            return XMaterial.PLAYER_HEAD.parseItem();
          }
       }
 
       ItemStack clone = base.clone();
       SkullMeta meta = (SkullMeta)clone.getItemMeta();
       if (meta != null) {
-         meta.setDisplayName(displayName);
+         meta.setDisplayName(xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(displayName));
          if (lore != null && lore.length > 0) {
-            meta.setLore(Arrays.asList(lore));
+            java.util.List<String> formattedLore = new java.util.ArrayList<>();
+            for (String l : lore) formattedLore.add(xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(l));
+            meta.setLore(formattedLore);
          }
          
-         meta.addItemFlags(org.bukkit.inventory.ItemFlag.values());
+         meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES, org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
 
          clone.setItemMeta(meta);
       }
 
       return clone;
+   }
+
+   private static void setHeadTexture(SkullMeta meta, String texture, UUID uuid) {
+       try {
+           XSkull.of(meta).profile(Profileable.detect(texture)).apply();
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
    }
 }
 

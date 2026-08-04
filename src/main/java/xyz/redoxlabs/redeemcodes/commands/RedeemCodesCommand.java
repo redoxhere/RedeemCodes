@@ -47,10 +47,11 @@ public class RedeemCodesCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage("§cOnly players can use admin commands.");
             return true;
         }
+        Player player = (Player) sender;
 
         if (!player.isOp() && !player.hasPermission("redeemcodes.admin")) {
             player.sendMessage(getMessage("no-permission"));

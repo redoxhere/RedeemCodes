@@ -64,7 +64,7 @@ public class SackManager implements Listener {
          File file = new File(sacksFolder, name + ".yml");
          FileConfiguration config = YamlConfiguration.loadConfiguration(file);
          xyz.redoxlabs.redeemcodes.utils.GUIHolder holder = new xyz.redoxlabs.redeemcodes.utils.GUIHolder("SACK_EDITOR");
-         Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎒 ꜱᴀᴄᴋ: &e" + name));
+         Inventory inv = Bukkit.createInventory(holder, 54, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', "&8🎒 ꜱᴀᴄᴋ: &e" + name)));
          holder.setInventory(inv);
          if (config.contains("contents")) {
             List<?> list = config.getList("contents");

@@ -1,7 +1,6 @@
 package xyz.redoxlabs.redeemcodes.guis;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
+
 import xyz.redoxlabs.redeemcodes.Main;
 import xyz.redoxlabs.redeemcodes.managers.CreateCodeHandler;
 import xyz.redoxlabs.redeemcodes.managers.HeadManager;
@@ -13,7 +12,7 @@ import java.util.Base64;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -26,7 +25,7 @@ public class MainGUI {
 
    public static void open(Player player) {
       GUIHolder holder = new GUIHolder("MAIN_GUI");
-      Inventory inv = Bukkit.createInventory(holder, 27, GUI_TITLE);
+      Inventory inv = Bukkit.createInventory(holder, 27, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(GUI_TITLE));
       holder.setInventory(inv);
 
       inv.setItem(11, HeadManager.getHead("CREATE", "§x§F§B§C§8§C§8C§x§F§B§C§E§C§Er§x§F§C§D§4§D§4e§x§F§C§D§A§D§Aa§x§F§D§E§0§E§0t§x§F§D§E§7§E§7e §x§F§E§E§D§E§DC§x§F§E§F§3§F§3o§x§F§F§F§9§F§9d§x§F§F§F§F§F§Fe", "", "§x§F§B§8§E§2§F§l| §x§F§B§D§A§3§Bᴄ§x§F§B§D§C§3§Fʀ§x§F§B§D§D§4§4ᴇ§x§F§C§D§F§4§8ᴀ§x§F§C§E§1§4§Cᴛ§x§F§C§E§2§5§1ᴇ §x§F§C§E§4§5§5ᴀ §x§F§C§E§5§5§9ɴ§x§F§D§E§7§5§Eᴇ§x§F§D§E§9§6§2ᴡ §x§F§D§E§A§6§6ʀ§x§F§D§E§C§6§Aᴇ§x§F§E§E§E§6§Fᴅ§x§F§E§E§F§7§3ᴇ§x§F§E§F§1§7§7ᴇ§x§F§E§F§2§7§Cᴍ §x§F§E§F§4§8§0ᴄ§x§F§F§F§6§8§4ᴏ§x§F§F§F§7§8§9ᴅ§x§F§F§F§9§8§Dᴇ", "§x§F§B§8§E§2§F§l| §x§F§B§D§A§3§Bᴄ§x§F§B§D§B§3§Eᴏ§x§F§B§D§C§4§1ɴ§x§F§B§D§E§4§4ꜰ§x§F§C§D§F§4§8ɪ§x§F§C§E§0§4§Bɢ§x§F§C§E§1§4§Eᴜ§x§F§C§E§2§5§1ʀ§x§F§C§E§4§5§4ᴇ §x§F§C§E§5§5§7ᴅ§x§F§D§E§6§5§Bᴇ§x§F§D§E§7§5§Eᴛ§x§F§D§E§8§6§1ᴀ§x§F§D§E§A§6§4ɪ§x§F§D§E§B§6§7ʟ§x§F§D§E§C§6§Aꜱ §x§F§D§E§D§6§Dɪ§x§F§E§E§E§7§1ɴ §x§F§E§E§F§7§4ᴄ§x§F§E§F§1§7§7ᴏ§x§F§E§F§2§7§Aᴅ§x§F§E§F§3§7§Dᴇ§x§F§E§F§4§8§0ꜱ§x§F§F§F§5§8§4.§x§F§F§F§7§8§7ʏ§x§F§F§F§8§8§Aᴍ§x§F§F§F§9§8§Dʟ"));
@@ -42,6 +41,7 @@ public class MainGUI {
       event.setCancelled(true);
       Player player = (Player)event.getWhoClicked();
       ItemStack clicked = event.getCurrentItem();
+      ItemStack info = XMaterial.PAPER.parseItem();
       if (clicked != null && clicked.hasItemMeta() && clicked.getItemMeta().getDisplayName() != null) {
          String itemName = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
          if (itemName.equals("Create Code")) {

@@ -33,7 +33,7 @@ public class CreateCodeHandler implements Listener {
 
    public void startCodeCreation(Player player) {
       awaitingInput.add(player.getUniqueId());
-      player.closeInventory();
+      plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
       player.sendMessage("§aPlease type the name for your new code in chat.");
       player.sendMessage("§7Type 'cancel' to abort.");
    }
@@ -41,24 +41,25 @@ public class CreateCodeHandler implements Listener {
    public void startDuplication(Player player, String selectedCode) {
       awaitingDuplicationInput.add(player.getUniqueId());
       selectedCodeForDuplication.put(player.getUniqueId(), selectedCode);
-      player.closeInventory();
+      plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
       player.sendMessage("§aPlease type the name for the duplicated code in chat.");
       player.sendMessage("§7Type 'cancel' to abort.");
    }
 
    public void startReviewInput(Player player) {
       awaitingReviewInput.add(player.getUniqueId());
-      player.closeInventory();
+      plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
       player.sendMessage("§aPlease type your review or feedback in chat.");
       player.sendMessage("§7Type 'cancel' to abort.");
    }
 
-   @EventHandler
+   @EventHandler(priority = org.bukkit.event.EventPriority.LOWEST)
    public void onChat(AsyncPlayerChatEvent event) {
       Player player = event.getPlayer();
       UUID playerUUID = player.getUniqueId();
       if (awaitingInput.contains(playerUUID)) {
          event.setCancelled(true);
+         event.getRecipients().clear();
          String input = ChatColor.stripColor(event.getMessage()).trim().replace(" ", "");
          if (input.equalsIgnoreCase("cancel")) {
             awaitingInput.remove(playerUUID);
@@ -71,6 +72,7 @@ public class CreateCodeHandler implements Listener {
          }
       } else if (awaitingDuplicationInput.contains(playerUUID)) {
          event.setCancelled(true);
+         event.getRecipients().clear();
          String input = ChatColor.stripColor(event.getMessage()).trim().replace(" ", "");
          String sourceCode = (String)selectedCodeForDuplication.get(playerUUID);
          if (input.equalsIgnoreCase("cancel")) {
@@ -88,6 +90,7 @@ public class CreateCodeHandler implements Listener {
          }
       } else if (awaitingReviewInput.contains(playerUUID)) {
          event.setCancelled(true);
+         event.getRecipients().clear();
          String input = ChatColor.stripColor(event.getMessage()).trim();
          if (input.equalsIgnoreCase("cancel")) {
             awaitingReviewInput.remove(playerUUID);
@@ -105,6 +108,7 @@ public class CreateCodeHandler implements Listener {
          RewardGUI rewardGUI = (RewardGUI)plugin.openRewardGUIs.get(player);
          if (rewardGUI != null && (rewardGUI.awaitingCommandPackName.contains(playerUUID) || rewardGUI.awaitingCommandForPack.contains(playerUUID) || rewardGUI.awaitingWeightInput.contains(playerUUID))) {
             event.setCancelled(true);
+            event.getRecipients().clear();
             rewardGUI.handleChat(event);
          }
 

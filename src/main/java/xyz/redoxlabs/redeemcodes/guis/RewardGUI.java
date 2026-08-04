@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -58,9 +58,9 @@ public class RewardGUI {
    public void openMain(Player player) {
       this.currentView = RewardGUI.View.MAIN;
       GUIHolder holder = new GUIHolder("REWARD_GUI");
-      Inventory inv = Bukkit.createInventory(holder, 27, ChatColor.translateAlternateColorCodes('&', "&8🎁 ʀᴇᴡᴀʀᴅꜱ"));
+      Inventory inv = Bukkit.createInventory(holder, 27, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', "&8🎁 ʀᴇᴡᴀʀᴅꜱ")));
       holder.setInventory(inv);
-      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+      GUIUtils.fillBorder(inv, XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE);
       inv.setItem(11, HeadManager.getHead("REWARD_ADD", "§x§F§B§E§2§D§EA§x§F§C§E§0§D§9d§x§F§C§D§E§D§3d §x§F§D§D§C§C§ER§x§F§D§D§A§C§8e§x§F§E§D§7§C§3w§x§F§E§D§5§B§Da§x§F§F§D§3§B§8r§x§F§F§D§1§B§2d", " ", "§x§F§B§E§2§D§E§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴀᴅᴅ ᴀ ɴᴇᴡ ʀᴇᴡᴀʀᴅ"));
       List<String> events = plugin.getCodesConfig().getStringList(rewardPath + ".events");
       String currentEvent = events.isEmpty() ? "None" : (String)events.get(0);
@@ -75,9 +75,9 @@ public class RewardGUI {
    public void openAddSelection(Player player) {
       this.currentView = RewardGUI.View.ADD_SELECTION;
       GUIHolder holder = new GUIHolder("REWARD_GUI");
-      Inventory inv = Bukkit.createInventory(holder, 27, ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴀᴅᴅ ʀᴇᴡᴀʀᴅ"));
+      Inventory inv = Bukkit.createInventory(holder, 27, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴀᴅᴅ ʀᴇᴡᴀʀᴅ")));
       holder.setInventory(inv);
-      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+      GUIUtils.fillBorder(inv, XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE);
       inv.setItem(11, HeadManager.getHead("REWARD_COMMAND", "§x§F§B§9§D§4§ECommand Pack", " ", "§x§F§B§9§D§4§E§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ᴄᴏᴍᴍᴀɴᴅ ᴘᴀᴄᴋꜱ"));
       inv.setItem(13, HeadManager.getHead("REWARD_SACK", "§x§4§5§D§1§5§8Sack", " ", "§x§4§5§D§1§5§8§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ꜱᴀᴄᴋꜱ"));
       inv.setItem(15, HeadManager.getHead("REWARD_PREMADE", "§x§6§E§B§1§D§4Premade", " ", "§x§6§E§B§1§D§4§l| §fᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ᴘʀᴇᴍᴀᴅᴇꜱ"));
@@ -90,9 +90,9 @@ public class RewardGUI {
       this.currentView = RewardGUI.View.COMMAND_LIST;
       this.page = page;
       GUIHolder holder = new GUIHolder("REWARD_GUI");
-      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴄᴏᴍᴍᴀɴᴅ ᴘᴀᴄᴋꜱ"));
+      Inventory inv = Bukkit.createInventory(holder, 54, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴄᴏᴍᴍᴀɴᴅ ᴘᴀᴄᴋꜱ")));
       holder.setInventory(inv);
-      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+      GUIUtils.fillBorder(inv, XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE);
       ConfigurationSection section = plugin.getCodesConfig().getConfigurationSection(rewardPath + ".commands");
       List<String> packs = section != null ? new ArrayList<>(section.getKeys(false)) : new ArrayList<>();
       addPagination(inv, packs, page, "COMMAND_PACK", (item, packName) -> {
@@ -127,9 +127,9 @@ public class RewardGUI {
       this.currentView = RewardGUI.View.SACK_LIST;
       this.page = page;
       GUIHolder holder = new GUIHolder("REWARD_GUI");
-      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎁 ꜱᴀᴄᴋ ʀᴇᴡᴀʀᴅꜱ"));
+      Inventory inv = Bukkit.createInventory(holder, 54, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', "&8🎁 ꜱᴀᴄᴋ ʀᴇᴡᴀʀᴅꜱ")));
       holder.setInventory(inv);
-      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+      GUIUtils.fillBorder(inv, XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE);
       List<String> sacks = plugin.getCodesConfig().getStringList(rewardPath + ".sacks");
       addPagination(inv, sacks, page, "REWARD_SACK", (item, entry) -> {
          String[] parts = entry.split(":");
@@ -157,9 +157,9 @@ public class RewardGUI {
       this.currentView = RewardGUI.View.PREMADE_LIST;
       this.page = page;
       GUIHolder holder = new GUIHolder("REWARD_GUI");
-      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴘʀᴇᴍᴀᴅᴇ ʀᴇᴡᴀʀᴅꜱ"));
+      Inventory inv = Bukkit.createInventory(holder, 54, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', "&8🎁 ᴘʀᴇᴍᴀᴅᴇ ʀᴇᴡᴀʀᴅꜱ")));
       holder.setInventory(inv);
-      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+      GUIUtils.fillBorder(inv, XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE);
       List<String> premades = plugin.getCodesConfig().getStringList(rewardPath + ".premades");
       addPagination(inv, premades, page, "REWARD_PREMADE", (item, entry) -> {
          String[] parts = entry.split(":");
@@ -188,9 +188,9 @@ public class RewardGUI {
       this.page = page;
       String title = view == RewardGUI.View.EVENT_SELECTOR ? "&8🎁 ꜱᴇʟᴇᴄᴛ ᴇᴠᴇɴᴛ" : (view == RewardGUI.View.SACK_SELECTOR ? "&8🎁 ꜱᴇʟᴇᴄᴛ ꜱᴀᴄᴋ" : "&8🎁 ꜱᴇʟᴇᴄᴛ ᴘʀᴇᴍᴀᴅᴇ");
       GUIHolder holder = new GUIHolder("REWARD_GUI");
-      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', title));
+      Inventory inv = Bukkit.createInventory(holder, 54, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', title)));
       holder.setInventory(inv);
-      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+      GUIUtils.fillBorder(inv, XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE);
       List<String> available;
       String headKey;
       if (view == RewardGUI.View.EVENT_SELECTOR) {
@@ -296,17 +296,17 @@ public class RewardGUI {
                }
             } else if (currentView == RewardGUI.View.COMMAND_LIST) {
                if (name.equals("Add New Pack")) {
-                  player.closeInventory();
+                  plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                   awaitingCommandPackName.add(player.getUniqueId());
                   player.sendMessage("§aEnter name for new command pack:");
-               } else if (!clicked.getType().equals(Material.LIGHT_BLUE_STAINED_GLASS_PANE)) {
+               } else if (XMaterial.matchXMaterial(clicked) != XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE) {
                   String packName = ChatColor.stripColor(name);
                   if (event.isShiftClick()) {
                      plugin.getCodesConfig().set(rewardPath + ".commands." + packName, (Object)null);
                      plugin.saveCodesConfig();
                      openCommandList(player, page);
                   } else {
-                     player.closeInventory();
+                     plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                      activePackForCommand.put(player.getUniqueId(), packName);
                      awaitingCommandForPack.add(player.getUniqueId());
                      player.sendMessage("§aEnter command to add to pack '" + packName + "':");
@@ -314,7 +314,7 @@ public class RewardGUI {
                }
             } else if (currentView != RewardGUI.View.SACK_LIST && currentView != RewardGUI.View.PREMADE_LIST) {
                if (currentView != RewardGUI.View.SACK_SELECTOR && currentView != RewardGUI.View.PREMADE_SELECTOR) {
-                  if (currentView == RewardGUI.View.EVENT_SELECTOR && !clicked.getType().equals(Material.LIGHT_BLUE_STAINED_GLASS_PANE)) {
+                  if (currentView == RewardGUI.View.EVENT_SELECTOR && XMaterial.matchXMaterial(clicked) != XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE) {
                      String eventName = ChatColor.stripColor(name);
                      List<String> list = new ArrayList<>();
                      list.add(eventName);
@@ -322,7 +322,7 @@ public class RewardGUI {
                      plugin.saveCodesConfig();
                      openMain(player);
                   }
-               } else if (!clicked.getType().equals(Material.LIGHT_BLUE_STAINED_GLASS_PANE)) {
+               } else if (XMaterial.matchXMaterial(clicked) != XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE) {
                   String itemName = ChatColor.stripColor(name);
                   boolean isSack = currentView == RewardGUI.View.SACK_SELECTOR;
                   String listKey = isSack ? "sacks" : "premades";
@@ -344,10 +344,10 @@ public class RewardGUI {
                boolean isSack = currentView == RewardGUI.View.SACK_LIST;
                String listKey = isSack ? "sacks" : "premades";
                if (!name.equals("Add Sack") && !name.equals("Add Premade")) {
-                  if (!clicked.getType().equals(Material.LIGHT_BLUE_STAINED_GLASS_PANE)) {
+                  if (XMaterial.matchXMaterial(clicked) != XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE) {
                      String itemName = ChatColor.stripColor(name);
                      if (event.isRightClick()) {
-                        player.closeInventory();
+                        plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                         activeItemForWeight.put(player.getUniqueId(), (isSack ? "sack:" : "premade:") + itemName);
                         awaitingWeightInput.add(player.getUniqueId());
                         player.sendMessage("§aEnter weight for " + itemName + ":");
@@ -360,7 +360,7 @@ public class RewardGUI {
                      } else if (isSack) {
                         plugin.getSackManager().openEditGUI(player, itemName);
                      } else {
-                        player.closeInventory();
+                        plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                         player.performCommand("rc premade view " + itemName);
                      }
                   }
@@ -375,13 +375,27 @@ public class RewardGUI {
 
    private void refreshView(Player player, int page) {
       switch (currentView) {
-         case COMMAND_LIST -> openCommandList(player, page);
-         case SACK_LIST -> openSackList(player, page);
-         case PREMADE_LIST -> openPremadeList(player, page);
-         case SACK_SELECTOR -> openSelector(player, RewardGUI.View.SACK_SELECTOR, page);
-         case PREMADE_SELECTOR -> openSelector(player, RewardGUI.View.PREMADE_SELECTOR, page);
-         case EVENT_SELECTOR -> openSelector(player, RewardGUI.View.EVENT_SELECTOR, page);
-         default -> openMain(player);
+         case COMMAND_LIST:
+            openCommandList(player, page);
+            break;
+         case SACK_LIST:
+            openSackList(player, page);
+            break;
+         case PREMADE_LIST:
+            openPremadeList(player, page);
+            break;
+         case SACK_SELECTOR:
+            openSelector(player, RewardGUI.View.SACK_SELECTOR, page);
+            break;
+         case PREMADE_SELECTOR:
+            openSelector(player, RewardGUI.View.PREMADE_SELECTOR, page);
+            break;
+         case EVENT_SELECTOR:
+            openSelector(player, RewardGUI.View.EVENT_SELECTOR, page);
+            break;
+         default:
+            openMain(player);
+            break;
       }
 
    }

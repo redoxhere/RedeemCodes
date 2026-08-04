@@ -18,7 +18,7 @@ import xyz.redoxlabs.redeemcodes.managers.SackManager;
 import xyz.redoxlabs.redeemcodes.utils.DefaultExampleGenerator;
 import xyz.redoxlabs.redeemcodes.listeners.GUIListener;
 import xyz.redoxlabs.redeemcodes.utils.PluginUpdateChecker;
-import xyz.redoxlabs.redeemcodes.utils.VersionSupportChecker;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -66,8 +66,7 @@ public final class Main extends JavaPlugin {
       saveDefaultConfig();
       createCodesConfig();
       (new DefaultExampleGenerator(this)).generate();
-      VersionSupportChecker versionChecker = new VersionSupportChecker(this);
-      versionChecker.checkVersion();
+
       HeadManager.preloadHeads();
       this.redeemDataManager = new RedeemDataManager(this);
       this.expirationManager = new CodeExpirationManager(this);
@@ -97,7 +96,7 @@ public final class Main extends JavaPlugin {
          public void onPlayerJoin(PlayerJoinEvent event) {
             HeadManager.getAllCachedHeads().forEach((key, head) -> {
                SkullMeta meta = (SkullMeta)head.getItemMeta();
-               if (meta != null && meta.getPlayerProfile() != null) {
+               if (meta != null) {
                   event.getPlayer().getInventory().addItem(new ItemStack[]{head});
                   event.getPlayer().getInventory().removeItem(new ItemStack[]{head});
                }

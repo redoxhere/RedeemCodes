@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -57,10 +57,12 @@ public class RedeemCommand implements CommandExecutor {
    
 
    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-      if (!(sender instanceof Player player)) {
+      if (!(sender instanceof Player)) {
          sender.sendMessage("§cOnly players can redeem codes!");
          return true;
-      } else if (args.length != 1) {
+      }
+      Player player = (Player) sender;
+      if (args.length != 1) {
          MessageUtil.sendMessage(plugin, player, "usage");
          MessageUtil.playSound(plugin, player, "sounds.failure");
          return true;

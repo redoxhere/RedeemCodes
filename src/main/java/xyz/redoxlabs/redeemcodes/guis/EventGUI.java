@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,6 +26,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import com.cryptomorin.xseries.XSound;
 import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
 import xyz.redoxlabs.redeemcodes.utils.GUIUtils;
 import xyz.redoxlabs.redeemcodes.utils.SoundUtil;
@@ -40,7 +41,7 @@ public class EventGUI implements Listener {
    private final Map<UUID, Integer> soundListPage = new HashMap<>();
    private static final int SOUNDS_PER_PAGE = 45;
    private static final int SOUND_LIST_PER_PAGE = 28;
-   private final List<Sound> allSounds;
+   private final List<XSound> allSounds;
 
    public EventGUI(Main plugin) {
       this.plugin = plugin;
@@ -48,30 +49,8 @@ public class EventGUI implements Listener {
       allSounds.sort((s1, s2) -> s1.name().compareTo(s2.name()));
    }
 
-   private List<Sound> getAllSounds() {
-      List<Sound> sounds = new ArrayList<>();
-
-      try {
-         Sound[] soundValues = (Sound[])Sound.class.getMethod("values").invoke((Object)null);
-         sounds.addAll(Arrays.asList(soundValues));
-      } catch (Exception e) {
-         try {
-            for(Field field : Sound.class.getDeclaredFields()) {
-               if (Modifier.isStatic(field.getModifiers()) && Sound.class.isAssignableFrom(field.getType())) {
-                  sounds.add((Sound)field.get((Object)null));
-               }
-            }
-         } catch (Exception ex) {
-            plugin.getLogger().warning("Could not load Sound values, using fallback sounds");
-            sounds.add(Sound.ENTITY_EXPERIENCE_ORB_PICKUP);
-            sounds.add(Sound.UI_BUTTON_CLICK);
-            sounds.add(Sound.BLOCK_NOTE_BLOCK_PLING);
-            sounds.add(Sound.ENTITY_PLAYER_LEVELUP);
-            sounds.add(Sound.BLOCK_ANVIL_LAND);
-         }
-      }
-
-      return sounds;
+   private List<XSound> getAllSounds() {
+      return java.util.Arrays.asList(XSound.values());
    }
 
    public void openFireworkEditor(Player player, String eventName) {
@@ -92,7 +71,7 @@ public class EventGUI implements Listener {
       }
 
       GUIHolder holder = new GUIHolder("EVENT_FIREWORKS");
-      Inventory inv = Bukkit.createInventory(holder, size, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴇᴠᴇɴᴛ ꜰɪʀᴇᴡᴏʀᴋꜱ: &b" + eventName));
+      Inventory inv = Bukkit.createInventory(holder, size, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', "&8📅 ᴇᴠᴇɴᴛ ꜰɪʀᴇᴡᴏʀᴋꜱ: &b" + eventName)));
       holder.setInventory(inv);
       if (existing != null) {
          ItemStack[] contents = (ItemStack[])existing.toArray(new ItemStack[0]);
@@ -110,9 +89,9 @@ public class EventGUI implements Listener {
    public void openSoundList(Player player, String eventName) {
       int page = (Integer)soundListPage.getOrDefault(player.getUniqueId(), 0);
       GUIHolder holder = new GUIHolder("EVENT_SOUNDS");
-      Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴇᴠᴇɴᴛ ꜱᴏᴜɴᴅꜱ: &b" + eventName));
+      Inventory inv = Bukkit.createInventory(holder, 54, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', "&8📅 ᴇᴠᴇɴᴛ ꜱᴏᴜɴᴅꜱ: &b" + eventName)));
       holder.setInventory(inv);
-      GUIUtils.fillBorder(inv, Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+      GUIUtils.fillBorder(inv, XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE);
 
       FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
       ConfigurationSection section = config.getConfigurationSection("sounds");
@@ -169,14 +148,14 @@ public class EventGUI implements Listener {
       if (eventName != null) {
          soundPickerPage.put(player.getUniqueId(), page);
          GUIHolder holder = new GUIHolder("PICK_SOUND");
-         Inventory inv = Bukkit.createInventory(holder, 54, ChatColor.translateAlternateColorCodes('&', "&8📅 ᴘɪᴄᴋ ꜱᴏᴜɴᴅ: &b" + eventName));
+         Inventory inv = Bukkit.createInventory(holder, 54, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(ChatColor.translateAlternateColorCodes('&', "&8📅 ᴘɪᴄᴋ ꜱᴏᴜɴᴅ: &b" + eventName)));
          holder.setInventory(inv);
          int start = page * 45;
          int end = Math.min(start + 45, allSounds.size());
 
          for(int i = start; i < end; ++i) {
-            Sound sound = (Sound)allSounds.get(i);
-            ItemStack item = new ItemStack(Material.PAPER);
+            XSound sound = allSounds.get(i);
+            ItemStack item = XMaterial.PAPER.parseItem();
             ItemMeta meta = item.getItemMeta();
             if (meta != null) {
                meta.setDisplayName(ChatColor.GOLD + sound.name());
@@ -216,7 +195,7 @@ public class EventGUI implements Listener {
                   List<ItemStack> content = new ArrayList<>();
    
                   for(ItemStack item : event.getInventory().getContents()) {
-                     if (item != null && item.getType() == Material.FIREWORK_ROCKET) {
+                     if (item != null && XMaterial.matchXMaterial(item) == XMaterial.FIREWORK_ROCKET) {
                         content.add(item);
                      }
                   }
@@ -280,13 +259,13 @@ public class EventGUI implements Listener {
                   if (soundId != null) {
                      if (event.isLeftClick() && !event.isShiftClick()) {
                         SoundUtil.playClick(plugin, player);
-                        player.closeInventory();
+                        plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                         awaitingDelayInput.put(player.getUniqueId(), new SoundEditSession(eventName, soundId));
                         player.sendMessage(ChatColor.GREEN + "Type the wait time in ticks (integer) in chat:");
                         player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
                      } else if (event.isRightClick()) {
                         SoundUtil.playClick(plugin, player);
-                        player.closeInventory();
+                        plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                         awaitingPitchInput.put(player.getUniqueId(), new SoundEditSession(eventName, soundId));
                         player.sendMessage(ChatColor.GREEN + "Type the pitch (0.0 - 2.0) in chat:");
                         player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
@@ -295,7 +274,7 @@ public class EventGUI implements Listener {
                         config.set("sounds." + soundId, (Object)null);
                         plugin.getEventManager().saveEvent(eventName);
                         openSoundList(player, eventName);
-                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 1.0F);
+                        XSound.UI_BUTTON_CLICK.play(player);
                      }
                   }
                }
@@ -323,7 +302,7 @@ public class EventGUI implements Listener {
                } else if (name.equals("Back to List")) {
                   SoundUtil.playClick(plugin, player);
                   openSoundList(player, eventName);
-               } else if (clicked.getType() == Material.PAPER) {
+               } else if (XMaterial.matchXMaterial(clicked) == XMaterial.PAPER) {
                   FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
                   String soundId = UUID.randomUUID().toString();
                   config.set("sounds." + soundId + ".sound", name);
@@ -331,7 +310,7 @@ public class EventGUI implements Listener {
                   config.set("sounds." + soundId + ".pitch", (double)1.0F);
                   plugin.getEventManager().saveEvent(eventName);
                   openSoundList(player, eventName);
-                  player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
+                  XSound.ENTITY_EXPERIENCE_ORB_PICKUP.play(player);
                }
             } else if ("EVENT_FIREWORKS".equals(id)) {
 

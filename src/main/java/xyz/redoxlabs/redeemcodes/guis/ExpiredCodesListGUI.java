@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -34,10 +34,10 @@ public class ExpiredCodesListGUI {
    public void open(Player player) {
       this.codes = new ArrayList<>(plugin.getExpirationManager().getExpiredCodes());
       GUIHolder holder = new GUIHolder("EXPIRED_CODES_LIST");
-      Inventory inv = Bukkit.createInventory(holder, 54, GUI_TITLE);
+      Inventory inv = Bukkit.createInventory(holder, 54, xyz.redoxlabs.redeemcodes.utils.MessageUtil.format(GUI_TITLE));
       holder.setInventory(inv);
       
-      GUIUtils.fillBorder(inv, Material.RED_STAINED_GLASS_PANE);
+      GUIUtils.fillBorder(inv, XMaterial.RED_STAINED_GLASS_PANE);
 
       int start = page * 28;
       int end = Math.min(start + 28, codes.size());
@@ -60,7 +60,7 @@ public class ExpiredCodesListGUI {
          inv.setItem(53, HeadManager.getHead("NEXT_PAGE", "§7Next Page"));
       }
 
-      ItemStack pageDisplay = new ItemStack(Material.PAPER);
+      ItemStack pageDisplay = XMaterial.PAPER.parseItem();
       ItemMeta pageMeta = pageDisplay.getItemMeta();
       if (pageMeta != null) {
          int maxPage = codes.isEmpty() ? 1 : (codes.size() - 1) / 28 + 1;

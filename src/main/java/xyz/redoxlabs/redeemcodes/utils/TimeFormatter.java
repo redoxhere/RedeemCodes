@@ -43,30 +43,22 @@ public class TimeFormatter {
       } else {
          long value = Long.parseLong(m.group(1));
          switch (m.group(2)) {
-            case "s" -> {
+            case "s":
                return value / 60L;
-            }
-            case "m" -> {
+            case "m":
                return value;
-            }
-            case "h" -> {
+            case "h":
                return value * 60L;
-            }
-            case "d" -> {
+            case "d":
                return value * 60L * 24L;
-            }
-            case "w" -> {
+            case "w":
                return value * 60L * 24L * 7L;
-            }
-            case "mn" -> {
+            case "mn":
                return value * 60L * 24L * 30L;
-            }
-            case "y" -> {
+            case "y":
                return value * 60L * 24L * 365L;
-            }
-            default -> {
+            default:
                return -1L;
-            }
          }
       }
    }
@@ -79,30 +71,22 @@ public class TimeFormatter {
       } else {
          long value = Long.parseLong(m.group(1));
          switch (m.group(2)) {
-            case "s" -> {
+            case "s":
                return value;
-            }
-            case "m" -> {
+            case "m":
                return value * 60L;
-            }
-            case "h" -> {
+            case "h":
                return value * 60L * 60L;
-            }
-            case "d" -> {
+            case "d":
                return value * 60L * 60L * 24L;
-            }
-            case "w" -> {
+            case "w":
                return value * 60L * 60L * 24L * 7L;
-            }
-            case "mn" -> {
+            case "mn":
                return value * 60L * 60L * 24L * 30L;
-            }
-            case "y" -> {
+            case "y":
                return value * 60L * 60L * 24L * 365L;
-            }
-            default -> {
+            default:
                return -1L;
-            }
          }
       }
    }

@@ -21,7 +21,8 @@ public class CreateCommand implements Subcommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) return true;
+        if (!(sender instanceof Player)) return true;
+        Player player = (Player) sender;
         FileConfiguration codes = plugin.getCodesConfig();
 
         if (args.length < 2) {
