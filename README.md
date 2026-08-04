@@ -1,5 +1,6 @@
 **RedeemCodes** is a powerful plugin that allows server administrators to create, manage, and redeem custom codes to reward players.
 
+
 ---
 
 ## 🔧 Features
@@ -259,8 +260,8 @@ messages:
 
 ## 📚 Requirements
 
-* Minecraft 1.16.5 - 1.21.x
-* Paper / Purpur
+* Minecraft 1.8.8+
+* Server Software: Paper, Purpur, Spigot, BUkkit, Folia
 
 ---
 
