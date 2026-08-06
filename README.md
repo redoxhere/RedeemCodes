@@ -1,29 +1,27 @@
+![Banner](https://cdn.modrinth.com/data/cached_images/2018cfdff840876bfa1c45b362fea47751057238.png)
+
+
 **RedeemCodes** is a powerful plugin that allows server administrators to create, manage, and redeem custom codes to reward players.
 
+### Features
 
----
+* **Custom Redeemable Codes** – Define unlimited codes with flexible reward options.
+* **Blacklist/Whitelist System** – Block or allow specific players for each code.
+* **Redemption Limits & Cooldowns** – Set per-player or global redemption limits with cooldown timers.
+* **Interactive GUI Editor** – Manage codes and rewards directly in an intuitive in-game GUI.
+* **Success & Error Sounds** – Configurable sounds that play on successful or failed redemption.
+* **Placeholder Support** – Use placeholders like `%player%`, `%uuid%`, `%random-min-max%`, and more inside reward commands.
+* **Permission-Based Access** – All admin commands are fully permission protected.
+* **Fully Configurable** – Customize all messages, sounds, and prefix in `config.yml`.
 
-## 🔧 Features
 
-* 🎟️ **Custom Redeemable Codes** – Define unlimited codes with flexible reward options.
-* ⛔ **Blacklist/Whitelist System** – Block or allow specific players for each code.
-* 🔄 **Redemption Limits & Cooldowns** – Set per-player or global redemption limits with cooldown timers.
-* 🎨 **Interactive GUI Editor** – Manage codes and rewards directly in an intuitive in-game GUI.
-* 🔊 **Success & Error Sounds** – Configurable sounds that play on successful or failed redemption.
-* 🧩 **Placeholder Support** – Use placeholders like `%player%`, `%uuid%`, `%random-min-max%`, and more inside reward commands.
-* 🔐 **Permission-Based Access** – All admin commands are fully permission protected.
-* 🧠 **Fully Configurable** – Customize all messages, sounds, and prefix in `config.yml`.
-
----
-
-## 🎁 Reward System
+### Reward System
 
 * **Console Command**: Rewards are assigned as console commands, creating endless possibilities without limitations.
 * **Placeholder Support**: Supports placeholders to add custom values in commands.
 
----
 
-## 🧩 Supported Placeholders
+### Supported Placeholders
 
 * `%player%` – Player's name
 * `%uuid%` – Player's UUID
@@ -37,11 +35,10 @@ Example reward:
 - "eco give %player% %random-100-500%"
 ```
 
----
 
-## 📦 Commands & Permissions
+### Commands & Permissions
 
-### ✅ Player Command
+**Player Command**
 
 ```plaintext
 /redeem <code>
@@ -50,9 +47,7 @@ Example reward:
 Redeem a code and claim its reward.
 ⤷ *Permission: None (available to all players)*
 
----
-
-### 🔧 Admin Commands
+**Admin Commands**
 
 ```plaintext
 /rc create <code>                - Create a new code
@@ -74,35 +69,42 @@ Redeem a code and claim its reward.
 
 ⤷ *Permission: `redeemcodes.admin`*
 
----
 
-## 🖥️ GUI System
+### GUI System
 
 The plugin includes a modern and easy-to-use GUI for code management:
 
-* **Main Menu**
 
-  * Create Code
-  * Codes List
-  * Admin Panel
 
-   ![RedeemCodes Menu](https://cdn.modrinth.com/data/cached_images/e18682b3eed35a24d04218d5c268c7574e3f4a95.png)
+<details>
+<summary>Main Menu</summary>
+Create Code, Codes List, Admin Panel
 
-* **Codes List GUI**
 
-  * View all available codes at a glance
+![RedeemCodes Menu](https://cdn.modrinth.com/data/cached_images/e18682b3eed35a24d04218d5c268c7574e3f4a95.png)
 
-   ![Codeslist](https://cdn.modrinth.com/data/cached_images/04b1c2ff452fd8c3932b188e3ca825b7647dcfa3.png)!
+</details>
 
-* **Code Editor**
+<details>
+<summary>Code List Menu</summary>
+View all available codes at one glance
 
-  * Edit rewards, settings, and options directly in-game
 
-   ![Code editor](https://cdn.modrinth.com/data/cached_images/3f2f5a5ccc9a512f472b72afde68c135c3939fdb.png)
+![Codeslist](https://cdn.modrinth.com/data/cached_images/04b1c2ff452fd8c3932b188e3ca825b7647dcfa3.png)!
 
----
+</details>
 
-## 🛠 Example Code Setup
+<details>
+<summary>Code Editor Menu</summary>
+Edit rewards, settings, and options directly in-game
+
+
+![Code editor](https://cdn.modrinth.com/data/cached_images/3f2f5a5ccc9a512f472b72afde68c135c3939fdb.png)
+
+</details>
+   
+
+### Example Code Setup
 
 <details>
 <summary>codes.yml</summary>
@@ -219,9 +221,8 @@ Codes:
 
 </details>  
 
----
 
-## 🔊 Configurable Sounds
+### Configurable Sounds
 
 ```yaml
 sounds:
@@ -229,9 +230,8 @@ sounds:
   failure: BLOCK_ANVIL_LAND
 ```
 
----
 
-## 💬 Fully Customizable Messages
+### Fully Customizable Messages
 
 ```yaml
 messages:
@@ -256,16 +256,14 @@ messages:
   code-expired: "&cThis code has expired." 
 ```
 
----
 
-## 📚 Requirements
+### Requirements
 
 * Minecraft 1.8.8+
-* Server Software: Paper, Purpur, Spigot, BUkkit, Folia
+* Server Software: Paper, Purpur, Spigot, Bukkit, Folia
 
----
 
-## 📌 Why Use RedeemCodes?
+### Why Use RedeemCodes?
 
 Whether you’re organizing events, giveaways, loyalty programs, or simple player rewards, RedeemCodes offers a seamless, lightweight, and customizable way to engage your server community.
 
