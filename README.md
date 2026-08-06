@@ -20,7 +20,6 @@
 Build anything from simple rewards to complex gacha-style reward pools by combining multiple reward types.
 
 * **Multiple Distribution Modes** – Choose how rewards are given:
-
   * **ALL** – Grant every configured reward.
   * **RANDOM** – Select one reward pack randomly.
   * **DRAW** – Select one reward using configurable weighted chances.
