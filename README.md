@@ -8,10 +8,13 @@
 * **Custom Redeemable Codes** – Define unlimited codes with flexible reward options.
 * **Blacklist/Whitelist System** – Block or allow specific players for each code.
 * **Redemption Limits & Cooldowns** – Set per-player or global redemption limits with cooldown timers.
+* **Permission System** - Develop permission-based codes to limit usage to a specific rank or group
+* **Dynamic reward system** - Mix and match different types of rewards to create simple, gacha-style, and more engaging pools.
+* **Events** - Trigger customizable actions such as fireworks, command sets, or animations when a reward is claimed
 * **Interactive GUI Editor** – Manage codes and rewards directly in an intuitive in-game GUI.
-* **Success & Error Sounds** – Configurable sounds that play on successful or failed redemption.
-* **Placeholder Support** – Use placeholders like `%player%`, `%uuid%`, `%random-min-max%`, and more inside reward commands.
-* **Permission-Based Access** – All admin commands are fully permission protected.
+* **Interaction Sounds** – Configurable sounds that play on events, successful or failed redemption.
+* **Placeholder Support** – Use Papi or in-built placeholders like `%player%`, `%uuid%`, `%random-min-max%`, and more inside reward commands.
+* **Permission-Based Access** – Every admin command is fully protected by permissions.
 * **Fully Configurable** – Customize all messages, sounds, and prefix in `config.yml`.
 
 
@@ -228,6 +231,10 @@ Codes:
 sounds:
   success: ENTITY_PLAYER_LEVELUP
   failure: BLOCK_ANVIL_LAND
+  click: UI_BUTTON_CLICK
+  page-turn: ITEM_BOOK_PAGE_TURN
+  error: ENTITY_VILLAGER_NO
+  close: BLOCK_CHEST_CLOSE
 ```
 
 
