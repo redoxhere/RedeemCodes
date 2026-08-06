@@ -9,22 +9,30 @@
 * **Blacklist/Whitelist System** – Block or allow specific players for each code.
 * **Redemption Limits & Cooldowns** – Set per-player or global redemption limits with cooldown timers.
 * **Permission System** - Develop permission-based codes to limit usage to a specific rank or group
-* **Dynamic reward system** - Mix and match different types of rewards to create simple, gacha-style, and more engaging pools.
 * **Events** - Trigger customizable actions such as fireworks, command sets, or animations when a reward is claimed
 * **Interactive GUI Editor** – Manage codes and rewards directly in an intuitive in-game GUI.
 * **Interaction Sounds** – Configurable sounds that play on events, successful or failed redemption.
-* **Placeholder Support** – Use Papi or in-built placeholders like `%player%`, `%uuid%`, `%random-min-max%`, and more inside reward commands.
 * **Permission-Based Access** – Every admin command is fully protected by permissions.
 * **Fully Configurable** – Customize all messages, sounds, and prefix in `config.yml`.
 
-
 ### Reward System
 
-* **Console Command**: Rewards are assigned as console commands, creating endless possibilities without limitations.
-* **Placeholder Support**: Supports placeholders to add custom values in commands.
+Build anything from simple rewards to complex gacha-style reward pools by combining multiple reward types.
 
+* **Multiple Distribution Modes** – Choose how rewards are given:
 
-### Supported Placeholders
+  * **ALL** – Grant every configured reward.
+  * **RANDOM** – Select one reward pack randomly.
+  * **DRAW** – Select one reward using configurable weighted chances.
+* **Command Packs** – Group multiple console commands into reusable reward packs.
+* **Sacks** – Give predefined item collections directly to the player's inventory.
+* **Premade Rewards** – Reuse commonly used reward sets defined in `premades.yml`.
+* **Reward Events** – Trigger custom celebrations, animations, sounds, fireworks, or other effects from the `events` folder.
+* **Weighted Rewards** – Assign weights to reward packs for loot box or gacha-style reward systems.
+* **Mix & Match Categories** – Combine commands, sacks, premades, and events in a single reward for highly customizable redemption experiences.
+* **Placeholder Support** – Supports PlaceholderAPI and built-in placeholders.
+
+### Built-in Placeholders
 
 * `%player%` – Player's name
 * `%uuid%` – Player's UUID
@@ -32,12 +40,28 @@
 * `%world%` – World name
 * `%random-min-max%` – Random number within a range
 
-Example reward:
+Example reward configuration:
 
 ```yaml
-- "eco give %player% %random-100-500%"
-```
+rewards:
+  type: DRAW
 
+  events:
+    - celebration
+
+  commands:
+    lucky_cash:
+      - "eco give %player% %random-500-1000%"
+      - "msg %player% &aYou won a cash reward!"
+      - "weight: 10"
+
+  sacks:
+    - starter: 5
+    - miner: 2
+
+  premades:
+    - vip_rank: 1
+```
 
 ### Commands & Permissions
 
