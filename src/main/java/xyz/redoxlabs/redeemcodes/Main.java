@@ -8,6 +8,7 @@ import xyz.redoxlabs.redeemcodes.guis.CodesListGUI;
 import xyz.redoxlabs.redeemcodes.guis.EventGUI;
 import xyz.redoxlabs.redeemcodes.guis.ExpiredCodesListGUI;
 import xyz.redoxlabs.redeemcodes.guis.RewardGUI;
+import xyz.redoxlabs.redeemcodes.guis.RedeemLimitGUI;
 import xyz.redoxlabs.redeemcodes.guis.SelectCodeListGUI;
 import xyz.redoxlabs.redeemcodes.managers.CreateCodeHandler;
 import xyz.redoxlabs.redeemcodes.managers.EventManager;
@@ -15,6 +16,7 @@ import xyz.redoxlabs.redeemcodes.managers.HeadManager;
 import xyz.redoxlabs.redeemcodes.managers.PremadeManager;
 import xyz.redoxlabs.redeemcodes.managers.RedeemDataManager;
 import xyz.redoxlabs.redeemcodes.managers.SackManager;
+import xyz.redoxlabs.redeemcodes.utils.CodeExpirationManager;
 import xyz.redoxlabs.redeemcodes.utils.DefaultExampleGenerator;
 import xyz.redoxlabs.redeemcodes.listeners.GUIListener;
 import xyz.redoxlabs.redeemcodes.utils.PluginUpdateChecker;
@@ -35,9 +37,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -59,12 +59,15 @@ public final class Main extends JavaPlugin {
    public final Map<Player, ExpiredCodesListGUI> openExpiredCodeGUIs = new HashMap<>();
    public final Map<Player, SelectCodeListGUI> openSelectCodeGUIs = new HashMap<>();
    public final Map<Player, RewardGUI> openRewardGUIs = new HashMap<>();
+   public final Map<Player, xyz.redoxlabs.redeemcodes.guis.RedeemLimitGUI> openLimitGUIs = new HashMap<>();
    private FoliaLib foliaLib;
 
    public void onEnable() {
       this.foliaLib = new FoliaLib(this);
-      saveDefaultConfig();
+      this.saveDefaultConfig();
+      this.reloadConfig();
       createCodesConfig();
+      xyz.redoxlabs.redeemcodes.migrations.MigrationManager.migrate(this);
       (new DefaultExampleGenerator(this)).generate();
 
       HeadManager.preloadHeads();
@@ -91,19 +94,7 @@ public final class Main extends JavaPlugin {
       this.createHandler = createHandler;
       getServer().getPluginManager().registerEvents(new GUIListener(this, createHandler), this);
       getServer().getPluginManager().registerEvents(eventGUI, this);
-      getServer().getPluginManager().registerEvents(new Listener() {
-         @EventHandler
-         public void onPlayerJoin(PlayerJoinEvent event) {
-            HeadManager.getAllCachedHeads().forEach((key, head) -> {
-               SkullMeta meta = (SkullMeta)head.getItemMeta();
-               if (meta != null) {
-                  event.getPlayer().getInventory().addItem(new ItemStack[]{head});
-                  event.getPlayer().getInventory().removeItem(new ItemStack[]{head});
-               }
 
-            });
-         }
-      }, this);
       int pluginId = 27831;
 
       try {
@@ -129,6 +120,7 @@ public final class Main extends JavaPlugin {
       openExpiredCodeGUIs.clear();
       openSelectCodeGUIs.clear();
       openRewardGUIs.clear();
+      if (openLimitGUIs != null) openLimitGUIs.clear();
 
       if (redeemDataManager != null) {
          redeemDataManager.saveFile();
@@ -172,12 +164,30 @@ public final class Main extends JavaPlugin {
          saveResource("codes.yml", false);
       }
 
-      this.codesConfig = YamlConfiguration.loadConfiguration(codesFile);
+      this.codesConfig = xyz.redoxlabs.redeemcodes.utils.FileTracker.validateAndLoad(codesFile, this);
+      if (this.codesConfig == null) {
+          this.codesConfig = new org.bukkit.configuration.file.YamlConfiguration();
+      } else {
+          xyz.redoxlabs.redeemcodes.utils.FileTracker.updateConfig(codesFile, "codes.yml", this, this.codesConfig);
+      }
    }
 
    public void reloadCodesConfig() {
       this.codesFile = new File(getDataFolder(), "codes.yml");
-      this.codesConfig = YamlConfiguration.loadConfiguration(codesFile);
+      this.codesConfig = xyz.redoxlabs.redeemcodes.utils.FileTracker.validateAndLoad(codesFile, this);
+      if (this.codesConfig == null) {
+          this.codesConfig = new org.bukkit.configuration.file.YamlConfiguration();
+      }
+   }
+
+   @Override
+   public void reloadConfig() {
+      super.reloadConfig();
+      File configFile = new File(getDataFolder(), "config.yml");
+      org.bukkit.configuration.file.YamlConfiguration validatedConfig = xyz.redoxlabs.redeemcodes.utils.FileTracker.validateAndLoad(configFile, this);
+      if (validatedConfig != null) {
+          xyz.redoxlabs.redeemcodes.utils.FileTracker.updateConfig(configFile, "config.yml", this, validatedConfig);
+      }
    }
 
    public FileConfiguration getCodesConfig() {
@@ -185,12 +195,14 @@ public final class Main extends JavaPlugin {
    }
 
    public void saveCodesConfig() {
-      try {
-         codesConfig.save(codesFile);
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-
+      final String dump = codesConfig.saveToString();
+      this.foliaLib.getImpl().runAsync((task) -> {
+         try {
+            java.nio.file.Files.write(codesFile.toPath(), dump.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      });
    }
 
    public RedeemDataManager getRedeemDataManager() {

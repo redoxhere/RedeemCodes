@@ -1,6 +1,12 @@
 # Prefix displayed before every log from this plugin.
 prefix: "&d&l[&bRedeemCodes&d&l] &r"
 
+# -------------------------------------------------------------------------
+# DO NOT MODIFY THIS VALUE. THIS IS USED FOR INTERNAL DATA MIGRATIONS.
+# Changing this will corrupt your plugin data.
+data-version: "x"
+# -------------------------------------------------------------------------
+
 # Sounds played for success and failure events.
 # You can change these to different sounds. Visit https://gist.github.com/Andre601/1ab3b4fabd0010ae241156333491c379 to find more.
 sounds:

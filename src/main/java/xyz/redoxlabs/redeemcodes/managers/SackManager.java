@@ -125,14 +125,16 @@ public class SackManager implements Listener {
       File file = new File(sacksFolder, name + ".yml");
       FileConfiguration config = YamlConfiguration.loadConfiguration(file);
       config.set("contents", inv.getContents());
+      final String dump = config.saveToString();
 
-      try {
-         config.save(file);
-      } catch (IOException e) {
-         plugin.getLogger().severe("Could not save sack: " + name);
-         e.printStackTrace();
-      }
-
+      ((xyz.redoxlabs.redeemcodes.Main) plugin).getFoliaLib().getImpl().runAsync((task) -> {
+         try {
+            java.nio.file.Files.write(file.toPath(), dump.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+         } catch (IOException e) {
+            plugin.getLogger().severe("Could not save sack: " + name);
+            e.printStackTrace();
+         }
+      });
    }
 
    public String[] getSackNames() {

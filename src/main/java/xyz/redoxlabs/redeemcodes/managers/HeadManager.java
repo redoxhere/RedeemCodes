@@ -40,6 +40,9 @@ public class HeadManager {
       register("GENERIC_ADD", "bd0f7034c1ac9f65f94aabe30c69ef7e7bc08cc0ca287a39af140436e5093aae");
       register("GENERIC_REMOVE", "60335c5089b28f7e1261749bf107fa675900c1956ca9e6d851ba55a5e1f8624a");
       register("COMMAND_PACK", "3687a2bcaf83ea8a3174d03d3900991b67e65c8ca1cc4d95a0b2cb717967a627");
+      register("LIMIT_PLAYER", "28e4606d638ad632a4b0becbf00dccf35934af169a2cf0d2be890b1cb19c5bc");
+      register("LIMIT_IP", "658c8b56eb96c38702ca4a4d94a57cf815a231ba069c5259f4a5ce21a187cf26");
+      register("LIMIT_GLOBAL", "5577c4de1f51a70722023e856b543cd570f1d0ee6b9d167b59028ce1bc92e458");
    }
 
    public static Map<String, ItemStack> getAllCachedHeads() {

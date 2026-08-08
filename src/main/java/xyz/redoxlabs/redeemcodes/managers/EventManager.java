@@ -71,7 +71,14 @@ public class EventManager {
             config.createSection("fireworks");
             config.createSection("commands");
             config.createSection("sounds");
-            config.save(file);
+            final String dump = config.saveToString();
+            plugin.getFoliaLib().getImpl().runAsync((task) -> {
+               try {
+                  java.nio.file.Files.write(file.toPath(), dump.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+               } catch (IOException e) {
+                  e.printStackTrace();
+               }
+            });
             eventConfigs.put(name, config);
             return true;
          } catch (IOException e) {
@@ -110,12 +117,14 @@ public class EventManager {
    public void saveEvent(String name) {
       FileConfiguration config = (FileConfiguration)eventConfigs.get(name);
       if (config != null) {
-         try {
-            config.save(new File(eventsFolder, name + ".yml"));
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-
+         final String dump = config.saveToString();
+         plugin.getFoliaLib().getImpl().runAsync((task) -> {
+            try {
+               java.nio.file.Files.write(new File(eventsFolder, name + ".yml").toPath(), dump.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         });
       }
    }
 

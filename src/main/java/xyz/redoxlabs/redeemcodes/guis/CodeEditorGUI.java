@@ -1,8 +1,8 @@
 package xyz.redoxlabs.redeemcodes.guis;
 
-import xyz.redoxlabs.redeemcodes.CodeExpirationManager;
 import xyz.redoxlabs.redeemcodes.Main;
 import xyz.redoxlabs.redeemcodes.managers.HeadManager;
+import xyz.redoxlabs.redeemcodes.utils.CodeExpirationManager;
 import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
 import xyz.redoxlabs.redeemcodes.utils.GUIUtils;
 import xyz.redoxlabs.redeemcodes.utils.TimeFormatter;
@@ -104,21 +104,18 @@ public class CodeEditorGUI implements Listener {
       }
       inv.setItem(14, createItem(XMaterial.NAME_TAG, "§x§F§F§E§5§6§8Permission Required", lore));
 
-      int limitCount = config.getInt("Codes." + codeName + ".redeem-limit.Count", 1);
-      String limitType = config.getString("Codes." + codeName + ".redeem-limit.Type", "PLAYER");
+      int playerLimit = config.getInt("Codes." + codeName + ".redeem-limit.player", 1);
+      int ipLimit = config.getInt("Codes." + codeName + ".redeem-limit.ip", 1);
+      int globalLimit = config.getInt("Codes." + codeName + ".redeem-limit.global", -1);
       inv.setItem(20, createItem(XMaterial.EXPERIENCE_BOTTLE, "§x§D§4§F§F§1§9Redeem Limit", List.of(
-         ChatColor.GRAY + "ʟᴇꜰᴛ ᴄʟɪᴄᴋ: -1 | ʀɪɢʜᴛ ᴄʟɪᴄᴋ: +1", 
+         ChatColor.GRAY + "ᴄʟɪᴄᴋ ᴛᴏ ᴍᴀɴᴀɢᴇ ᴄᴏᴅᴇ'ꜱ ʀᴇᴅᴇᴇᴍ ʟɪᴍɪᴛ", 
          " ", 
-         "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§Fᴄᴜʀʀᴇɴᴛ ʟɪᴍɪᴛ: §x§2§B§8§6§D§7" + limitCount
+         "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§Fᴘʟᴀʏᴇʀ ʟɪᴍɪᴛ: §x§2§B§8§6§D§7" + playerLimit,
+         "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§Fɪᴘ ʟɪᴍɪᴛ: §x§2§B§8§6§D§7" + ipLimit,
+         "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§Fɢʟᴏʙᴀʟ ʟɪᴍɪᴛ: §x§2§B§8§6§D§7" + globalLimit
       )));
 
-      inv.setItem(22, createItem(XMaterial.COMPARATOR, "§x§F§F§5§1§2§DRedeem Type", List.of(
-         ChatColor.GRAY + "ᴄʟɪᴄᴋ ᴛᴏ ᴛᴏɢɢʟᴇ ʟɪᴍɪᴛ ᴛʏᴘᴇ", 
-         "", 
-         "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§FType: §x§2§B§8§6§D§7" + limitType
-      )));
-
-      int cd = config.getInt("Codes." + codeName + ".redeem-limit.Cooldown", 0);
+      int cd = config.getInt("Codes." + codeName + ".redeem-limit.cooldown", 0);
       inv.setItem(24, createItem(XMaterial.CLOCK, "§x§F§F§E§7§2§8Cooldown", List.of(
          ChatColor.GRAY + "ᴄʟɪᴄᴋ ᴛᴏ ꜱᴇᴛ ʀᴇᴅᴇᴇᴍ ᴄᴏᴏʟᴅᴏᴡɴ", 
          " ", 
@@ -139,7 +136,7 @@ public class CodeEditorGUI implements Listener {
       boolean isExpired = expManager.isExpired(codeName);
       long remaining = expManager.getRemainingTime(codeName);
       if (isExpired) {
-         inv.setItem(31, HeadManager.getHead("REACTIVATE", "§x§6§1§F§B§4§2R§x§6§0§F§B§4§8e§x§5§F§F§C§4§Da§x§5§E§F§C§5§3c§x§5§E§F§C§5§9t§x§5§D§F§D§5§Ei§x§5§C§F§D§6§4v§x§5§B§F§D§6§Aa§x§5§A§F§D§7§0t§x§5§9§F§E§7§5e §x§5§9§F§E§7§BC§x§5§8§F§E§8§1o§x§5§7§F§F§8§6d§x§5§6§F§F§8§Ce", "§7ᴄʟɪᴄᴋ ᴛᴏ ʀᴇᴀᴄᴛɪᴠᴀᴛᴇ ᴛʜɪꜱ ᴄᴏᴅᴇ", "§7ᴛʜɪꜱ ᴡɪʟʟ ꜱᴇᴛ ɪᴛꜱ ᴇxᴘɪʀᴀᴛɪᴏɴ ᴛᴏ 'ɴᴇᴠᴇʀ'"));
+         inv.setItem(22, HeadManager.getHead("REACTIVATE", "§x§6§1§F§B§4§2R§x§6§0§F§B§4§8e§x§5§F§F§C§4§Da§x§5§E§F§C§5§3c§x§5§E§F§C§5§9t§x§5§D§F§D§5§Ei§x§5§C§F§D§6§4v§x§5§B§F§D§6§Aa§x§5§A§F§D§7§0t§x§5§9§F§E§7§5e §x§5§9§F§E§7§BC§x§5§8§F§E§8§1o§x§5§7§F§F§8§6d§x§5§6§F§F§8§Ce", "§7ᴄʟɪᴄᴋ ᴛᴏ ʀᴇᴀᴄᴛɪᴠᴀᴛᴇ ᴛʜɪꜱ ᴄᴏᴅᴇ", "§7ᴛʜɪꜱ ᴡɪʟʟ ꜱᴇᴛ ɪᴛꜱ ᴇxᴘɪʀᴀᴛɪᴏɴ ᴛᴏ 'ɴᴇᴠᴇʀ'"));
       } else {
          String expireDisplay;
          if (remaining > 0L) {
@@ -152,7 +149,7 @@ public class CodeEditorGUI implements Listener {
                         open(player);
                      } else {
                         ItemStack item = HeadManager.getHead("EXPIRE_TIME", "§x§F§B§D§7§6§5E§x§F§B§D§B§6§Dx§x§F§C§D§F§7§5p§x§F§C§E§3§7§Di§x§F§D§E§7§8§5r§x§F§D§E§A§8§De §x§F§E§E§E§9§5T§x§F§E§F§2§9§Di§x§F§F§F§6§A§5m§x§F§F§F§A§A§De", "§7ᴄʟɪᴄᴋ ᴛᴏ ꜱᴇᴛ ᴇxᴘɪʀᴇ ᴛɪᴍᴇ", " ", "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§Fᴇxᴘɪʀɪɴɢ ɪɴ: §x§2§B§8§6§D§7" + TimeFormatter.formatDuration(newRemaining));
-                        inv.setItem(31, item);
+                        inv.setItem(22, item);
                      }
                   } else {
                      this.cancelUpdateTask();
@@ -163,7 +160,7 @@ public class CodeEditorGUI implements Listener {
             expireDisplay = duration == -1 ? "Never" : TimeFormatter.formatDuration((long)duration * 1000L);
          }
 
-         inv.setItem(31, HeadManager.getHead("EXPIRE_TIME", "§cExpire Time", "§7Click to set expire time.", " ", "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§FCurrent: §x§2§B§8§6§D§7" + expireDisplay));
+         inv.setItem(22, HeadManager.getHead("EXPIRE_TIME", "§cExpire Time", "§7Click to set expire time.", " ", "§x§2§B§8§6§D§7§l| §x§F§F§F§F§F§FCurrent: §x§2§B§8§6§D§7" + expireDisplay));
       }
 
       List<String> usedPlayers = plugin.getRedeemDataManager().getRedeemedPlayers(codeName);
@@ -252,23 +249,9 @@ public class CodeEditorGUI implements Listener {
                   plugin.openRewardGUIs.put(player, rewardGUI);
                   rewardGUI.openMain(player);
                } else if (name.equals("Redeem Limit")) {
-                  int current = plugin.getCodesConfig().getInt("Codes." + codeName + ".redeem-limit.Count", 1);
-                  if (event.isRightClick()) {
-                     ++current;
-                  } else if (event.isLeftClick()) {
-                     current = Math.max(1, current - 1);
-                  }
-
-                  plugin.getCodesConfig().set("Codes." + codeName + ".redeem-limit.Count", current);
-                  plugin.saveCodesConfig();
-                  open(player);
-               } else if (name.equals("Redeem Type")) {
-                  FileConfiguration config = plugin.getCodesConfig();
-                  String type = config.getString("Codes." + codeName + ".redeem-limit.Type", "PLAYER");
-                  type = type.equalsIgnoreCase("PLAYER") ? "CODE" : "PLAYER";
-                  config.set("Codes." + codeName + ".redeem-limit.Type", type);
-                  plugin.saveCodesConfig();
-                  open(player);
+                  xyz.redoxlabs.redeemcodes.guis.RedeemLimitGUI limitGUI = new xyz.redoxlabs.redeemcodes.guis.RedeemLimitGUI(plugin, codeName, this);
+                  plugin.openLimitGUIs.put(player, limitGUI);
+                  limitGUI.open(player);
                } else if (name.equals("Cooldown")) {
                   awaitingCooldownInput.add(player.getUniqueId());
                   plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());

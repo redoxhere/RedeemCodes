@@ -51,6 +51,12 @@ public class GUIListener implements Listener {
                   editor.handleClick(event, player);
                }
                break;
+            case "REDEEM_LIMIT_GUI":
+               xyz.redoxlabs.redeemcodes.guis.RedeemLimitGUI limitGUI = (xyz.redoxlabs.redeemcodes.guis.RedeemLimitGUI)plugin.openLimitGUIs.get(player);
+               if (limitGUI != null) {
+                  limitGUI.handleClick(event, player);
+               }
+               break;
             case "EXPIRED_CODES_LIST":
                ExpiredCodesListGUI expiredGui = (ExpiredCodesListGUI)plugin.openExpiredCodeGUIs.get(player);
                if (expiredGui != null) {

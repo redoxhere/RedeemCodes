@@ -26,7 +26,12 @@ public class PremadeManager {
          plugin.saveResource("premades.yml", false);
       }
 
-      this.premadesConfig = YamlConfiguration.loadConfiguration(premadesFile);
+      this.premadesConfig = xyz.redoxlabs.redeemcodes.utils.FileTracker.validateAndLoad(premadesFile, plugin);
+      if (this.premadesConfig == null) {
+          this.premadesConfig = new YamlConfiguration();
+      } else {
+          xyz.redoxlabs.redeemcodes.utils.FileTracker.updateConfig(premadesFile, "premades.yml", plugin, this.premadesConfig);
+      }
    }
 
    public List<String> getPremadeCommands(String name) {
@@ -74,12 +79,14 @@ public class PremadeManager {
    }
 
    private void save() {
-      try {
-         premadesConfig.save(premadesFile);
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-
+      final String dump = premadesConfig.saveToString();
+      plugin.getFoliaLib().getImpl().runAsync((task) -> {
+         try {
+            java.nio.file.Files.write(premadesFile.toPath(), dump.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      });
    }
 }
 

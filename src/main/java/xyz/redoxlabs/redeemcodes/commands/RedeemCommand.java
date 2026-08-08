@@ -96,30 +96,46 @@ public class RedeemCommand implements CommandExecutor {
             String type = codes.getString("Codes." + code + ".Playerlist.Blacklist.Type", "ENABLED");
             List<String> blacklisted = codes.getStringList("Codes." + code + ".Playerlist.Blacklist.List");
             if ((!type.equalsIgnoreCase("ENABLED") || !blacklisted.contains(player.getName())) && (!type.equalsIgnoreCase("REVERSE") || blacklisted.contains(player.getName()))) {
-               String limitType = codes.getString("Codes." + code + ".redeem-limit.Type", "PLAYER");
-               int limitCount = codes.getInt("Codes." + code + ".redeem-limit.Count", -1);
-               int cooldownMinutes = codes.getInt("Codes." + code + ".redeem-limit.Cooldown", 0);
+               int playerLimit = codes.getInt("Codes." + code + ".redeem-limit.player", 1);
+               int ipLimit = codes.getInt("Codes." + code + ".redeem-limit.ip", 1);
+               int globalLimit = codes.getInt("Codes." + code + ".redeem-limit.global", -1);
+               int cooldownMinutes = codes.getInt("Codes." + code + ".redeem-limit.cooldown", 0);
+               
                RedeemDataManager dataManager = plugin.getRedeemDataManager();
                int playerUses = dataManager.getPlayerUses(code, player.getUniqueId());
+               int globalUses = dataManager.getData().getInt("codes." + code + ".global-uses", 0);
+               
                long lastRedeemTime = dataManager.getLastRedeemTime(code, player.getUniqueId());
                long currentTime = System.currentTimeMillis();
-               if (limitType.equalsIgnoreCase("PLAYER")) {
-                  if (limitCount != -1 && playerUses >= limitCount) {
-                     MessageUtil.sendMessage(plugin, player, "already-used");
-                     MessageUtil.playSound(plugin, player, "sounds.failure");
-                     return true;
-                  }
-               } else if (limitType.equalsIgnoreCase("CODE")) {
-                  if (playerUses > 0) {
-                     MessageUtil.sendMessage(plugin, player, "already-used");
-                     MessageUtil.playSound(plugin, player, "sounds.failure");
-                     return true;
-                  }
 
-                  if (limitCount <= 0) {
-                     MessageUtil.sendMessage(plugin, player, "out-of-stock");
-                     MessageUtil.playSound(plugin, player, "sounds.failure");
-                     return true;
+               if (globalLimit != -1 && globalUses >= globalLimit) {
+                  MessageUtil.sendMessage(plugin, player, "out-of-stock");
+                  MessageUtil.playSound(plugin, player, "sounds.failure");
+                  return true;
+               }
+
+               if (playerLimit != -1 && playerUses >= playerLimit) {
+                  MessageUtil.sendMessage(plugin, player, "already-used");
+                  MessageUtil.playSound(plugin, player, "sounds.failure");
+                  return true;
+               }
+
+               if (ipLimit != -1) {
+                  String currentIp = player.getAddress().getAddress().getHostAddress();
+                  List<String> usedIps = dataManager.getPlayerIps(code, player.getUniqueId());
+                  
+
+                  List<String> ipsToCheck = new ArrayList<>(usedIps);
+                  if (!ipsToCheck.contains(currentIp)) {
+                     ipsToCheck.add(currentIp);
+                  }
+                  
+                  for (String ip : ipsToCheck) {
+                     if (dataManager.getIpUses(code, ip) >= ipLimit) {
+                        MessageUtil.sendMessage(plugin, player, "already-used");
+                        MessageUtil.playSound(plugin, player, "sounds.failure");
+                        return true;
+                     }
                   }
                }
 
@@ -130,7 +146,7 @@ public class RedeemCommand implements CommandExecutor {
                      long minutes = remaining / 60L;
                      long seconds = remaining % 60L;
                      String formatted = minutes + "m " + seconds + "s";
-                     String msg = codes.getString("Codes." + code + ".redeem-limit.Cooldown-message", "&cWait %Cooldown%");
+                     String msg = codes.getString("Codes." + code + ".redeem-limit.cooldown-message", "&cWait %Cooldown%");
                      player.sendMessage(plugin.color(plugin.getPrefix() + msg.replace("%Cooldown%", formatted)));
                      MessageUtil.playSound(plugin, player, "sounds.failure");
                      return true;
@@ -138,12 +154,14 @@ public class RedeemCommand implements CommandExecutor {
                }
 
                processRewards(player, code, codes);
+               
                dataManager.addGlobalUse(code);
                dataManager.addPlayerUse(code, player.getUniqueId());
                dataManager.setLastRedeemTime(code, player.getUniqueId(), currentTime);
-               if (limitType.equalsIgnoreCase("CODE")) {
-                  codes.set("Codes." + code + ".redeem-limit.Count", limitCount - 1);
-                  plugin.saveCodesConfig();
+               if (ipLimit != -1) {
+                  String currentIp = player.getAddress().getAddress().getHostAddress();
+                  dataManager.addIpUse(code, currentIp);
+                  dataManager.addPlayerIp(code, player.getUniqueId(), currentIp);
                }
 
                MessageUtil.sendMessage(plugin, player, "redeem-success");

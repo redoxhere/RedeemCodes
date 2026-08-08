@@ -123,11 +123,11 @@ public class CreateCodeHandler implements Listener {
          codes.set("Codes." + codeName + ".enabled", true);
          codes.set("Codes." + codeName + ".permisson.required", false);
          codes.set("Codes." + codeName + ".permisson.list", new ArrayList<>());
-         codes.set("Codes." + codeName + ".redeem-limit.Type", "PLAYER");
-         codes.set("Codes." + codeName + ".redeem-limit.Count", 1);
-         codes.set("Codes." + codeName + ".redeem-limit.Cooldown", 0);
+         codes.set("Codes." + codeName + ".redeem-limit.player", 1);
+         codes.set("Codes." + codeName + ".redeem-limit.ip", 1);
+         codes.set("Codes." + codeName + ".redeem-limit.global", -1);
+         codes.set("Codes." + codeName + ".redeem-limit.cooldown", 0);
          codes.set("Codes." + codeName + ".expire-time", -1);
-         codes.set("Codes." + codeName + ".Playerlist.Used", new ArrayList<>());
          codes.set("Codes." + codeName + ".Playerlist.Blacklist.Type", "ENABLED");
          codes.set("Codes." + codeName + ".Playerlist.Blacklist.List", new ArrayList<>());
          codes.set("Codes." + codeName + ".rewards.type", "RANDOM");
@@ -159,7 +159,6 @@ public class CreateCodeHandler implements Listener {
                }
             }
 
-            codes.set(newPath + ".Playerlist.Used", new ArrayList<>());
             plugin.saveCodesConfig();
             player.sendMessage("§aCode §e" + newCodeName + " §ahas been created as a duplicate of §e" + sourceCode + "§a!");
             AdminPanelGUI.open(player, plugin);

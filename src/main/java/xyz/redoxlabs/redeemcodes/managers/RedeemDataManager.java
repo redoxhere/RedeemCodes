@@ -40,14 +40,41 @@ public class RedeemDataManager {
       return data;
    }
 
-   public void saveFile() {
-      try {
-         data.save(file);
-      } catch (IOException e) {
-         plugin.getLogger().severe("Could not save redeemdata.yml!");
-         e.printStackTrace();
-      }
+   private volatile boolean isSaving = false;
+   private volatile boolean saveQueued = false;
 
+   public void saveFile() {
+      if (isSaving) {
+         saveQueued = true;
+         return;
+      }
+      isSaving = true;
+      final String dump = data.saveToString();
+      if (!plugin.isEnabled()) {
+         try {
+            java.nio.file.Files.write(file.toPath(), dump.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+         } catch (IOException e) {
+            plugin.getLogger().severe("Could not save redeemdata.yml!");
+            e.printStackTrace();
+         }
+         isSaving = false;
+         return;
+      }
+      
+      ((xyz.redoxlabs.redeemcodes.Main) plugin).getFoliaLib().getImpl().runAsync((task) -> {
+         try {
+            java.nio.file.Files.write(file.toPath(), dump.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+         } catch (IOException e) {
+            plugin.getLogger().severe("Could not save redeemdata.yml!");
+            e.printStackTrace();
+         } finally {
+            isSaving = false;
+            if (saveQueued) {
+               saveQueued = false;
+               ((xyz.redoxlabs.redeemcodes.Main) plugin).getFoliaLib().getImpl().runNextTick((t) -> saveFile());
+            }
+         }
+      });
    }
 
    public int getPlayerUses(String codeName, UUID uuid) {
@@ -111,6 +138,36 @@ public class RedeemDataManager {
    public boolean hasCooldown(String codeName, UUID uuid, long cooldownMillis) {
       long last = getLastRedeemTime(codeName, uuid);
       return System.currentTimeMillis() - last < cooldownMillis;
+   }
+
+   public int getIpUses(String codeName, String ip) {
+
+      String safeIp = ip.replace(".", "_");
+      return data.getInt("codes." + codeName + ".ip_uses." + safeIp, 0);
+   }
+
+   public void addIpUse(String codeName, String ip) {
+      String safeIp = ip.replace(".", "_");
+      int current = getIpUses(codeName, ip);
+      data.set("codes." + codeName + ".ip_uses." + safeIp, current + 1);
+      saveFile();
+   }
+
+   public List<String> getPlayerIps(String codeName, UUID uuid) {
+      String path = "codes." + codeName + ".players." + uuid + ".ips";
+      if (data.contains(path)) {
+         return data.getStringList(path);
+      }
+      return new ArrayList<>();
+   }
+
+   public void addPlayerIp(String codeName, UUID uuid, String ip) {
+      List<String> ips = getPlayerIps(codeName, uuid);
+      if (!ips.contains(ip)) {
+         ips.add(ip);
+         data.set("codes." + codeName + ".players." + uuid + ".ips", ips);
+         saveFile();
+      }
    }
 }
 

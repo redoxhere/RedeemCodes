@@ -67,9 +67,6 @@ public class GUIUtils {
         return item;
     }
 
-    /**
-     * Creates a custom head with the given skin data, name, and lore using HeadManager.
-     */
     public static ItemStack createCodeHead(Main plugin, String code) {
         boolean isExpired = plugin.getExpirationManager().isExpired(code);
         String currentPro = isExpired ? "§x§F§F§7§0§7§0§l| " : "§x§2§D§9§D§F§F§l| ";

@@ -27,18 +27,17 @@ Codes:
     #   PLAYER -> Limits how many times a single player can redeem.
     #   CODE   -> Limits the total global uses of the code (e.g., first 10 people).
     redeem-limit:
-      Type: PLAYER
-      Count: 1 # Number of times allowed (Set to -1 for infinite).
-      Cooldown: 0 # Cooldown in minutes between uses (0 to disable).
-      Cooldown-message: "&cYou must wait %Cooldown% before redeeming again!"
+      player: 1 # Number of times allowed per player (Set to -1 for infinite).
+      ip: 1 # Number of times allowed per ip address (Set to -1 for infinite).
+      global: -1 # Number of codes in stock globally (Set to -1 for infinite).
+      cooldown: 0 # Cooldown in minutes between uses (0 to disable).
+      cooldown-message: "&cYou must wait %Cooldown% before redeeming again!"
 
     # Expiration time in seconds. -1 means it never expires.
     expire-time: -1
 
     # Player Data & Blacklisting
     Playerlist:
-      Used: [] # Do not edit manually. Stores UUIDs of players who used the code.
-
       # Blacklist Control
       # Type:
       #   ENABLED  -> Players in the list CANNOT use the code.

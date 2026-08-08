@@ -1,5 +1,6 @@
-package xyz.redoxlabs.redeemcodes;
+package xyz.redoxlabs.redeemcodes.utils;
 
+import xyz.redoxlabs.redeemcodes.Main;
 import xyz.redoxlabs.redeemcodes.managers.RedeemDataManager;
 import java.util.HashSet;
 import java.util.Iterator;

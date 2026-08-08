@@ -1,8 +1,8 @@
 package xyz.redoxlabs.redeemcodes.guis;
 
-import xyz.redoxlabs.redeemcodes.CodeExpirationManager;
 import xyz.redoxlabs.redeemcodes.Main;
 import xyz.redoxlabs.redeemcodes.managers.HeadManager;
+import xyz.redoxlabs.redeemcodes.utils.CodeExpirationManager;
 import xyz.redoxlabs.redeemcodes.utils.GUIHolder;
 import xyz.redoxlabs.redeemcodes.utils.GUIUtils;
 import xyz.redoxlabs.redeemcodes.utils.SoundUtil;

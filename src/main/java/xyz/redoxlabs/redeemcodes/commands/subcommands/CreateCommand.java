@@ -37,10 +37,11 @@ public class CreateCommand implements Subcommand {
                 codes.set(path + ".enabled", true);
                 codes.set(path + ".permisson.required", false);
                 codes.set(path + ".permisson.list", new ArrayList<>());
-                codes.set(path + ".redeem-limit.Type", "PLAYER");
-                codes.set(path + ".redeem-limit.Count", 1);
-                codes.set(path + ".redeem-limit.Cooldown", 0);
-                codes.set(path + ".Playerlist.Used", new ArrayList<>());
+                codes.set(path + ".redeem-limit.player", 1);
+                codes.set(path + ".redeem-limit.ip", 1);
+                codes.set(path + ".redeem-limit.global", -1);
+                codes.set(path + ".redeem-limit.cooldown", 0);
+                codes.set(path + ".expire-time", -1);
                 codes.set(path + ".Playerlist.Blacklist.Type", "ENABLED");
                 codes.set(path + ".Playerlist.Blacklist.List", new ArrayList<>());
                 codes.set(path + ".rewards.type", "ALL");

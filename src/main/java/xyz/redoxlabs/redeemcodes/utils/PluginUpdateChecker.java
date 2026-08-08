@@ -87,28 +87,9 @@ public class PluginUpdateChecker {
       }
    }
 
-   private boolean isNewerVersion(String versionA, String versionB) {
-      try {
-         String[] partsA = versionA.split("\\.");
-         String[] partsB = versionB.split("\\.");
-         int length = Math.max(partsA.length, partsB.length);
-
-         for(int i = 0; i < length; ++i) {
-            int numA = i < partsA.length ? Integer.parseInt(partsA[i]) : 0;
-            int numB = i < partsB.length ? Integer.parseInt(partsB[i]) : 0;
-            if (numA > numB) {
-               return true;
-            }
-            if (numA < numB) {
-               return false;
-            }
-         }
-         return false;
-      } catch (NumberFormatException e) {
-         plugin.getLogger().warning("Failed to compare versions: " + versionA + " vs " + versionB);
-         return false;
-      }
-   }
+    private boolean isNewerVersion(String versionA, String versionB) {
+       return VersionComparator.isNewerVersion(versionA, versionB);
+    }
 
    private void notifyOperators(final String latestVersion) {
       plugin.getFoliaLib().getImpl().runNextTick((task) -> {
