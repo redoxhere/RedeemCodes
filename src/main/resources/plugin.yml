@@ -2,7 +2,7 @@ name: RedeemCodes
 version: '${project.version}'
 main: xyz.redoxlabs.redeemcodes.Main
 api-version: '1.13'
-description: "Best free Redeem Codes and Vouchers plugin for Minecraft servers"
+description: "The best free custom redeem codes, vouchers, and server rewards plugin for Minecraft!"
 author: 'Redoxlabs'
 softdepend: [PlaceholderAPI]
 folia-supported: true

@@ -1,9 +1,15 @@
-![Banner](https://cdn.modrinth.com/data/cached_images/2018cfdff840876bfa1c45b362fea47751057238.png)
+<div align="center">
+  <img src="https://cdn.modrinth.com/data/cached_images/2018cfdff840876bfa1c45b362fea47751057238.png" alt="RedeemCodes Minecraft Plugin Banner" />
+  
+  <h1>RedeemCodes - The Ultimate Minecraft Voucher & Rewards Plugin</h1>
+  <p><b>Create custom redeem codes, vouchers, and rewards for your Minecraft server with infinite possibilities!</b></p>
+</div>
 
+**RedeemCodes** is the most advanced, free **Minecraft Redeem Codes and Vouchers plugin** available for Spigot, Paper, and Folia servers. Whether you are running a survival SMP, Skyblock, or Factions server, RedeemCodes allows server administrators to easily create, manage, and distribute custom codes to reward their players. 
 
-**RedeemCodes** is a powerful plugin that allows server administrators to create, manage, and redeem custom codes to reward players.
+From simple item drops to complex gacha-style reward pools, RedeemCodes provides everything you need to boost player engagement through giveaways, vote rewards, and VIP perks.
 
-### Features
+### 🌟 Key Features
 
 * **Custom Redeemable Codes** – Define unlimited codes with flexible reward options.
 * **Blacklist/Whitelist System** – Block or allow specific players for each code.
