@@ -39,6 +39,8 @@ public class RedeemCodesCommand implements CommandExecutor, TabCompleter {
         subcommands.put("show", new ShowCommand(plugin));
         subcommands.put("redeemed", new RedeemedCommand(plugin));
         subcommands.put("review", new ReviewCommand(plugin));
+        subcommands.put("info", new InfoCommand(plugin));
+        subcommands.put("test", new TestCommand(plugin));
     }
 
     private String getMessage(String key) {
@@ -47,42 +49,43 @@ public class RedeemCodesCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("§cOnly players can use admin commands.");
-            return true;
-        }
-        Player player = (Player) sender;
-
-        if (!player.isOp() && !player.hasPermission("redeemcodes.admin")) {
-            player.sendMessage(getMessage("no-permission"));
-            MessageUtil.playSound(plugin, player, "sounds.failure");
+        if (!sender.isOp() && !sender.hasPermission("redeemcodes.admin")) {
+            sender.sendMessage(getMessage("no-permission"));
+            if (sender instanceof Player) MessageUtil.playSound(plugin, (Player) sender, "sounds.failure");
             return true;
         }
 
         if (args.length < 1) {
-            MainGUI.open(player);
-            MessageUtil.playSound(plugin, player, "sounds.success");
+            if (sender instanceof Player) {
+                MainGUI.open((Player) sender);
+                MessageUtil.playSound(plugin, (Player) sender, "sounds.success");
+            } else {
+                sender.sendMessage("§cYou must specify a subcommand. (e.g. /redeemcodes help)");
+            }
             return true;
         }
 
         String action = args[0].toLowerCase();
         
-
         switch (action) {
             case "reload":
                 plugin.reloadConfig();
                 plugin.reloadCodesConfig();
                 plugin.getPremadeManager().reloadPremades();
                 plugin.getEventManager().reloadEvents();
-                player.sendMessage(getMessage("reload-success"));
-                MessageUtil.playSound(plugin, player, "sounds.success");
+                sender.sendMessage(getMessage("reload-success"));
+                if (sender instanceof Player) MessageUtil.playSound(plugin, (Player) sender, "sounds.success");
                 return true;
             case "gui":
-                MainGUI.open(player);
-                MessageUtil.playSound(plugin, player, "sounds.success");
+                if (sender instanceof Player) {
+                    MainGUI.open((Player) sender);
+                    MessageUtil.playSound(plugin, (Player) sender, "sounds.success");
+                } else {
+                    sender.sendMessage("§cOnly players can open GUIs.");
+                }
                 return true;
             case "version":
-                player.sendMessage(plugin.color("&bRedeemCodes Version: &f" + plugin.getDescription().getVersion()));
+                sender.sendMessage(plugin.color("&bRedeemCodes Version: &f" + plugin.getDescription().getVersion()));
                 return true;
         }
 
@@ -90,8 +93,8 @@ public class RedeemCodesCommand implements CommandExecutor, TabCompleter {
         if (subcommand != null) {
             return subcommand.execute(sender, args);
         } else {
-            player.sendMessage(getMessage("unknown-action").replace("%action%", action));
-            MessageUtil.playSound(plugin, player, "sounds.failure");
+            sender.sendMessage(getMessage("unknown-action").replace("%action%", action));
+            if (sender instanceof Player) MessageUtil.playSound(plugin, (Player) sender, "sounds.failure");
             return true;
         }
     }
@@ -100,10 +103,18 @@ public class RedeemCodesCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
-            StringUtil.copyPartialMatches(args[0], Arrays.asList("reload", "create", "remove", "sack", "premade", "event", "reward", "help", "list", "show", "redeemed", "gui", "review"), completions);
+            StringUtil.copyPartialMatches(args[0], Arrays.asList("reload", "create", "remove", "sack", "premade", "event", "reward", "help", "list", "show", "redeemed", "gui", "review", "info", "test"), completions);
             return completions;
-        } else {
-            return completions;
+        } else if (args.length > 1) {
+            Subcommand subcommand = subcommands.get(args[0].toLowerCase());
+            if (subcommand != null) {
+                List<String> subCompletions = subcommand.onTabComplete(sender, args);
+                if (subCompletions != null) {
+                    StringUtil.copyPartialMatches(args[args.length - 1], subCompletions, completions);
+                    return completions;
+                }
+            }
         }
+        return completions;
     }
 }

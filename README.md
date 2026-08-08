@@ -16,7 +16,7 @@
 * **Fully Configurable** – Customize all messages, sounds, and prefix in `config.yml`.
 * **File Tracker** - Monitors all plugin files and notifies admins about invalid formats, syntax issues, and errors  
 * **Async Data Management** - Reads and writes data asynchronously to ensure smooth, lag-free file management
-* **Infinite rewards** Create command-based rewards that execute console commands, or design custom rewards with our various reward types, unlocking infinite possibilities.
+* **Infinite Rewards** - Create command-based rewards that execute console commands, or design custom rewards with our various reward types, unlocking infinite possibilities.
 
 ### Reward System
 
@@ -78,23 +78,26 @@ Redeem a code and claim its reward.
 
 **Admin Commands**
 
-```plaintext
-/rc create <code>                - Create a new code
-/rc remove <code>                - Remove a code
-/rc reward                       - Add/Remove/View rewards
-/rc sack                         - Add/Remove/View Sacks
-/rc event                        - Add/Remove/Play Events
-/rc list                         - List all codes
-/rc redeemed <code>              - Show players who redeemed a code
-/rc rewards <code>               - Show rewards attached to a code
-/rc reload                       - Reload plugin configs
-/rc version                      - View plugin version
-/rc show <code>                  - Show details of a code
-/rc redeemed <code> [page]       - View redeemed users with pagination
-/rc review <message>             - Send a review or bug report to developers
-/rc gui                          - Open the RedeemCodes menu interface
-/rc help [page]                  - Show the help menu
-```
+| Command | Description |
+| :--- | :--- |
+| `/rc create <code>` | Create a new code and initialize settings. |
+| `/rc remove <code>` | Delete a code completely. |
+| `/rc list` | List all existing codes with their active status. |
+| `/rc show <code>` | Show details and configured rewards of a code. |
+| `/rc redeemed <code> [page]`| View a paginated list of players who redeemed a code. |
+| `/rc reward` | Add, remove, or view code rewards. |
+| `/rc sack` | Add, remove, edit, or give Sack integrations. |
+| `/rc premade` | Add, remove, or view Premade reward sets. |
+| `/rc event` | Add, remove, or test Event hooks. |
+| `/rc gui` | Open the interactive RedeemCodes Admin Menu. |
+| `/rc reload` | Reload the configuration safely. |
+| `/rc version` | View the active plugin version. |
+| `/rc test <code>` | Dry run a code to safely test its rewards. |
+| `/rc info` | View detailed plugin information and credits. |
+| `/rc help [page]` | Show the help menu. |
+| `/rc review <message>` | Send a review or bug report to the developers. |
+
+*Note: All admin commands support seamless **Tab Completion** and can be run from the Server Console.*
 
 ⤷ *Permission: `redeemcodes.admin`*
 

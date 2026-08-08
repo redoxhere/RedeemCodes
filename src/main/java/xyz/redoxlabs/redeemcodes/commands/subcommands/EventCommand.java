@@ -83,4 +83,15 @@ public class EventCommand implements Subcommand {
         }
         return true;
     }
+    @Override
+    public java.util.List<String> onTabComplete(org.bukkit.command.CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            return java.util.Arrays.asList("create", "remove", "add", "play");
+        } else if (args.length == 3 && !args[1].equalsIgnoreCase("create")) {
+            return new java.util.ArrayList<>(plugin.getEventManager().getEventNames());
+        } else if (args.length == 4 && args[1].equalsIgnoreCase("add")) {
+            return java.util.Arrays.asList("firework", "sound", "command");
+        }
+        return new java.util.ArrayList<>();
+    }
 }

@@ -23,9 +23,9 @@ Codes:
         - code.redeem.welcome
 
     # Redemption Limits
-    # Type:
-    #   PLAYER -> Limits how many times a single player can redeem.
-    #   CODE   -> Limits the total global uses of the code (e.g., first 10 people).
+    # player: Maximum times a single player can redeem this code.
+    # ip: Maximum times a single IP address can redeem this code.
+    # global: Maximum times this code can be redeemed across the entire server.
     redeem-limit:
       player: 1 # Number of times allowed per player (Set to -1 for infinite).
       ip: 1 # Number of times allowed per ip address (Set to -1 for infinite).

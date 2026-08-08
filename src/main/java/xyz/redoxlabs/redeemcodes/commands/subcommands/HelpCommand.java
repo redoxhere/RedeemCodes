@@ -34,11 +34,15 @@ public class HelpCommand implements Subcommand {
                 "&b/rc list &7- List codes",
                 "&b/rc redeemed <code> &7- List usage",
                 "&b/rc reload &7- Reload config",
-                "&b/rc gui &7- Open GUI"
+                "&b/rc gui &7- Open GUI",
+                "&b/rc test <code> &7- Dry run a code",
+                "&b/rc info &7- Plugin information"
         );
+        
         int commandsPerPage = 6;
         int totalPages = (int) Math.ceil((double) helpCommands.size() / (double) commandsPerPage);
         int page = 1;
+        
         if (args.length > 1) {
             try {
                 page = Integer.parseInt(args[1]);
@@ -69,5 +73,10 @@ public class HelpCommand implements Subcommand {
 
         player.sendMessage(plugin.color("&e&m                                                                       "));
         return true;
+    }
+    
+    @Override
+    public java.util.List<String> onTabComplete(org.bukkit.command.CommandSender sender, String[] args) {
+        return new java.util.ArrayList<>();
     }
 }

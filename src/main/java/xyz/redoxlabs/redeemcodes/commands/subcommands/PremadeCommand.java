@@ -68,4 +68,13 @@ public class PremadeCommand implements Subcommand {
         }
         return true;
     }
+    @Override
+    public java.util.List<String> onTabComplete(org.bukkit.command.CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            return java.util.Arrays.asList("add", "remove", "view");
+        } else if (args.length == 3) {
+            return new java.util.ArrayList<>(plugin.getPremadeManager().getPremadeNames());
+        }
+        return new java.util.ArrayList<>();
+    }
 }

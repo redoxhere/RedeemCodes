@@ -102,8 +102,8 @@ public class EventManager {
       }
    }
 
-   public Set<String> getEventNames() {
-      return eventConfigs.keySet();
+   public java.util.Set<String> getEventNames() {
+       return eventConfigs.keySet();
    }
 
    public boolean eventExists(String name) {

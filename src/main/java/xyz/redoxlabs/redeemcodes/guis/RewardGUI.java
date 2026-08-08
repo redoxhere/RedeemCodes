@@ -200,7 +200,7 @@ public class RewardGUI {
          available = Arrays.asList(plugin.getSackManager().getSackNames());
          headKey = "REWARD_SACK";
       } else {
-         available = plugin.getPremadeManager().getPremadeNames();
+         available = new ArrayList<>(plugin.getPremadeManager().getPremadeNames());
          headKey = "REWARD_PREMADE";
       }
 

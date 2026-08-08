@@ -49,4 +49,13 @@ public class RedeemedCommand implements Subcommand {
         }
         return true;
     }
+    @Override
+    public java.util.List<String> onTabComplete(org.bukkit.command.CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            if (plugin.getCodesConfig().getConfigurationSection("Codes") != null) {
+                return new java.util.ArrayList<>(plugin.getCodesConfig().getConfigurationSection("Codes").getKeys(false));
+            }
+        }
+        return new java.util.ArrayList<>();
+    }
 }

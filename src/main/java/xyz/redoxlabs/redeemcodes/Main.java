@@ -86,7 +86,9 @@ public final class Main extends JavaPlugin {
 
       PluginCommand redeemcodesCommand = getCommand("redeemcodes");
       if (redeemcodesCommand != null) {
-         redeemcodesCommand.setExecutor(new RedeemCodesCommand(this));
+         RedeemCodesCommand rcc = new RedeemCodesCommand(this);
+         redeemcodesCommand.setExecutor(rcc);
+         redeemcodesCommand.setTabCompleter(rcc);
       }
 
       CreateCodeHandler createHandler = new CreateCodeHandler(this);

@@ -59,4 +59,13 @@ public class SackCommand implements Subcommand {
         }
         return true;
     }
+    @Override
+    public java.util.List<String> onTabComplete(org.bukkit.command.CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            return java.util.Arrays.asList("create", "delete", "edit", "give");
+        } else if (args.length == 3 && !args[1].equalsIgnoreCase("create")) {
+            return java.util.Arrays.asList(plugin.getSackManager().getSackNames());
+        }
+        return new java.util.ArrayList<>();
+    }
 }

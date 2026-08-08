@@ -58,4 +58,8 @@ public class CreateCommand implements Subcommand {
         }
         return true;
     }
+    @Override
+    public java.util.List<String> onTabComplete(org.bukkit.command.CommandSender sender, String[] args) {
+        return new java.util.ArrayList<>();
+    }
 }

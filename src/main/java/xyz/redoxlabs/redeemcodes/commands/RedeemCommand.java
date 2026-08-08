@@ -83,254 +83,41 @@ public class RedeemCommand implements CommandExecutor {
             MessageUtil.playSound(plugin, player, "sounds.failure");
             return true;
          } else {
-            if (codes.getBoolean("Codes." + code + ".permisson.required", false)) {
-               List<String> perms = codes.getStringList("Codes." + code + ".permisson.list");
-               boolean hasPermission = perms.stream().anyMatch(player::hasPermission);
-               if (!hasPermission) {
-                  MessageUtil.sendMessage(plugin, player, "no-permission");
-                  MessageUtil.playSound(plugin, player, "sounds.failure");
-                  return true;
-               }
+            java.util.List<xyz.redoxlabs.redeemcodes.commands.validators.RedeemValidator> validators = java.util.Arrays.asList(
+                new xyz.redoxlabs.redeemcodes.commands.validators.PermissionValidator(),
+                new xyz.redoxlabs.redeemcodes.commands.validators.BlacklistValidator(),
+                new xyz.redoxlabs.redeemcodes.commands.validators.StockValidator(),
+                new xyz.redoxlabs.redeemcodes.commands.validators.PlayerLimitValidator(),
+                new xyz.redoxlabs.redeemcodes.commands.validators.IpLimitValidator(),
+                new xyz.redoxlabs.redeemcodes.commands.validators.CooldownValidator()
+            );
+
+            for (xyz.redoxlabs.redeemcodes.commands.validators.RedeemValidator validator : validators) {
+                if (!validator.validate(plugin, player, code, codes)) {
+                    return true;
+                }
             }
 
-            String type = codes.getString("Codes." + code + ".Playerlist.Blacklist.Type", "ENABLED");
-            List<String> blacklisted = codes.getStringList("Codes." + code + ".Playerlist.Blacklist.List");
-            if ((!type.equalsIgnoreCase("ENABLED") || !blacklisted.contains(player.getName())) && (!type.equalsIgnoreCase("REVERSE") || blacklisted.contains(player.getName()))) {
-               int playerLimit = codes.getInt("Codes." + code + ".redeem-limit.player", 1);
-               int ipLimit = codes.getInt("Codes." + code + ".redeem-limit.ip", 1);
-               int globalLimit = codes.getInt("Codes." + code + ".redeem-limit.global", -1);
-               int cooldownMinutes = codes.getInt("Codes." + code + ".redeem-limit.cooldown", 0);
-               
-               RedeemDataManager dataManager = plugin.getRedeemDataManager();
-               int playerUses = dataManager.getPlayerUses(code, player.getUniqueId());
-               int globalUses = dataManager.getData().getInt("codes." + code + ".global-uses", 0);
-               
-               long lastRedeemTime = dataManager.getLastRedeemTime(code, player.getUniqueId());
-               long currentTime = System.currentTimeMillis();
+            RedeemDataManager dataManager = plugin.getRedeemDataManager();
+            long currentTime = System.currentTimeMillis();
 
-               if (globalLimit != -1 && globalUses >= globalLimit) {
-                  MessageUtil.sendMessage(plugin, player, "out-of-stock");
-                  MessageUtil.playSound(plugin, player, "sounds.failure");
-                  return true;
-               }
-
-               if (playerLimit != -1 && playerUses >= playerLimit) {
-                  MessageUtil.sendMessage(plugin, player, "already-used");
-                  MessageUtil.playSound(plugin, player, "sounds.failure");
-                  return true;
-               }
-
-               if (ipLimit != -1) {
-                  String currentIp = player.getAddress().getAddress().getHostAddress();
-                  List<String> usedIps = dataManager.getPlayerIps(code, player.getUniqueId());
-                  
-
-                  List<String> ipsToCheck = new ArrayList<>(usedIps);
-                  if (!ipsToCheck.contains(currentIp)) {
-                     ipsToCheck.add(currentIp);
-                  }
-                  
-                  for (String ip : ipsToCheck) {
-                     if (dataManager.getIpUses(code, ip) >= ipLimit) {
-                        MessageUtil.sendMessage(plugin, player, "already-used");
-                        MessageUtil.playSound(plugin, player, "sounds.failure");
-                        return true;
-                     }
-                  }
-               }
-
-               if (cooldownMinutes > 0) {
-                  long cooldownMillis = (long)cooldownMinutes * 60L * 1000L;
-                  if (currentTime - lastRedeemTime < cooldownMillis) {
-                     long remaining = (cooldownMillis - (currentTime - lastRedeemTime)) / 1000L;
-                     long minutes = remaining / 60L;
-                     long seconds = remaining % 60L;
-                     String formatted = minutes + "m " + seconds + "s";
-                     String msg = codes.getString("Codes." + code + ".redeem-limit.cooldown-message", "&cWait %Cooldown%");
-                     player.sendMessage(plugin.color(plugin.getPrefix() + msg.replace("%Cooldown%", formatted)));
-                     MessageUtil.playSound(plugin, player, "sounds.failure");
-                     return true;
-                  }
-               }
-
-               processRewards(player, code, codes);
-               
-               dataManager.addGlobalUse(code);
-               dataManager.addPlayerUse(code, player.getUniqueId());
-               dataManager.setLastRedeemTime(code, player.getUniqueId(), currentTime);
-               if (ipLimit != -1) {
-                  String currentIp = player.getAddress().getAddress().getHostAddress();
-                  dataManager.addIpUse(code, currentIp);
-                  dataManager.addPlayerIp(code, player.getUniqueId(), currentIp);
-               }
-
-               MessageUtil.sendMessage(plugin, player, "redeem-success");
-               MessageUtil.playSound(plugin, player, "sounds.success");
-               return true;
-            } else {
-               MessageUtil.sendMessage(plugin, player, "blacklisted");
-               MessageUtil.playSound(plugin, player, "sounds.failure");
-               return true;
+            new xyz.redoxlabs.redeemcodes.managers.RewardProcessor(plugin).processRewards(player, code, codes, false);
+            
+            dataManager.addGlobalUse(code);
+            dataManager.addPlayerUse(code, player.getUniqueId());
+            dataManager.setLastRedeemTime(code, player.getUniqueId(), currentTime);
+            
+            int ipLimit = codes.getInt("Codes." + code + ".redeem-limit.ip", 1);
+            if (ipLimit != -1) {
+                String currentIp = player.getAddress().getAddress().getHostAddress();
+                dataManager.addIpUse(code, currentIp);
+                dataManager.addPlayerIp(code, player.getUniqueId(), currentIp);
             }
+
+            MessageUtil.sendMessage(plugin, player, "redeem-success");
+            MessageUtil.playSound(plugin, player, "sounds.success");
+            return true;
          }
-      }
-   }
-
-   private void processRewards(Player player, String code, FileConfiguration codes) {
-      String rewardPath = "Codes." + code + ".rewards";
-      if (codes.contains(rewardPath) && codes.isList(rewardPath)) {
-         for(String cmd : codes.getStringList(rewardPath)) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), parsePlaceholders(cmd, player));
-         }
-      }
-
-      String type = codes.getString(rewardPath + ".type", "ALL").toUpperCase();
-      List<RewardEntry> allRewards = new ArrayList<>();
-      if (codes.isConfigurationSection(rewardPath + ".commands")) {
-         ConfigurationSection cmdSection = codes.getConfigurationSection(rewardPath + ".commands");
-         if (cmdSection != null) {
-            for(String packName : cmdSection.getKeys(false)) {
-               List<String> commands = cmdSection.getStringList(packName);
-               int weight = 1;
-               List<String> cleanCommands = new ArrayList<>();
-
-               for(String line : commands) {
-                  if (line.toLowerCase().startsWith("weight:")) {
-                     try {
-                        weight = Integer.parseInt(line.split(":")[1].trim());
-                     } catch (Exception e) {
-                     }
-                  } else {
-                     cleanCommands.add(line);
-                  }
-               }
-
-               allRewards.add(new RewardEntry(RedeemCommand.RewardType.COMMAND_PACK, packName, weight, cleanCommands));
-            }
-         }
-      }
-
-      if (codes.contains(rewardPath + ".sacks")) {
-         for(String entry : codes.getStringList(rewardPath + ".sacks")) {
-            String[] parts = entry.split(":");
-            String name = parts[0];
-            int weight = parts.length > 1 ? parseInt(parts[1]) : 1;
-            allRewards.add(new RewardEntry(RedeemCommand.RewardType.SACK, name, weight, (List)null));
-         }
-      }
-
-      if (codes.contains(rewardPath + ".premades")) {
-         for(String entry : codes.getStringList(rewardPath + ".premades")) {
-            String[] parts = entry.split(":");
-            String name = parts[0];
-            int weight = parts.length > 1 ? parseInt(parts[1]) : 1;
-            allRewards.add(new RewardEntry(RedeemCommand.RewardType.PREMADE, name, weight, (List)null));
-         }
-      }
-
-      if (codes.contains(rewardPath + ".events")) {
-         for(String entry : codes.getStringList(rewardPath + ".events")) {
-            String[] parts = entry.split(":");
-            String name = parts[0];
-            int weight = parts.length > 1 ? parseInt(parts[1]) : 1;
-            allRewards.add(new RewardEntry(RedeemCommand.RewardType.EVENT, name, weight, (List)null));
-         }
-      }
-
-      if (!allRewards.isEmpty()) {
-         if (type.equals("ALL")) {
-            for(RewardEntry reward : allRewards) {
-               executeReward(player, reward);
-            }
-         } else if (type.equals("RANDOM")) {
-            RewardEntry selected = (RewardEntry)allRewards.get(random.nextInt(allRewards.size()));
-            executeReward(player, selected);
-         } else if (type.equals("DRAW")) {
-            int totalWeight = allRewards.stream().mapToInt((r) -> r.weight).sum();
-            if (totalWeight <= 0) {
-               executeReward(player, (RewardEntry)allRewards.get(random.nextInt(allRewards.size())));
-               return;
-            }
-
-            int randomValue = random.nextInt(totalWeight);
-            int currentWeight = 0;
-
-            for(RewardEntry reward : allRewards) {
-               currentWeight += reward.weight;
-               if (randomValue < currentWeight) {
-                  executeReward(player, reward);
-                  break;
-               }
-            }
-         } else {
-            for(RewardEntry reward : allRewards) {
-               executeReward(player, reward);
-            }
-         }
-
-      }
-   }
-
-   private void executeReward(Player player, RewardEntry reward) {
-      switch (reward.type) {
-         case COMMAND_PACK:
-            if (reward.commands != null) {
-               for(String cmd : reward.commands) {
-                  String parsed = parsePlaceholders(cmd, player);
-                  Bukkit.dispatchCommand(Bukkit.getConsoleSender(), parsed);
-               }
-            }
-            break;
-         case SACK:
-            plugin.getSackManager().giveSack(player, reward.key);
-            break;
-         case PREMADE:
-            for(String cmd : plugin.getPremadeManager().getPremadeCommands(reward.key)) {
-               String parsed = parsePlaceholders(cmd, player);
-               Bukkit.dispatchCommand(Bukkit.getConsoleSender(), parsed);
-            }
-            break;
-         case EVENT:
-            plugin.getEventManager().executeEvent(player, reward.key);
-      }
-
-   }
-
-   private int parseInt(String s) {
-      try {
-         return Integer.parseInt(s);
-      } catch (NumberFormatException e) {
-         return 1;
-      }
-   }
-
-   private static enum RewardType {
-      COMMAND_PACK,
-      SACK,
-      PREMADE,
-      EVENT;
-
-
-      private static RewardType[] $values() {
-         return new RewardType[]{COMMAND_PACK, SACK, PREMADE, EVENT};
-      }
-   }
-
-   private static class RewardEntry {
-      RewardType type;
-      String key;
-      int weight;
-      List<String> commands;
-
-      public RewardEntry(RewardType type, String key, int weight, List<String> commands) {
-         this.type = type;
-         this.key = key;
-         this.weight = weight;
-         this.commands = commands;
       }
    }
 }
-
-
-
-
