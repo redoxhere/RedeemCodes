@@ -7,13 +7,16 @@
 
 * **Custom Redeemable Codes** – Define unlimited codes with flexible reward options.
 * **Blacklist/Whitelist System** – Block or allow specific players for each code.
-* **Redemption Limits & Cooldowns** – Set per-player or global redemption limits with cooldown timers.
+* **Redemption Limits & Cooldowns** – Set per-player, per-IP, or global redemption limits with cooldown timers.
 * **Permission System** - Develop permission-based codes to limit usage to a specific rank or group
 * **Events** - Trigger customizable actions such as fireworks, command sets, or animations when a reward is claimed
 * **Interactive GUI Editor** – Manage codes and rewards directly in an intuitive in-game GUI.
 * **Interaction Sounds** – Configurable sounds that play on events, successful or failed redemption.
 * **Permission-Based Access** – Every admin command is fully protected by permissions.
 * **Fully Configurable** – Customize all messages, sounds, and prefix in `config.yml`.
+* **File Tracker** - Monitors all plugin files and notifies admins about invalid formats, syntax issues, and errors  
+* **Async Data Management** - Reads and writes data asynchronously to ensure smooth, lag-free file management
+* **Infinite rewards** Create command-based rewards that execute console commands, or design custom rewards with our various reward types, unlocking infinite possibilities.
 
 ### Reward System
 
@@ -159,22 +162,21 @@ Codes:
         - code.redeem.welcome
 
     # Redemption Limits
-    # Type:
-    #   PLAYER -> Limits how many times a single player can redeem.
-    #   CODE   -> Limits the total global uses of the code (e.g., first 10 people).
+    # player: Maximum times a single player can redeem this code.
+    # ip: Maximum times a single IP address can redeem this code.
+    # global: Maximum times this code can be redeemed across the entire server.
     redeem-limit:
-      Type: PLAYER
-      Count: 1 # Number of times allowed (Set to -1 for infinite).
-      Cooldown: 0 # Cooldown in minutes between uses (0 to disable).
-      Cooldown-message: "&cYou must wait %Cooldown% before redeeming again!"
+      player: 1 # Number of times allowed per player (Set to -1 for infinite).
+      ip: 1 # Number of times allowed per ip address (Set to -1 for infinite).
+      global: -1 # Number of codes in stock globally (Set to -1 for infinite).
+      cooldown: 0 # Cooldown in minutes between uses (0 to disable).
+      cooldown-message: "&cYou must wait %Cooldown% before redeeming again!"
 
     # Expiration time in seconds. -1 means it never expires.
     expire-time: -1
 
     # Player Data & Blacklisting
     Playerlist:
-      Used: [] # Do not edit manually. Stores UUIDs of players who used the code.
-
       # Blacklist Control
       # Type:
       #   ENABLED  -> Players in the list CANNOT use the code.
