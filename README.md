@@ -107,7 +107,7 @@ The plugin includes a modern and easy-to-use GUI for code management:
 
 <details>
 <summary>Main Menu</summary>
-Create Code, Codes List, Admin Panel
+Create Code, Codes List, Admin Panel<br><br>
 
 
 ![RedeemCodes Menu](https://cdn.modrinth.com/data/cached_images/e18682b3eed35a24d04218d5c268c7574e3f4a95.png)
@@ -116,7 +116,7 @@ Create Code, Codes List, Admin Panel
 
 <details>
 <summary>Code List Menu</summary>
-View all available codes at one glance
+View all available codes at one glance<br><br>
 
 
 ![Codeslist](https://cdn.modrinth.com/data/cached_images/04b1c2ff452fd8c3932b188e3ca825b7647dcfa3.png)!
@@ -125,7 +125,7 @@ View all available codes at one glance
 
 <details>
 <summary>Code Editor Menu</summary>
-Edit rewards, settings, and options directly in-game
+Edit rewards, settings, and options directly in-game<br><br>
 
 
 ![Code editor](https://cdn.modrinth.com/data/cached_images/3f2f5a5ccc9a512f472b72afde68c135c3939fdb.png)
