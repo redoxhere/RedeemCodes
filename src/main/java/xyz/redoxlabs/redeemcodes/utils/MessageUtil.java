@@ -130,7 +130,7 @@ public class MessageUtil {
     }
 
     public static net.md_5.bungee.api.chat.BaseComponent[] parseInteractive(String text) {
-        net.md_5.bungee.api.chat.ComponentBuilder builder = new net.md_5.bungee.api.chat.ComponentBuilder("");
+        java.util.List<net.md_5.bungee.api.chat.BaseComponent> components = new java.util.ArrayList<>();
         String hoverText = null;
         net.md_5.bungee.api.chat.ClickEvent clickEvent = null;
 
@@ -149,7 +149,7 @@ public class MessageUtil {
                     if (clickEvent != null) {
                         comp.setClickEvent(clickEvent);
                     }
-                    builder.append(comp);
+                    components.add(comp);
                 }
             }
             
@@ -187,11 +187,11 @@ public class MessageUtil {
                 if (clickEvent != null) {
                     comp.setClickEvent(clickEvent);
                 }
-                builder.append(comp);
+                components.add(comp);
             }
         }
         
-        return builder.create();
+        return components.toArray(new net.md_5.bungee.api.chat.BaseComponent[0]);
     }
 
     public static void playSound(Main plugin, Player player, String path) {
