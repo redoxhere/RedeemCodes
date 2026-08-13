@@ -86,7 +86,7 @@ Redeem a code and claim its reward.
 
 | Command | Description |
 | :--- | :--- |
-| `/rc create <new|copy> <name> [new-name]` | Create a new code or copy an existing one. |
+| `/rc create <new/copy> <name> [new-name]` | Create a new code or copy an existing one. |
 | `/rc remove <code>` | Delete a code completely. |
 | `/rc list` | List all existing codes with their active status. |
 | `/rc show <code>` | Show details and configured rewards of a code. |
@@ -259,7 +259,7 @@ Codes:
 </details>  
 
 
-### Configurable Sounds
+### Configurable Sounds and Messages
 
 ```yaml
 sounds:
@@ -269,38 +269,6 @@ sounds:
   page-turn: ITEM_BOOK_PAGE_TURN
   error: ENTITY_VILLAGER_NO
   close: BLOCK_CHEST_CLOSE
-```
-
-
-### Fully Customizable Messages
-
-```yaml
-general:
-  usage: "&cUsage: /redeem <code>"
-  not-exist: "&cThis code doesn't exist!"
-  no-permission: "&cYou don't have permission to use this."
-  code-disabled: "&cThis code is currently disabled."
-  out-of-stock: "&cThis code is out of stock!"
-  code-expired: "&cThis code has expired."
-
-handlers:
-  blacklisted: "&cYou are not allowed to redeem this code."
-  already-used: "&eYou have already redeemed this code."
-  redeem-success: "&aSuccessfully redeemed the code!"
-
-commands:
-  create:
-    usage: "&cUsage: /rc create <new|copy> <name> [new-name]"
-    exists: "&cCode already exists!"
-    success: "&aCreated new code: %code%"
-  remove:
-    success: "&aRemoved code: %code%"
-  reload:
-    success: "&aAll configuration files reloaded!"
-
-guis:
-  code-editor:
-    invalid-number: "&cInvalid number."
 ```
 
 
