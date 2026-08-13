@@ -45,7 +45,7 @@ public class SackCommand implements Subcommand {
                         xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.sack.created", "&#32CD32Sack \'&#00BFFF") + sackName + "&#32CD32\' created successfully!");
                         MessageUtil.playSound(plugin, player, "sounds.success");
                     } else {
-                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.sack.exists", "&#FF6347Sack \'&#00BFFF") + sackName + "&#FF6347\' already exists.");
+                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.sack.already-exists", "&#FF6347Sack \'&#00BFFF") + sackName + "&#FF6347\' already exists.");
                     }
                     break;
                 case "remove":
@@ -69,7 +69,7 @@ public class SackCommand implements Subcommand {
                     }
 
                     plugin.getSackManager().giveSack(target, sackName);
-                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.sack.gave", "&#32CD32Gave sack to &#00BFFF") + target.getName());
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.sack.given", "&#32CD32Gave sack to &#00BFFF") + target.getName());
                     MessageUtil.playSound(plugin, player, "sounds.success");
             }
         return true;

@@ -97,7 +97,7 @@ public class GlobalSackListGUI {
                 SoundUtil.playClick(plugin, player);
                 awaitingSackName.add(player.getUniqueId());
                 player.closeInventory();
-                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.create-sack", "&#00BFFFPlease type the name for the new sack in chat.\n&#E0E0E0Type 'cancel' to abort."));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.sacks.prompt-create", "&#00BFFFPlease type the name for the new sack in chat.\n&#E0E0E0Type 'cancel' to abort."));
             } else if (XMaterial.matchXMaterial(clicked) != XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE) {
                 String sackName = ChatColor.stripColor(name);
                 if (event.isShiftClick()) {

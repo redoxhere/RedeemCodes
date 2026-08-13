@@ -62,7 +62,7 @@ public class CreateCommand implements Subcommand {
                 }
             } else if (type.equals("copy")) {
                 if (args.length < 4) {
-                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.create.copy-usage", "&#FF6347Usage: /rc create copy <source-code> <new-code>"));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.create.copy-usage", "&#FF6347Usage: /rc create copy <source-code> <new-code>"));
                     return true;
                 }
                 String sourceCode = args[2];

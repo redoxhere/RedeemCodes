@@ -298,7 +298,7 @@ public class RewardGUI {
                if (name.equals("Add New Pack")) {
                   player.closeInventory();
                   awaitingCommandPackName.add(player.getUniqueId());
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.create-pack", "&#00BFFFPlease type the name for the new command pack in chat.\n&#E0E0E0Type 'cancel' to abort."));
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.rewards.prompt-pack-name", "&#00BFFFPlease type the name for the new command pack in chat.\n&#E0E0E0Type 'cancel' to abort."));
                } else if (XMaterial.matchXMaterial(clicked) != XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE) {
                   String packName = ChatColor.stripColor(name);
                   if (event.isShiftClick()) {
@@ -309,7 +309,7 @@ public class RewardGUI {
                      player.closeInventory();
                      activePackForCommand.put(player.getUniqueId(), packName);
                      awaitingCommandForPack.add(player.getUniqueId());
-                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.add-command", "&#00BFFFPlease type the command to add to pack '&#E0E0E0") + packName + "&#00BFFF' in chat.\n&#E0E0E0Type 'cancel' to abort.");
+                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.rewards.prompt-pack-cmd", "&#00BFFFPlease type the command to add to pack '&#E0E0E0") + packName + "&#00BFFF' in chat.\n&#E0E0E0Type 'cancel' to abort.");
                   }
                }
             } else if (currentView != RewardGUI.View.SACK_LIST && currentView != RewardGUI.View.PREMADE_LIST) {
@@ -349,7 +349,7 @@ public class RewardGUI {
                      if (event.isRightClick()) {
                         activeItemForWeight.put(player.getUniqueId(), (isSack ? "sack:" : "premade:") + itemName);
                         player.closeInventory();
-                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.set-weight", "&#00BFFFPlease type the new weight for &#E0E0E0") + itemName + "&#00BFFF in chat.\n&#E0E0E0Type 'cancel' to abort.");
+                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.rewards.prompt-weight", "&#00BFFFPlease type the new weight for &#E0E0E0") + itemName + "&#00BFFF in chat.\n&#E0E0E0Type 'cancel' to abort.");
                      } else if (event.isShiftClick()) {
                         List<String> list = plugin.getCodesConfig().getStringList(rewardPath + "." + listKey);
                         list.removeIf((s) -> s.split(":")[0].equals(itemName));
@@ -434,7 +434,7 @@ public class RewardGUI {
 
                plugin.getCodesConfig().set(rewardPath + ".commands." + packName, new ArrayList<>());
                plugin.saveCodesConfig();
-               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.reward.pack-created", "&#32CD32Created new command pack: &#00BFFF") + packName);
+               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.rewards.pack-created", "&#32CD32Created new command pack: &#00BFFF") + packName);
                awaitingCommandPackName.remove(uuid);
                openCommandList(player, 0);
             } else if (awaitingCommandForPack.contains(uuid)) {
@@ -444,7 +444,7 @@ public class RewardGUI {
                   list.add(rawMsg.trim());
                   plugin.getCodesConfig().set(rewardPath + ".commands." + pack, list);
                   plugin.saveCodesConfig();
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.reward.command-added", "&#32CD32Added command to pack &#00BFFF") + pack);
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.rewards.cmd-added", "&#32CD32Added command to pack &#00BFFF") + pack);
                }
 
                awaitingCommandForPack.remove(uuid);
@@ -470,7 +470,7 @@ public class RewardGUI {
 
                      plugin.getCodesConfig().set(rewardPath + "." + listKey, list);
                      plugin.saveCodesConfig();
-                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.reward.weight-updated", "&#32CD32Weight updated to &#00BFFF") + weight);
+                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.rewards.weight-updated", "&#32CD32Weight updated to &#00BFFF") + weight);
                      awaitingWeightInput.remove(uuid);
                      activeItemForWeight.remove(uuid);
                      if (type.equals("sack")) {
@@ -479,7 +479,7 @@ public class RewardGUI {
                         openPremadeList(player, 0);
                      }
                   } catch (NumberFormatException e) {
-                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.reward.invalid-number", "&#FF6347Invalid number! Please try again or type 'cancel' to abort."));
+                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.rewards.invalid-weight", "&#FF6347Invalid number! Please try again or type 'cancel' to abort."));
                   }
                }
             }

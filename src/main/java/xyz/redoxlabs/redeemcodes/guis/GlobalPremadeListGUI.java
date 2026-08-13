@@ -96,7 +96,7 @@ public class GlobalPremadeListGUI {
                 SoundUtil.playClick(plugin, player);
                 awaitingPremadeName.add(player.getUniqueId());
                 player.closeInventory();
-                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.create-premade", "&#00BFFFPlease type the name for the new premade in chat.\n&#E0E0E0Type 'cancel' to abort."));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.premades.prompt-create", "&#00BFFFPlease type the name for the new premade in chat.\n&#E0E0E0Type 'cancel' to abort."));
             } else if (XMaterial.matchXMaterial(clicked) != XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE) {
                 String premadeName = ChatColor.stripColor(name);
                 if (event.isShiftClick()) {

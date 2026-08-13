@@ -29,72 +29,86 @@
 # ==========================================================
 
 general:
-  usage: "<hover:&#E0E0E0Click to view help menu><click:run_command:/rc help>&#FF6347Usage: /rc <code></click></hover>"
-  not-exist: "<hover:&#E0E0E0Click to view list of codes><click:run_command:/rc list>&#FF6347This code doesn't exist!</click></hover>"
+  usage: "<hover:&#E0E0E0Click to view help menu><click:run_command:/rc help>&#FF6347Usage:
+    /rc <code></click></hover>"
+  not-exist: "<hover:&#E0E0E0Click to view list of codes><click:run_command:/rc list>&#FF6347This
+    code doesn't exist!</click></hover>"
   blacklisted: "&#FF6347You are not allowed to redeem this code."
   already-used: "&#FF6347You have already redeemed this code."
   redeem-success: "&#32CD32Successfully redeemed the code!"
-  reload-success: "&#32CD32All configuration files reloaded!"
   no-permission: "&#FF6347You don't have permission to use this."
-  code-exists: "<hover:&#E0E0E0Click to view list of codes><click:run_command:/rc list>&#FF6347Code already exists!</click></hover>"
-  code-created: "&#32CD32Created new code: <hover:&#E0E0E0Click to view details><click:run_command:/rc show %code%>&#00BFFF%code%</click></hover>"
-  code-removed: "&#32CD32Removed code: &#00BFFF%code%"
-  reward-added: "&#32CD32Added reward to <hover:&#E0E0E0Click to view details><click:run_command:/rc show %code%>&#00BFFF%code%</click></hover> &#32CD32with ID &#00BFFF%id%"
-  reward-removed: "&#32CD32Removed reward ID &#00BFFF%id%"
-  reward-not-found: "&#FF6347That reward ID doesn't exist!"
-  invalid-reward-id: "&#FF6347Invalid reward ID!"
-  command-usage: "<hover:&#E0E0E0Click to view help menu><click:run_command:/rc help>&#FF6347Usage: /rc <command> [arguments]</click></hover>"
-  unknown-action: "&#FF6347Unknown action: &#00BFFF%action%"
+  code-exists: "<hover:&#E0E0E0Click to view list of codes><click:run_command:/rc
+    list>&#FF6347Code already exists!</click></hover>"
+  code-created: "&#32CD32Created new code: <hover:&#E0E0E0Click to view details><click:run_command:/rc
+    show %code%>&#00BFFF%code%</click></hover>"
   code-disabled: "&#FF6347This code is currently disabled."
   out-of-stock: "&#FF6347This code is out of stock!"
   code-expired: "&#FF6347This code has expired."
 
+  coming-soon: '&#2D9DFF[&#62D6E6Vouchers&#2D9DFF] &#62D6E6Coming Soon...'
 commands:
+  unknown-action: "&#FF6347Unknown action: &#00BFFF%action%"
   test:
-    usage: "<hover:&#E0E0E0Click to view help menu><click:run_command:/rc help>&#FF6347Usage: /rc test <code></click></hover>"
-    header: "&#1E90FF&m                                                                                &r &#00BFFFDry Run &r&#1E90FF&m                                                                                "
+    usage: "<hover:&#E0E0E0Click to view help menu><click:run_command:/rc help>&#FF6347Usage:
+      /rc test <code></click></hover>"
+    header: "&#1E90FF&m                                                          \
+      \                      &r &#00BFFFDry Run &r&#1E90FF&m                     \
+      \                                                           "
     start: "&#E0E0E0Simulating code: &#00BFFF%code%"
     checking: "&#E0E0E0Checking rewards..."
-    legacy-cmd: "  &#1E90FF▶ &#E0E0E0Would execute legacy command: &#00BFFF%cmd%"
-    cmd-pack: "  &#1E90FF▶ &#E0E0E0Selected command pack: &#00BFFF%pack%"
-    cmd: "    &#E0E0E0Would execute command: &#00BFFF%cmd%"
-    sack: "  &#1E90FF▶ &#E0E0E0Would give sack: &#00BFFF%sack%"
-    premade: "  &#1E90FF▶ &#E0E0E0Would execute premade: &#00BFFF%premade%"
-    event: "  &#1E90FF▶ &#E0E0E0Would play event: &#00BFFF%event%"
     complete: "&#32CD32[DRY RUN COMPLETE]"
   list:
-    header: "&#1E90FF&m                                                                                &r &#00BFFFExisting Codes &r&#1E90FF&m                                                                                "
-    footer: "&#1E90FF&m                                                                                "
+    header: "&#1E90FF&m                                                          \
+      \                      &r &#00BFFFExisting Codes &r&#1E90FF&m              \
+      \                                                                  "
+    footer: "&#1E90FF&m                                                          \
+      \                      "
     empty: "&#FF4500No codes found."
-    item: "<hover:&eClick to view details!\n&7Status: %status_formatted%\n&7Stock: &f%stock%><click:run_command:/rc show %code%>&#00BFFF➤ &#E0E0E0%code% %status_formatted%</click></hover>"
+    item: "<hover:&eClick to view details!\n&7Status: %status_formatted%\n&7Stock:
+      &f%stock%><click:run_command:/rc show %code%>&#00BFFF➤ &#E0E0E0%code% %status_formatted%</click></hover>"
     status-enabled: "&#00FF7F(Enabled)"
     status-disabled: "&#FF4500(Disabled)"
   show:
-    header: "&#1E90FF&m                                                                                &r &#00BFFFCode: &#E0E0E0%code% &r&#1E90FF&m                                                                                "
-    header-modern: '&#2D9DFF&m                                                                                &r &#62D6E6Code Details: &f%code% &r&#2D9DFF&m                                                                                '
+    header: "&#1E90FF&m                                                          \
+      \                      &r &#00BFFFCode: &#E0E0E0%code% &r&#1E90FF&m        \
+      \                                                                        "
     status: "&#E0E0E0Status: %status_formatted%"
-    status-modern: '<hover:&#E0E0E0Click to toggle status><click:run_command:/rc edit %code% enabled toggle>&#2D9DFF➤ &#E0E0E0Status: %status_formatted%</click></hover>'
-    limits: '<hover:&#E0E0E0Click to edit limits><click:suggest_command:/rc edit %code% limit-global >&#2D9DFF➤ &#E0E0E0Limits: &#62D6E6Player: &#E0E0E0%player% &7| &#62D6E6IP: &#E0E0E0%ip% &7| &#62D6E6Global: &#E0E0E0%global%</click></hover>'
-    cooldown: '<hover:&#E0E0E0Click to edit cooldown><click:suggest_command:/rc edit %code% cooldown >&#2D9DFF➤ &#E0E0E0Cooldown: &#62D6E6%cooldown%</click></hover>'
-    expire: '<hover:&#E0E0E0Click to edit expiration><click:suggest_command:/rc edit %code% expire >&#2D9DFF➤ &#E0E0E0Expires: &#62D6E6%expire%</click></hover>'
-    permission: '<hover:&#E0E0E0Click to toggle permission requirement><click:run_command:/rc edit %code% permission toggle>&#2D9DFF➤ &#E0E0E0Permission: %perm_status% &7(%count% perms)</click></hover>'
-    blacklist: '<hover:&#E0E0E0Click to toggle blacklist mode><click:run_command:/rc edit %code% blacklist toggle>&#2D9DFF➤ &#E0E0E0Blacklist: &#62D6E6%type% &7(%count% players)</click></hover>'
+    limits: '<hover:&#E0E0E0Click to edit limits><click:suggest_command:/rc edit %code%
+      limit-global >&#2D9DFF➤ &#E0E0E0Limits: &#62D6E6Player: &#E0E0E0%player% &7|
+      &#62D6E6IP: &#E0E0E0%ip% &7| &#62D6E6Global: &#E0E0E0%global%</click></hover>'
+    cooldown: '<hover:&#E0E0E0Click to edit cooldown><click:suggest_command:/rc edit
+      %code% cooldown >&#2D9DFF➤ &#E0E0E0Cooldown: &#62D6E6%cooldown%</click></hover>'
+    expire: '<hover:&#E0E0E0Click to edit expiration><click:suggest_command:/rc edit
+      %code% expire >&#2D9DFF➤ &#E0E0E0Expires: &#62D6E6%expire%</click></hover>'
+    permission: '<hover:&#E0E0E0Click to toggle permission requirement><click:run_command:/rc
+      edit %code% permission toggle>&#2D9DFF➤ &#E0E0E0Permission: %perm_status% &7(%count%
+      perms)</click></hover>'
+    blacklist: '<hover:&#E0E0E0Click to toggle blacklist mode><click:run_command:/rc
+      edit %code% blacklist toggle>&#2D9DFF➤ &#E0E0E0Blacklist: &#62D6E6%type% &7(%count%
+      players)</click></hover>'
     type: "&#E0E0E0Reward Type: &#00BFFF%type%"
-    type-modern: '<hover:&#E0E0E0Click to change reward type><click:suggest_command:/rc edit %code% reward settype >&#2D9DFF➤ &#E0E0E0Reward Type: &#62D6E6%type%</click></hover>'
     rewards-header: "&#E0E0E0Rewards:"
-    rewards-header-modern: '&#2D9DFF➤ &#E0E0E0Rewards:'
     category-header: "  &#1E90FF▶ &#00BFFF%category% &#E0E0E0(%count%)"
-    category-header-modern: '  &#62D6E6%category% &7(%count%)'
-    category-item: "    <hover:&#00BFFFClick to copy><click:suggest_command:%item%>&#E0E0E0- %item%</click></hover>"
-    category-item-modern: '    <hover:&#62D6E6Click to remove reward><click:run_command:/rc edit %code% reward remove %type% %item%>&#E0E0E0- %item%</click></hover>'
-    category-item-event: '    <hover:&#62D6E6Click to edit><click:suggest_command:/rc edit %code% reward setevent >&#E0E0E0- %item%</click></hover>'
+    category-item: "    <hover:&#00BFFFClick to copy><click:suggest_command:%item%>&#E0E0E0-
+      %item%</click></hover>"
+    category-item-event: '    <hover:&#62D6E6Click to edit><click:suggest_command:/rc
+      edit %code% reward setevent >&#E0E0E0- %item%</click></hover>'
   help:
-    header: "&#1E90FF&m                                                                                &r &#00BFFFRedeemCodes Help &r&#1E90FF&m                                                                                "
-    item: "<hover:&eClick to auto-fill><click:suggest_command:%command%>&#00BFFF%command% &#E0E0E0%description%</click></hover>"
-    footer: "&#1E90FF&m                                                                                "
-    pagination: "<hover:&ePrevious Page><click:run_command:/rc help %prev_page%>&#1E90FF[«]</click></hover> &#E0E0E0Page %page%/%max_page% <hover:&eNext Page><click:run_command:/rc help %next_page%>&#1E90FF[»]</click></hover>"
+    header: "&#1E90FF&m                                                          \
+      \                      &r &#00BFFFRedeemCodes Help &r&#1E90FF&m            \
+      \                                                                    "
+    item: "<hover:&eClick to auto-fill><click:suggest_command:%command%>&#00BFFF%command%
+      &#E0E0E0%description%</click></hover>"
+    footer: "&#1E90FF&m                                                          \
+      \                      "
+    pagination: "<hover:&ePrevious Page><click:run_command:/rc help %prev_page%>&#1E90FF[«]</click></hover>
+      &#E0E0E0Page %page%/%max_page% <hover:&eNext Page><click:run_command:/rc help
+      %next_page%>&#1E90FF[»]</click></hover>"
   redeemed:
-    header: "&#1E90FF&m                                                                                &r &#00BFFFRedemptions: &#E0E0E0%code% &r&#1E90FF&m                                                                                "
+    header: "&#1E90FF&m                                                          \
+      \                      &r &#00BFFFRedemptions: &#E0E0E0%code% &r&#1E90FF&m \
+      \                                                                          \
+      \     "
     empty: "&#FF4500No one has redeemed this code yet."
     count: "&#E0E0E0Total Redemptions: &#00BFFF%count%"
     item: "  &#00BFFF• &#E0E0E0%player%"
@@ -111,26 +125,22 @@ commands:
     usage-add: "&#FF4500Usage: /rc event add %event% <firework|command|sound>"
     usage-cmd: "&#FF4500Usage: /rc event add %event% command <console command>"
   create:
-    usage: "&#FF6347Usage: /rc create <code>"
+    usage: "<hover:&#E0E0E0Click to view help menu><click:run_command:/rc help>&#FF6347Usage: /rc create <code></click></hover>"
     editor-available: "&#E0E0E0[*] In-game editor is now available. Use command /rc"
   info:
-    header-line: "&#1E90FF&m                                                                                "
     version: "&#00BFFFRedeemCodes &#E0E0E0v"
     author: "&#1E90FF➤ &#E0E0E0Author: &#00BFFF"
-    github: "<hover:&#E0E0E0Click to open><click:open_url:https://github.com/redoxhere/RedeemCodes>&#1E90FF➤ &#E0E0E0GitHub: &#00BFFFhttps://github.com/redoxhere/RedeemCodes</click></hover>"
+    github: "<hover:&#E0E0E0Click to open><click:open_url:https://github.com/redoxhere/RedeemCodes>&#1E90FF➤
+      &#E0E0E0GitHub: &#00BFFFhttps://github.com/redoxhere/RedeemCodes</click></hover>"
     description: "&#1E90FF➤ &#E0E0E0Description: &#00BFFF"
-    footer-line: "&#1E90FF&m                                                                                "
+    divider: '&#1E90FF&m                                                                                '
   premade:
     usage: "&cUsage: /rc premade <add|remove|view> <name> [command/index]"
     usage-add: "&cUsage: /rc premade add "
-    cmd-added: "&aAdded command to premade '&e"
     usage-remove: "&cUsage: /rc premade remove "
-    cmd-removed: "&aRemoved command at index "
     out-of-bounds: "&cIndex out of bounds."
     invalid-index: "&cInvalid index."
     not-found: "&cPremade '&e"
-    header: "&d--- Premade: &e"
-    item: "&b"
   remove:
     usage: "&#FF6347Usage: /rc remove <code>"
     success: "&#32CD32Code removed: &#00BFFF"
@@ -138,66 +148,39 @@ commands:
     usage: "&#FF6347Usage: /rc review <message>"
     success: "&aThank you! Your review has been sent."
     disabled: "&cThe server owner has disabled this feature."
-  reward:
-    usage-main: "&#FF6347Usage: /rc reward <codename> <add|remove|view|settype|setevent> ..."
-    unknown-action: "&#FF6347Unknown reward action. Use add, remove, view, settype, setevent."
-    usage-add: "&#FF6347Usage: /rc reward "
-    usage-add-pack: "&cUsage: /rc reward "
-    added-pack-cmd: "&aAdded command to pack '&e"
-    sack-not-found-1: "&cSack '&e"
-    sack-not-found-2: "&cSack '&e"
-    added-sack: "&aAdded sack '&e"
-    premade-not-found-1: "&cPremade '&e"
-    premade-not-found-2: "&cPremade '&e"
-    added-premade: "&aAdded premade '&e"
-    unknown-type: "&cUnknown type. Use command, sack, or premade."
-    usage-remove: "&cUsage: /rc reward "
-    usage-remove-pack: "&cUsage: /rc reward "
-    pack-not-found: "&cCommand pack '&e"
-    pack-removed: "&aRemoved empty command pack '&e"
-    cmd-removed: "&aRemoved command at index "
-    out-of-bounds: "&cIndex out of bounds."
-    invalid-index: "&cInvalid index."
-    sack-removed: "&aRemoved sack '&e"
-    sack-not-in-code: "&cSack '&e"
-    premade-removed: "&aRemoved premade '&e"
-    premade-not-in-code: "&cPremade '&e"
-    usage-settype: "&cUsage: /rc reward "
-    type-updated: "&aReward type for '&e"
-    invalid-type: "&cInvalid type. Use RANDOM, ALL, or DRAW."
-    usage-setevent: "&cUsage: /rc reward "
-    events-cleared: "&aCleared all events from code '&e"
-    event-not-found: "&cEvent '&e"
-    event-set: "&aSet event for code '&e"
-    separator: "&e&m                                                                                "
   sack:
     usage: "&#FF6347Usage: /rc sack <create|remove|edit|give> <name>"
     created: "&#32CD32Sack '&#00BFFF"
-    already-exists: "&#FF6347Sack '&#00BFFF"
     removed: "&#32CD32Sack removed."
     not-found: "&#FF6347Sack not found."
     player-not-found: "&#FF6347Player not found."
-    given: "&#32CD32Gave sack to &#00BFFF"
   edit:
     usage: '&#FF6347Usage: /rc edit <codename> <property> [args...]'
-    unknown-prop: '&#FF6347Unknown property. Use cooldown, expire, enabled, limit-global, limit-player, limit-ip, permission, blacklist, reward.'
-
+    unknown-prop: '&#FF6347Unknown property. Use cooldown, expire, enabled, limit-global,
+      limit-player, limit-ip, permission, blacklist, reward.'
+  reload:
+    success: '&#32CD32All configuration files reloaded!'
 guis:
   prompts:
-    create: "&#00BFFFPlease type the name for your new code in chat.\n&#E0E0E0Type 'cancel' to abort."
+    create: "&#00BFFFPlease type the name for your new code in chat.\n&#E0E0E0Type
+      'cancel' to abort."
     cancel: "&#FF4500Action cancelled."
-    invalid-name: "&#FF4500Invalid code name! Code names can only contain letters and numbers."
-    duplicate: "&#00BFFFPlease type the name for the duplicated code in chat.\n&#E0E0E0Type 'cancel' to abort."
-    review: "&#00BFFFPlease type your review or feedback in chat.\n&#E0E0E0Type 'cancel' to abort."
+    invalid-name: "&#FF4500Invalid code name! Code names can only contain letters
+      and numbers."
+    duplicate: "&#00BFFFPlease type the name for the duplicated code in chat.\n&#E0E0E0Type
+      'cancel' to abort."
+    review: "&#00BFFFPlease type your review or feedback in chat.\n&#E0E0E0Type 'cancel'
+      to abort."
   editor:
     perms-cleared: "&#32CD32All permissions removed from code '&#00BFFF"
-    prompt-permission: "&#00BFFFPlease type the permission in chat. (e.g., 'code.redeem.example')\n&#E0E0E0Type 'cancel' to abort."
-    prompt-cooldown: "&#00BFFFType the cooldown in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).\n&#E0E0E0Type 'cancel' to abort."
-    prompt-expire: "&#00BFFFType the expire time in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).\n&#E0E0E0Type 'cancel' to abort. Type 'never' to disable expiration."
+    prompt-permission: "&#00BFFFPlease type the permission in chat. (e.g., 'code.redeem.example')\n\
+      &#E0E0E0Type 'cancel' to abort."
+    prompt-cooldown: "&#00BFFFType the cooldown in chat (e.g., 1s, 5m, 1h, 3d, 1w,
+      2mn, 1y).\n&#E0E0E0Type 'cancel' to abort."
+    prompt-expire: "&#00BFFFType the expire time in chat (e.g., 1s, 5m, 1h, 3d, 1w,
+      2mn, 1y).\n&#E0E0E0Type 'cancel' to abort. Type 'never' to disable expiration."
     reactivated: "&#32CD32Code '&#00BFFF"
-    prompt-blacklist: "&#00BFFFPlease type the username to add to the blacklist.\n&#E0E0E0Type 'cancel' to abort."
     remove-warning: "&#FF6347WARNING: You are about to remove the code '&#00BFFF"
-    cooldown-cancelled: "&#FF6347Cooldown setup cancelled."
     cooldown-invalid: "&#FF6347Invalid format. Use 1s, 3m, 1h, 1d, 1w, 1mn, 1y."
     cooldown-retry: "&#32CD32Please try again, or type 'cancel' to exit."
     cooldown-set: "&#87CEFACooldown set to &#00BFFF"
@@ -206,61 +189,67 @@ guis:
     blacklist-added: "&#87CEFA"
     expire-cancelled: "&#FF6347Expire time setup cancelled."
     expire-disabled: "&#87CEFAExpire time disabled (never expires)."
-    expire-invalid: "&#FF6347Invalid format. Use 1s, 3m, 1h, 1d, 1w, 1mn, 1y."
-    expire-retry: "&#32CD32Please try again, or type 'cancel' to exit."
     expire-set: "&#87CEFAExpire time set to &#00BFFF"
     perm-cancelled: "&#FF6347Permission addition cancelled."
     perm-exists: "&#FFD700Permission '&#00BFFF"
     perm-added: "&#87CEFAPermission '&#00BFFF"
     exec-remove: "&#32CD32Executing removal command..."
     remove-cancelled: "&#FF6347Code removal cancelled."
+    perm-invalid: '&#FF6347Invalid permission format.'
   events:
     prompt-fireworks: "&#32CD32Add Firework Rockets here. Close to save."
     fireworks-saved: "&#32CD32Fireworks saved for event '&#00BFFF"
-    prompt-delay: "&#00BFFFType the wait time in ticks (integer) in chat:\n&#E0E0E0Type 'cancel' to abort."
-    prompt-pitch: "&#00BFFFType the pitch (0.0 - 2.0) in chat:\n&#E0E0E0Type 'cancel' to abort."
+    prompt-delay: "&#00BFFFType the wait time in ticks (integer) in chat:\n&#E0E0E0Type
+      'cancel' to abort."
+    prompt-pitch: "&#00BFFFType the pitch (0.0 - 2.0) in chat:\n&#E0E0E0Type 'cancel'
+      to abort."
     cancelled-delay: "&#FF6347Cancelled."
     delay-set: "&#32CD32Delay set to &#00BFFF"
     invalid-delay: "&#FF6347Invalid number. Operation cancelled."
     cancelled-pitch: "&#FF6347Cancelled."
     pitch-set: "&#32CD32Pitch set to &#00BFFF"
-    invalid-pitch: "&#FF6347Invalid number. Operation cancelled."
   rewards:
-    prompt-pack-name: "&#00BFFFPlease type the name for the new command pack in chat.\n&#E0E0E0Type 'cancel' to abort."
+    prompt-pack-name: "&#00BFFFPlease type the name for the new command pack in chat.\n\
+      &#E0E0E0Type 'cancel' to abort."
     prompt-pack-cmd: "&#00BFFFPlease type the command to add to pack '&#E0E0E0"
     prompt-weight: "&#00BFFFPlease type the new weight for &#E0E0E0"
-    cancelled: "&#FF6347Action cancelled."
-    invalid-pack-name: "&#FF6347Invalid pack name! Use only letters, numbers, and underscores."
     pack-created: "&#32CD32Created new command pack: &#00BFFF"
     cmd-added: "&#32CD32Added command to pack &#00BFFF"
     weight-updated: "&#32CD32Weight updated to &#00BFFF"
-    invalid-weight: "&#FF6347Invalid number! Please try again or type 'cancel' to abort."
+    invalid-weight: "&#FF6347Invalid number! Please try again or type 'cancel' to
+      abort."
   sacks:
-    prompt-create: "&#00BFFFPlease type the name for the new sack in chat.\n&#E0E0E0Type 'cancel' to abort."
-    cancelled: "&#FF6347Action cancelled."
-    invalid-name: "&#FF6347Invalid sack name! Use only letters, numbers, and underscores."
-    created: "&#32CD32Created new sack: &#00BFFF"
-    exists: "&#FF6347Sack already exists."
-    deleted: "&#32CD32Sack deleted."
+    prompt-create: "&#00BFFFPlease type the name for the new sack in chat.\n&#E0E0E0Type
+      'cancel' to abort."
   premades:
-    prompt-create: "&#00BFFFPlease type the name for the new premade in chat.\n&#E0E0E0Type 'cancel' to abort."
-    cancelled: "&#FF6347Action cancelled."
-    invalid-name: "&#FF6347Invalid premade name! Use only letters, numbers, and underscores."
-    created: "&#32CD32Created new premade: &#00BFFF"
-    exists: "&#FF6347Premade already exists."
-    deleted: "&#32CD32Premade deleted."
-
+    prompt-create: "&#00BFFFPlease type the name for the new premade in chat.\n&#E0E0E0Type
+      'cancel' to abort."
 handlers:
   create:
+    copy-usage: "<hover:&#00BFFFClick to copy code!><click:suggest_command:%code%>&#00BFFFClick
+      here to copy!</click></hover>"
     cancelled: "&#FF6347Action cancelled."
-    invalid-name: "&#FF6347Invalid code name! Code names can only contain letters and numbers."
+    invalid-name: "&#FF6347Invalid code name! Code names can only contain letters
+      and numbers."
     already-exists: "&#FF6347That code name already exists!"
     review-cancelled: "&#FF6347Review cancelled."
     dupe-already-exists: "&#FF6347That code already exists!"
     source-lost: "&#FF6347Error: Source code name was lost. Please try again."
     source-not-found: "&#FF6347Error: Source code configuration not found for '&#E0E0E0"
-    dupe-created: "&#32CD32Code <hover:&#E0E0E0Click to view details!><click:run_command:/rc show "
+    dupe-created: "&#32CD32Code <hover:&#E0E0E0Click to view details!><click:run_command:/rc
+      show "
   sack:
     not-found: "&#FF6347Sack '&#E0E0E0"
     editing: "&#32CD32Editing sack '&#00BFFF"
     saved: "&#32CD32Sack '&#00BFFF"
+    already-exists: '&#FF6347Sack already exists.'
+    created: '&#32CD32Sack created successfully.'
+    deleted: '&#32CD32Sack deleted successfully.'
+    given: '&#32CD32Sack given to player.'
+  premade:
+    created: '&#32CD32Premade created successfully.'
+    deleted: '&#32CD32Premade deleted successfully.'
+premades:
+  header: '&#1E90FF&m                                                                                &r
+    &#00BFFF%premade% &r&#1E90FF&m                                                                                '
+  item: '&#E0E0E0- %item%'

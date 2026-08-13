@@ -25,8 +25,8 @@ public class FileTracker {
 
     public static YamlConfiguration validateAndLoad(File file, Main plugin) {
         YamlConfiguration config = new YamlConfiguration();
-        try {
-            config.load(file);
+        try (java.io.InputStreamReader reader = new java.io.InputStreamReader(new java.io.FileInputStream(file), StandardCharsets.UTF_8)) {
+            config.load(reader);
             return config;
         } catch (InvalidConfigurationException e) {
             handleConfigError(file, e, plugin);
@@ -105,7 +105,7 @@ public class FileTracker {
 
         if (modified) {
             try {
-                currentConfig.save(file);
+                java.nio.file.Files.write(file.toPath(), currentConfig.saveToString().getBytes(StandardCharsets.UTF_8));
                 Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[RedeemCodes] Auto-updated " + file.getName() + " with missing elements:");
                 for (String key : missingKeys) {
                     Bukkit.getConsoleSender().sendMessage(ChatColor.GRAY + " - Added missing key: " + ChatColor.WHITE + key);

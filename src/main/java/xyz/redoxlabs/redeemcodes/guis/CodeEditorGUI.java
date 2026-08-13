@@ -236,12 +236,12 @@ public class CodeEditorGUI implements Listener {
                   } else if (event.isLeftClick() && event.isShiftClick()) {
                      plugin.getCodesConfig().set("Codes." + codeName + ".permisson.list", new ArrayList<>());
                      plugin.saveCodesConfig();
-                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.permission-removed", "&#32CD32All permissions removed from code \'&#00BFFF") + codeName + "&#32CD32\'.");
+                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.perms-cleared", "&#32CD32All permissions removed from code \'&#00BFFF") + codeName + "&#32CD32\'.");
                      open(player);
                   } else if (event.isLeftClick()) {
                      awaitingPermissionInput.add(player.getUniqueId());
                      plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
-                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.add-permission", "&#00BFFFPlease type the permission in chat. (e.g., \'code.redeem.example\')\n&#E0E0E0Type \'cancel\' to abort."));
+                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.prompt-permission", "&#00BFFFPlease type the permission in chat. (e.g., \'code.redeem.example\')\n&#E0E0E0Type \'cancel\' to abort."));
                   }
                } else if (name.equals("Manage Rewards")) {
                   RewardGUI rewardGUI = new RewardGUI(plugin, codeName, this);
@@ -254,14 +254,14 @@ public class CodeEditorGUI implements Listener {
                } else if (name.equals("Cooldown")) {
                   awaitingCooldownInput.add(player.getUniqueId());
                   plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.set-cooldown", "&#00BFFFType the cooldown in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).\n&#E0E0E0Type \'cancel\' to abort."));
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.prompt-cooldown", "&#00BFFFType the cooldown in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).\n&#E0E0E0Type \'cancel\' to abort."));
                } else if (name.equals("Expire Time")) {
                   awaitingExpireTimeInput.add(player.getUniqueId());
                   plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.set-expiration", "&#00BFFFType the expiration time in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).\n&#E0E0E0Type \'cancel\' to abort. Type \'never\' to disable expiration."));
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.prompt-expire", "&#00BFFFType the expiration time in chat (e.g., 1s, 5m, 1h, 3d, 1w, 2mn, 1y).\n&#E0E0E0Type \'cancel\' to abort. Type \'never\' to disable expiration."));
                } else if (name.equals("Reactivate Code")) {
                   plugin.getExpirationManager().reactivate(codeName);
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.code-reactivated", "&#32CD32Code \'&#00BFFF") + codeName + "&#32CD32\' has been reactivated.");
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.reactivated", "&#32CD32Code \'&#00BFFF") + codeName + "&#32CD32\' has been reactivated.");
                   open(player);
                } else if (name.equals("Blacklist Toggle")) {
                   String bl = plugin.getCodesConfig().getString("Codes." + codeName + ".Playerlist.Blacklist.Type", "ENABLED");
@@ -275,11 +275,11 @@ public class CodeEditorGUI implements Listener {
                } else if (name.equals("Add to Blacklist")) {
                   awaitingBlacklistInput.add(player.getUniqueId());
                   plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.set-limit", "&#00BFFFType the maximum uses in chat.\n&#E0E0E0Type \'cancel\' to abort."));
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.prompt-cooldown", "&#00BFFFType the maximum uses in chat.\n&#E0E0E0Type \'cancel\' to abort."));
                } else if (name.equals("Remove Code")) {
                   awaitingRemoveConfirm.add(player.getUniqueId());
                   plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.confirm-remove", "&#FF6347WARNING: You are about to remove the code \'&#00BFFF") + codeName + "&#FF6347\'.\n&#FFD700This action is permanent. Type \'confirm\' in chat to proceed.\n&#E0E0E0Type anything else to cancel.");
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.remove-warning", "&#FF6347WARNING: You are about to remove the code \'&#00BFFF") + codeName + "&#FF6347\'.\n&#FFD700This action is permanent. Type \'confirm\' in chat to proceed.\n&#E0E0E0Type anything else to cancel.");
                }
             } else {
                xyz.redoxlabs.redeemcodes.utils.SoundUtil.playClick(plugin, player);
@@ -309,13 +309,13 @@ public class CodeEditorGUI implements Listener {
             } else {
                long minutes = TimeFormatter.parseTimeToMinutes(msg);
                if (minutes < 0L) {
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.invalid-format", "&#FF6347Invalid format. Use 1s, 3m, 1h, 1d, 1w, 1mn, 1y."));
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.cooldown-invalid", "&#FF6347Invalid format. Use 1s, 3m, 1h, 1d, 1w, 1mn, 1y."));
                   awaitingCooldownInput.add(playerUUID);
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.invalid-number", "&#FF6347Invalid number! Please try again or type 'cancel'."));
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.cooldown-invalid", "&#FF6347Invalid number! Please try again or type 'cancel'."));
                } else {
                   plugin.getCodesConfig().set("Codes." + codeName + ".redeem-limit.Cooldown", (int)minutes);
                   plugin.saveCodesConfig();
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.cooldown-set", "&#32CD32Cooldown set to &#00BFFF") + msg + "&#32CD32.");
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.cooldown-set", "&#32CD32Cooldown set to &#00BFFF") + msg + "&#32CD32.");
                   open(player);
                }
             }
@@ -328,16 +328,16 @@ public class CodeEditorGUI implements Listener {
          plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingBlacklistInput.remove(playerUUID);
             if (playerName.equalsIgnoreCase("cancel")) {
-               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.blacklist-add-cancelled", "&#FF6347Blacklist addition cancelled."));
+               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.blacklist-cancelled", "&#FF6347Blacklist addition cancelled."));
             } else {
                List<String> blacklist = plugin.getCodesConfig().getStringList("Codes." + codeName + ".Playerlist.Blacklist.List");
                if (blacklist.contains(playerName)) {
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.blacklist-already-exists", "&#FFD700") + playerName + " is already on the blacklist.");
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.blacklist-exists", "&#FFD700") + playerName + " is already on the blacklist.");
                } else {
                   blacklist.add(playerName);
                   plugin.getCodesConfig().set("Codes." + codeName + ".Playerlist.Blacklist.List", blacklist);
                   plugin.saveCodesConfig();
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.blacklist-added", "&#87CEFA") + playerName + " has been added to the blacklist.");
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.blacklist-added", "&#87CEFA") + playerName + " has been added to the blacklist.");
                }
             }
 
@@ -350,21 +350,21 @@ public class CodeEditorGUI implements Listener {
          plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingExpireTimeInput.remove(playerUUID);
             if (input.equalsIgnoreCase("cancel")) {
-               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.expire-cancelled", "&#FF6347Expire time setup cancelled."));
+               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.expire-cancelled", "&#FF6347Expire time setup cancelled."));
             } else if (input.equalsIgnoreCase("never")) {
                plugin.getExpirationManager().setExpiration(codeName, -1L);
-               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.expire-disabled", "&#87CEFAExpire time disabled (never expires)."));
+               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.expire-disabled", "&#87CEFAExpire time disabled (never expires)."));
             } else {
                long seconds = TimeFormatter.parseTimeToSeconds(input);
                if (seconds < 0L) {
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.invalid-permission", "&#FF6347Invalid permission format! Only letters, numbers, dots, and underscores allowed."));
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.perm-invalid", "&#FF6347Invalid permission format! Only letters, numbers, dots, and underscores allowed."));
                   awaitingExpireTimeInput.add(playerUUID);
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.try-again", "&#32CD32Please try again, or type 'cancel' to exit."));
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.cooldown-retry", "&#32CD32Please try again, or type 'cancel' to exit."));
                   return;
                }
 
                plugin.getExpirationManager().setExpiration(codeName, seconds);
-               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.expire-set", "&#87CEFAExpire time set to &#00BFFF") + input + " &#87CEFA(" + seconds + " seconds).");
+               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.expire-set", "&#87CEFAExpire time set to &#00BFFF") + input + " &#87CEFA(" + seconds + " seconds).");
             }
 
             open(player);
@@ -376,16 +376,16 @@ public class CodeEditorGUI implements Listener {
          plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingPermissionInput.remove(playerUUID);
             if (input.equalsIgnoreCase("cancel")) {
-               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.permission-add-cancelled", "&#FF6347Permission addition cancelled."));
+               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.perm-cancelled", "&#FF6347Permission addition cancelled."));
             } else {
                List<String> permList = plugin.getCodesConfig().getStringList("Codes." + codeName + ".permisson.list");
                if (permList.contains(input)) {
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.permission-already-exists", "&#FFD700Permission \'&#00BFFF") + input + "&#FFD700\' is already in the list.");
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.perm-exists", "&#FFD700Permission \'&#00BFFF") + input + "&#FFD700\' is already in the list.");
                } else {
                   permList.add(input);
                   plugin.getCodesConfig().set("Codes." + codeName + ".permisson.list", permList);
                   plugin.saveCodesConfig();
-                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.permission-added", "&#87CEFAPermission \'&#00BFFF") + input + "&#87CEFA\' added to the list.");
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.perm-added", "&#87CEFAPermission \'&#00BFFF") + input + "&#87CEFA\' added to the list.");
                }
             }
 
@@ -397,11 +397,11 @@ public class CodeEditorGUI implements Listener {
          plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             awaitingRemoveConfirm.remove(playerUUID);
             if (confirmation.equalsIgnoreCase("confirm")) {
-               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.removing-code", "&#32CD32Executing removal command..."));
+               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.exec-remove", "&#32CD32Executing removal command..."));
                player.performCommand("rc remove " + codeName);
                plugin.openEditorGUIs.remove(player);
             } else {
-               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.remove-cancelled", "&#FF6347Code removal cancelled."));
+               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.remove-cancelled", "&#FF6347Code removal cancelled."));
                open(player);
             }
 

@@ -49,7 +49,7 @@ public class PremadeCommand implements Subcommand {
 
                 String command = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
                 plugin.getPremadeManager().addCommand(name, command);
-                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.premade.added", "&#32CD32Added command to premade '&#00BFFF%name%&#32CD32'.").replace("%name%", name));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.premade.created", "&#32CD32Added command to premade '&#00BFFF%name%&#32CD32'.").replace("%name%", name));
                 MessageUtil.playSound(plugin, player, "sounds.success");
             } else if (sub.equals("remove")) {
                 if (args.length < 4) {
@@ -60,7 +60,7 @@ public class PremadeCommand implements Subcommand {
                 try {
                     int index = Integer.parseInt(args[3]);
                     if (plugin.getPremadeManager().removeCommand(name, index)) {
-                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.premade.removed", "&#32CD32Removed command at index &#00BFFF%index% &#32CD32from premade '&#00BFFF%name%&#32CD32'.").replace("%name%", name).replace("%index%", String.valueOf(index)));
+                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.premade.deleted", "&#32CD32Removed command at index &#00BFFF%index% &#32CD32from premade '&#00BFFF%name%&#32CD32'.").replace("%name%", name).replace("%index%", String.valueOf(index)));
                         MessageUtil.playSound(plugin, player, "sounds.success");
                     } else {
                         xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.premade.out-of-bounds", "&#FF6347Index out of bounds."));
@@ -75,10 +75,10 @@ public class PremadeCommand implements Subcommand {
                     return true;
                 }
 
-                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.premade.view-header", "&#1E90FF&m        &r &#00BFFFPremade: &#E0E0E0%name% &r&#1E90FF&m        ").replace("%name%", name));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("premades.header", "&#1E90FF&m        &r &#00BFFFPremade: &#E0E0E0%name% &r&#1E90FF&m        ").replace("%name%", name));
 
                 for (int i = 0; i < cmds.size(); ++i) {
-                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.premade.view-item", "  &#00BFFF%index%: &#E0E0E0%cmd%").replace("%index%", String.valueOf(i)).replace("%cmd%", cmds.get(i)));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("premades.item", "  &#00BFFF%index%: &#E0E0E0%cmd%").replace("%index%", String.valueOf(i)).replace("%cmd%", cmds.get(i)));
                 }
             }
         return true;

@@ -98,7 +98,7 @@ public class EditCommand implements Subcommand {
         String timeStr = args[3];
         long minutes = TimeFormatter.parseTimeToMinutes(timeStr);
         if (minutes < 0) {
-            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.invalid-format", "&#FF6347Invalid format. Use 1s, 3m, 1h, 1d, 1w, 1mn, 1y."));
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.cooldown-invalid", "&#FF6347Invalid format. Use 1s, 3m, 1h, 1d, 1w, 1mn, 1y."));
             return;
         }
         codes.set("Codes." + codeName + ".redeem-limit.Cooldown", (int)minutes);
@@ -119,7 +119,7 @@ public class EditCommand implements Subcommand {
         }
         long seconds = TimeFormatter.parseTimeToSeconds(timeStr);
         if (seconds < 0) {
-            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.code-editor.invalid-format", "&#FF6347Invalid format. Use 1s, 3m, 1h, 1d, 1w, 1mn, 1y."));
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.editor.cooldown-invalid", "&#FF6347Invalid format. Use 1s, 3m, 1h, 1d, 1w, 1mn, 1y."));
             return;
         }
         plugin.getExpirationManager().setExpiration(codeName, seconds);
