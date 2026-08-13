@@ -25,7 +25,7 @@ public class CooldownValidator implements RedeemValidator {
                 String formatted = minutes + "m " + seconds + "s";
                 String msg = codesConfig.getString("Codes." + code + ".redeem-limit.cooldown-message", "&cWait %Cooldown%");
                 
-                player.sendMessage(plugin.color(plugin.getPrefix() + msg.replace("%Cooldown%", formatted)));
+                MessageUtil.sendInteractiveMessage(player, MessageUtil.color(plugin.getPrefix()) + msg.replace("%Cooldown%", formatted));
                 MessageUtil.playSound(plugin, player, "sounds.failure");
                 return false;
             }

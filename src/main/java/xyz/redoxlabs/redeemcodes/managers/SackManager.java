@@ -59,7 +59,7 @@ public class SackManager implements Listener {
 
    public void openEditGUI(Player player, String name) {
       if (!sackExists(name)) {
-         player.sendMessage(ChatColor.RED + "Sack '" + name + "' does not exist.");
+         xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.sack.not-exist", "&#FF6347Sack '&#E0E0E0%name%&#FF6347' does not exist.").replace("%name%", name));
       } else {
          File file = new File(sacksFolder, name + ".yml");
          FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -76,7 +76,7 @@ public class SackManager implements Listener {
 
          editors.put(player.getUniqueId(), name);
          player.openInventory(inv);
-         player.sendMessage(ChatColor.GREEN + "Editing sack '" + name + "'. Close inventory to save.");
+         xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.sack.editing", "&#32CD32Editing sack '&#00BFFF%name%&#32CD32'. Close inventory to save.").replace("%name%", name));
       }
    }
 
@@ -114,7 +114,7 @@ public class SackManager implements Listener {
             xyz.redoxlabs.redeemcodes.utils.GUIHolder holder = (xyz.redoxlabs.redeemcodes.utils.GUIHolder) event.getInventory().getHolder();
             if ("SACK_EDITOR".equals(holder.getGuiType())) {
                saveSack(sackName, event.getInventory());
-               player.sendMessage(ChatColor.GREEN + "Sack '" + sackName + "' updated and saved!");
+               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.sack.saved", "&#32CD32Sack '&#00BFFF%name%&#32CD32' updated and saved!").replace("%name%", sackName));
                xyz.redoxlabs.redeemcodes.utils.SoundUtil.playClick(plugin, player);
             }
          }

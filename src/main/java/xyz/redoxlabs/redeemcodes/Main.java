@@ -7,6 +7,8 @@ import xyz.redoxlabs.redeemcodes.guis.CodeEditorGUI;
 import xyz.redoxlabs.redeemcodes.guis.CodesListGUI;
 import xyz.redoxlabs.redeemcodes.guis.EventGUI;
 import xyz.redoxlabs.redeemcodes.guis.ExpiredCodesListGUI;
+import xyz.redoxlabs.redeemcodes.guis.GlobalPremadeListGUI;
+import xyz.redoxlabs.redeemcodes.guis.GlobalSackListGUI;
 import xyz.redoxlabs.redeemcodes.guis.RewardGUI;
 import xyz.redoxlabs.redeemcodes.guis.RedeemLimitGUI;
 import xyz.redoxlabs.redeemcodes.guis.SelectCodeListGUI;
@@ -46,6 +48,8 @@ import com.tcoded.folialib.FoliaLib;
 public final class Main extends JavaPlugin {
    private FileConfiguration codesConfig;
    private File codesFile;
+   private FileConfiguration messagesConfig;
+   private File messagesFile;
    private RedeemDataManager redeemDataManager;
    private CodeExpirationManager expirationManager;
    private CreateCodeHandler createHandler;
@@ -57,7 +61,9 @@ public final class Main extends JavaPlugin {
    public final Map<Player, CodesListGUI> openCodeGUIs = new HashMap<>();
    public final Map<Player, CodeEditorGUI> openEditorGUIs = new HashMap<>();
    public final Map<Player, ExpiredCodesListGUI> openExpiredCodeGUIs = new HashMap<>();
-   public final Map<Player, SelectCodeListGUI> openSelectCodeGUIs = new HashMap<>();
+   public final java.util.Map<org.bukkit.entity.Player, SelectCodeListGUI> openSelectCodeGUIs = new java.util.HashMap<>();
+   public final java.util.Map<org.bukkit.entity.Player, GlobalSackListGUI> openGlobalSackGUIs = new java.util.HashMap<>();
+   public final java.util.Map<org.bukkit.entity.Player, GlobalPremadeListGUI> openGlobalPremadeGUIs = new java.util.HashMap<>();
    public final Map<Player, RewardGUI> openRewardGUIs = new HashMap<>();
    public final Map<Player, xyz.redoxlabs.redeemcodes.guis.RedeemLimitGUI> openLimitGUIs = new HashMap<>();
    private FoliaLib foliaLib;
@@ -67,6 +73,7 @@ public final class Main extends JavaPlugin {
       this.saveDefaultConfig();
       this.reloadConfig();
       createCodesConfig();
+      createMessagesConfig();
       xyz.redoxlabs.redeemcodes.migrations.MigrationManager.migrate(this);
       (new DefaultExampleGenerator(this)).generate();
 
@@ -97,7 +104,7 @@ public final class Main extends JavaPlugin {
       getServer().getPluginManager().registerEvents(new GUIListener(this, createHandler), this);
       getServer().getPluginManager().registerEvents(eventGUI, this);
 
-      int pluginId = 27831;
+      int pluginId = 33333; // old: 27831
 
       try {
          Class.forName("org.bstats.bukkit.Metrics");
@@ -180,6 +187,32 @@ public final class Main extends JavaPlugin {
       if (this.codesConfig == null) {
           this.codesConfig = new org.bukkit.configuration.file.YamlConfiguration();
       }
+   }
+
+   private void createMessagesConfig() {
+      this.messagesFile = new File(getDataFolder(), "messages.yml");
+      if (!messagesFile.exists()) {
+         saveResource("messages.yml", false);
+      }
+
+      this.messagesConfig = xyz.redoxlabs.redeemcodes.utils.FileTracker.validateAndLoad(messagesFile, this);
+      if (this.messagesConfig == null) {
+          this.messagesConfig = new org.bukkit.configuration.file.YamlConfiguration();
+      } else {
+          xyz.redoxlabs.redeemcodes.utils.FileTracker.updateConfig(messagesFile, "messages.yml", this, this.messagesConfig);
+      }
+   }
+
+   public void reloadMessagesConfig() {
+      this.messagesFile = new File(getDataFolder(), "messages.yml");
+      this.messagesConfig = xyz.redoxlabs.redeemcodes.utils.FileTracker.validateAndLoad(messagesFile, this);
+      if (this.messagesConfig == null) {
+          this.messagesConfig = new org.bukkit.configuration.file.YamlConfiguration();
+      }
+   }
+
+   public FileConfiguration getMessagesConfig() {
+      return messagesConfig;
    }
 
    @Override

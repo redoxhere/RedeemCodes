@@ -34,23 +34,20 @@ public class CreateCodeHandler implements Listener {
    public void startCodeCreation(Player player) {
       awaitingInput.add(player.getUniqueId());
       plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
-      player.sendMessage("§aPlease type the name for your new code in chat.");
-      player.sendMessage("§7Type 'cancel' to abort.");
+      xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendRawMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.create", "&aPlease type the name for your new code in chat.\n&7Type 'cancel' to abort."));
    }
 
    public void startDuplication(Player player, String selectedCode) {
       awaitingDuplicationInput.add(player.getUniqueId());
       selectedCodeForDuplication.put(player.getUniqueId(), selectedCode);
       plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
-      player.sendMessage("§aPlease type the name for the duplicated code in chat.");
-      player.sendMessage("§7Type 'cancel' to abort.");
+      xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendRawMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.duplicate", "&aPlease type the name for the duplicated code in chat.\n&7Type 'cancel' to abort."));
    }
 
    public void startReviewInput(Player player) {
       awaitingReviewInput.add(player.getUniqueId());
       plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
-      player.sendMessage("§aPlease type your review or feedback in chat.");
-      player.sendMessage("§7Type 'cancel' to abort.");
+      xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendRawMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.review", "&aPlease type your review or feedback in chat.\n&7Type 'cancel' to abort."));
    }
 
    @EventHandler(priority = org.bukkit.event.EventPriority.LOWEST)
@@ -63,9 +60,9 @@ public class CreateCodeHandler implements Listener {
          String input = ChatColor.stripColor(event.getMessage()).trim().replace(" ", "");
          if (input.equalsIgnoreCase("cancel")) {
             awaitingInput.remove(playerUUID);
-            player.sendMessage("§cCode creation cancelled.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "guis.prompts.cancel");
          } else if (!isValidCodeName(input)) {
-            player.sendMessage("§cInvalid code name! Code names can only contain letters and numbers.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "guis.prompts.invalid-name");
          } else {
             plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> createCode(player, input));
             awaitingInput.remove(playerUUID);
@@ -78,11 +75,11 @@ public class CreateCodeHandler implements Listener {
          if (input.equalsIgnoreCase("cancel")) {
             awaitingDuplicationInput.remove(playerUUID);
             selectedCodeForDuplication.remove(playerUUID);
-            player.sendMessage("§cCode duplication cancelled.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.create.cancelled", "&#FF6347Action cancelled."));
          } else if (!isValidCodeName(input)) {
-            player.sendMessage("§cInvalid code name! Code names can only contain letters and numbers.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.create.invalid-name", "&#FF6347Invalid code name! Code names can only contain letters and numbers."));
          } else if (plugin.getCodesConfig().contains("Codes." + input)) {
-            player.sendMessage("§cThat code name already exists!");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.create.already-exists", "&#FF6347That code name already exists!"));
          } else {
             awaitingDuplicationInput.remove(playerUUID);
             selectedCodeForDuplication.remove(playerUUID);
@@ -94,7 +91,7 @@ public class CreateCodeHandler implements Listener {
          String input = ChatColor.stripColor(event.getMessage()).trim();
          if (input.equalsIgnoreCase("cancel")) {
             awaitingReviewInput.remove(playerUUID);
-            player.sendMessage("§cReview cancelled.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.create.review-cancelled", "&#FF6347Review cancelled."));
          } else {
             plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> sendReview(player, input));
             awaitingReviewInput.remove(playerUUID);
@@ -112,13 +109,26 @@ public class CreateCodeHandler implements Listener {
             rewardGUI.handleChat(event);
          }
 
+         xyz.redoxlabs.redeemcodes.guis.GlobalSackListGUI sackGUI = plugin.openGlobalSackGUIs.get(player);
+         if (sackGUI != null && sackGUI.awaitingSackName.contains(playerUUID)) {
+            event.setCancelled(true);
+            event.getRecipients().clear();
+            sackGUI.handleChat(event);
+         }
+
+         xyz.redoxlabs.redeemcodes.guis.GlobalPremadeListGUI premadeGUI = plugin.openGlobalPremadeGUIs.get(player);
+         if (premadeGUI != null && premadeGUI.awaitingPremadeName.contains(playerUUID)) {
+            event.setCancelled(true);
+            event.getRecipients().clear();
+            premadeGUI.handleChat(event);
+         }
       }
    }
 
    private void createCode(Player player, String codeName) {
       FileConfiguration codes = plugin.getCodesConfig();
-      if (codes.contains("Codes." + codeName)) {
-         player.sendMessage("§cThat code already exists!");
+      if (plugin.getCodesConfig().contains("Codes." + codeName)) {
+         xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.create.dupe-already-exists", "&#FF6347That code already exists!"));
       } else {
          codes.set("Codes." + codeName + ".enabled", true);
          codes.set("Codes." + codeName + ".permisson.required", false);
@@ -130,38 +140,55 @@ public class CreateCodeHandler implements Listener {
          codes.set("Codes." + codeName + ".expire-time", -1);
          codes.set("Codes." + codeName + ".Playerlist.Blacklist.Type", "ENABLED");
          codes.set("Codes." + codeName + ".Playerlist.Blacklist.List", new ArrayList<>());
-         codes.set("Codes." + codeName + ".rewards.type", "RANDOM");
+         codes.set("Codes." + codeName + ".rewards.type", "ALL");
          codes.createSection("Codes." + codeName + ".rewards.commands");
          codes.set("Codes." + codeName + ".rewards.sacks", new ArrayList<>());
          codes.set("Codes." + codeName + ".rewards.premades", new ArrayList<>());
          codes.set("Codes." + codeName + ".rewards.events", new ArrayList<>());
+         codes.set("Codes." + codeName + ".rewards.list", new ArrayList<>());
          plugin.saveCodesConfig();
-         player.sendMessage("§aCode §e" + codeName + " §ahas been created!");
-         MainGUI.open(player);
+         String msg = plugin.getMessagesConfig().getString("general.code-created", "&aCode %code% has been created!").replace("%code%", codeName);
+         xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, msg);
+         xyz.redoxlabs.redeemcodes.guis.CodesListGUI gui = new xyz.redoxlabs.redeemcodes.guis.CodesListGUI(plugin);
+         plugin.openCodeGUIs.put(player, gui);
+         gui.open(player);
       }
    }
 
-   private void duplicateCode(Player player, String sourceCode, String newCodeName) {
+   public void duplicateCode(Player player, String sourceCode, String newCodeName) {
       plugin.reloadCodesConfig();
       FileConfiguration codes = plugin.getCodesConfig();
       if (sourceCode == null) {
-         player.sendMessage("§cError: Source code name was lost. Please try again.");
+         xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.create.source-lost", "&#FF6347Error: Source code name was lost. Please try again."));
       } else {
          String sourcePath = "Codes." + sourceCode;
          String newPath = "Codes." + newCodeName;
          ConfigurationSection sourceSection = codes.getConfigurationSection(sourcePath);
          if (sourceSection == null) {
-            player.sendMessage("§cError: Source code configuration not found for '" + sourceCode + "'.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.create.source-not-found", "&#FF6347Error: Source code configuration not found for '&#E0E0E0") + sourceCode + "&#FF6347'.");
          } else {
             for(String key : sourceSection.getKeys(true)) {
                if (!sourceSection.isConfigurationSection(key)) {
-                  codes.set(newPath + "." + key, sourceSection.get(key));
+                  Object val = sourceSection.get(key);
+                  if (val instanceof java.util.Collection) {
+                     codes.set(newPath + "." + key, new java.util.ArrayList<>((java.util.Collection<?>) val));
+                  } else {
+                     codes.set(newPath + "." + key, val);
+                  }
                }
             }
 
             plugin.saveCodesConfig();
-            player.sendMessage("§aCode §e" + newCodeName + " §ahas been created as a duplicate of §e" + sourceCode + "§a!");
-            AdminPanelGUI.open(player, plugin);
+            
+            long expireTime = codes.getLong(newPath + ".expire-time", -1);
+            if (expireTime != -1) {
+               plugin.getExpirationManager().setExpiration(newCodeName, expireTime);
+            }
+
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("handlers.create.dupe-created", "&#32CD32Code <hover:&#E0E0E0Click to view details!><click:run_command:/rc show ") + newCodeName + ">&#00BFFF" + newCodeName + "</click></hover> &#32CD32has been created as a duplicate of &#00BFFF" + sourceCode + "&#32CD32!");
+            xyz.redoxlabs.redeemcodes.guis.CodesListGUI gui = new xyz.redoxlabs.redeemcodes.guis.CodesListGUI(plugin);
+            plugin.openCodeGUIs.put(player, gui);
+            gui.open(player);
          }
       }
    }

@@ -109,7 +109,7 @@ public class SelectCodeListGUI {
          if (itemName.equals("Go Back")) {
             SoundUtil.playClick(plugin, player);
             player.closeInventory();
-            AdminPanelGUI.open(player, plugin);
+            CreateCodeGUI.open(player, plugin);
          } else if (itemName.equals("Next Page")) {
             if ((page + 1) * 28 < codes.size()) {
                SoundUtil.playPageTurn(plugin, player);

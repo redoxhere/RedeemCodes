@@ -296,9 +296,9 @@ public class RewardGUI {
                }
             } else if (currentView == RewardGUI.View.COMMAND_LIST) {
                if (name.equals("Add New Pack")) {
-                  plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
+                  player.closeInventory();
                   awaitingCommandPackName.add(player.getUniqueId());
-                  player.sendMessage("§aEnter name for new command pack:");
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.create-pack", "&#00BFFFPlease type the name for the new command pack in chat.\n&#E0E0E0Type 'cancel' to abort."));
                } else if (XMaterial.matchXMaterial(clicked) != XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE) {
                   String packName = ChatColor.stripColor(name);
                   if (event.isShiftClick()) {
@@ -306,10 +306,10 @@ public class RewardGUI {
                      plugin.saveCodesConfig();
                      openCommandList(player, page);
                   } else {
-                     plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
+                     player.closeInventory();
                      activePackForCommand.put(player.getUniqueId(), packName);
                      awaitingCommandForPack.add(player.getUniqueId());
-                     player.sendMessage("§aEnter command to add to pack '" + packName + "':");
+                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.add-command", "&#00BFFFPlease type the command to add to pack '&#E0E0E0") + packName + "&#00BFFF' in chat.\n&#E0E0E0Type 'cancel' to abort.");
                   }
                }
             } else if (currentView != RewardGUI.View.SACK_LIST && currentView != RewardGUI.View.PREMADE_LIST) {
@@ -347,10 +347,9 @@ public class RewardGUI {
                   if (XMaterial.matchXMaterial(clicked) != XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE) {
                      String itemName = ChatColor.stripColor(name);
                      if (event.isRightClick()) {
-                        plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                         activeItemForWeight.put(player.getUniqueId(), (isSack ? "sack:" : "premade:") + itemName);
-                        awaitingWeightInput.add(player.getUniqueId());
-                        player.sendMessage("§aEnter weight for " + itemName + ":");
+                        player.closeInventory();
+                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.set-weight", "&#00BFFFPlease type the new weight for &#E0E0E0") + itemName + "&#00BFFF in chat.\n&#E0E0E0Type 'cancel' to abort.");
                      } else if (event.isShiftClick()) {
                         List<String> list = plugin.getCodesConfig().getStringList(rewardPath + "." + listKey);
                         list.removeIf((s) -> s.split(":")[0].equals(itemName));
@@ -406,7 +405,7 @@ public class RewardGUI {
       String msg = ChatColor.stripColor(rawMsg).trim();
       UUID uuid = player.getUniqueId();
       if (msg.equalsIgnoreCase("cancel")) {
-         player.sendMessage("§cOperation cancelled.");
+         xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.cancel", "&#FF6347Action cancelled."));
          cleanupChat(uuid);
          plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> {
             if (activeItemForWeight.containsKey(uuid)) {
@@ -429,13 +428,13 @@ public class RewardGUI {
             if (awaitingCommandPackName.contains(uuid)) {
                String packName = msg.replace(" ", "");
                if (!packName.matches("^[a-zA-Z0-9_]+$")) {
-                  player.sendMessage("§cInvalid name. Use only letters, numbers, underscores.");
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.prompts.invalid-name", "&#FF6347Invalid pack name! Use only letters, numbers, and underscores."));
                   return;
                }
 
                plugin.getCodesConfig().set(rewardPath + ".commands." + packName, new ArrayList<>());
                plugin.saveCodesConfig();
-               player.sendMessage("§aCreated pack: " + packName);
+               xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.reward.pack-created", "&#32CD32Created new command pack: &#00BFFF") + packName);
                awaitingCommandPackName.remove(uuid);
                openCommandList(player, 0);
             } else if (awaitingCommandForPack.contains(uuid)) {
@@ -445,7 +444,7 @@ public class RewardGUI {
                   list.add(rawMsg.trim());
                   plugin.getCodesConfig().set(rewardPath + ".commands." + pack, list);
                   plugin.saveCodesConfig();
-                  player.sendMessage("§aAdded command to " + pack);
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.reward.command-added", "&#32CD32Added command to pack &#00BFFF") + pack);
                }
 
                awaitingCommandForPack.remove(uuid);
@@ -471,7 +470,7 @@ public class RewardGUI {
 
                      plugin.getCodesConfig().set(rewardPath + "." + listKey, list);
                      plugin.saveCodesConfig();
-                     player.sendMessage("§aWeight set to " + weight);
+                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.reward.weight-updated", "&#32CD32Weight updated to &#00BFFF") + weight);
                      awaitingWeightInput.remove(uuid);
                      activeItemForWeight.remove(uuid);
                      if (type.equals("sack")) {
@@ -480,7 +479,7 @@ public class RewardGUI {
                         openPremadeList(player, 0);
                      }
                   } catch (NumberFormatException e) {
-                     player.sendMessage("§cInvalid number. Try again or type cancel.");
+                     xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.reward.invalid-number", "&#FF6347Invalid number! Please try again or type 'cancel' to abort."));
                   }
                }
             }

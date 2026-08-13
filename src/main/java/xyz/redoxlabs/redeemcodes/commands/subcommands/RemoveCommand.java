@@ -20,15 +20,15 @@ public class RemoveCommand implements Subcommand {
         FileConfiguration codes = plugin.getCodesConfig();
 
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /rc remove <code>");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.remove.usage", "&#FF6347Usage: /rc remove <code>"));
         } else {
             String codeRemove = args[1];
             if (!codes.contains("Codes." + codeRemove)) {
-                player.sendMessage("§cThis code doesn't exist.");
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "general.not-exist");
             } else {
                 codes.set("Codes." + codeRemove, null);
                 plugin.saveCodesConfig();
-                player.sendMessage(plugin.color("&aCode removed: &c" + codeRemove));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.remove.success", "&#32CD32Code removed: &#00BFFF") + codeRemove);
                 MessageUtil.playSound(plugin, player, "sounds.success");
             }
         }

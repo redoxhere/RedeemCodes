@@ -94,9 +94,8 @@ public class PluginUpdateChecker {
    private void notifyOperators(final String latestVersion) {
       plugin.getFoliaLib().getImpl().runNextTick((task) -> {
          Bukkit.getOnlinePlayers().stream().filter((player) -> player.isOp() || player.hasPermission("redeemcodes.admin")).forEach((player) -> {
-            String prefix = plugin.getConfig().getString("prefix", "&7[RedeemCodes] ");
-            player.sendMessage(MessageUtil.color(prefix + "&eA new plugin update is available! (v" + latestVersion + ")"));
-            player.sendMessage(MessageUtil.color(prefix + "&eDownload: " + MODRINTH_PROJECT_URL));
+            MessageUtil.sendMenuMessage(plugin, player, plugin.getPrefix() + "&#FFD700A new plugin update is available! (v" + latestVersion + ")");
+            MessageUtil.sendMenuMessage(plugin, player, plugin.getPrefix() + "<hover:&#E0E0E0Click to download><click:open_url:" + MODRINTH_PROJECT_URL + ">&#FFD700Download: &#00BFFF" + MODRINTH_PROJECT_URL + "</click></hover>");
          });
       });
    }

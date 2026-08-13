@@ -5,6 +5,8 @@ import xyz.redoxlabs.redeemcodes.guis.AdminPanelGUI;
 import xyz.redoxlabs.redeemcodes.guis.CodeEditorGUI;
 import xyz.redoxlabs.redeemcodes.guis.CodesListGUI;
 import xyz.redoxlabs.redeemcodes.guis.ExpiredCodesListGUI;
+import xyz.redoxlabs.redeemcodes.guis.GlobalPremadeListGUI;
+import xyz.redoxlabs.redeemcodes.guis.GlobalSackListGUI;
 import xyz.redoxlabs.redeemcodes.guis.MainGUI;
 import xyz.redoxlabs.redeemcodes.guis.RewardGUI;
 import xyz.redoxlabs.redeemcodes.guis.SelectCodeListGUI;
@@ -35,6 +37,9 @@ public class GUIListener implements Listener {
          switch (id) {
             case "MAIN_GUI":
                MainGUI.handleClick(event, plugin, createHandler);
+               break;
+            case "CREATE_CODE_GUI":
+               xyz.redoxlabs.redeemcodes.guis.CreateCodeGUI.handleClick(event, plugin);
                break;
             case "ADMIN_PANEL":
                AdminPanelGUI.handleClick(event, plugin);
@@ -75,6 +80,18 @@ public class GUIListener implements Listener {
                   rewardGUI.handleClick(event, player);
                }
                break;
+            case "GLOBAL_SACK_LIST":
+               GlobalSackListGUI sackGUI = plugin.openGlobalSackGUIs.get(player);
+               if (sackGUI != null) {
+                  sackGUI.handleClick(event, player);
+               }
+               break;
+            case "GLOBAL_PREMADE_LIST":
+               GlobalPremadeListGUI premadeGUI = plugin.openGlobalPremadeGUIs.get(player);
+               if (premadeGUI != null) {
+                  premadeGUI.handleClick(event, player);
+               }
+               break;
          }
       }
    }
@@ -101,6 +118,18 @@ public class GUIListener implements Listener {
                break;
             case "SELECT_CODE_LIST":
                plugin.openSelectCodeGUIs.remove(player);
+               break;
+            case "GLOBAL_SACK_LIST":
+               GlobalSackListGUI sackGUI = plugin.openGlobalSackGUIs.get(player);
+               if (sackGUI != null && !sackGUI.awaitingSackName.contains(player.getUniqueId())) {
+                  plugin.openGlobalSackGUIs.remove(player);
+               }
+               break;
+            case "GLOBAL_PREMADE_LIST":
+               GlobalPremadeListGUI premadeGUI = plugin.openGlobalPremadeGUIs.get(player);
+               if (premadeGUI != null && !premadeGUI.awaitingPremadeName.contains(player.getUniqueId())) {
+                  plugin.openGlobalPremadeGUIs.remove(player);
+               }
                break;
          }
       }

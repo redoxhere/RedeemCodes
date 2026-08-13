@@ -15,14 +15,14 @@ public class InfoCommand implements Subcommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        sender.sendMessage(plugin.color("&e&m--------------------------------------------------"));
-        sender.sendMessage(plugin.color("&d&lRedeemCodes &r&7v" + plugin.getDescription().getVersion()));
-        sender.sendMessage(plugin.color(""));
-        sender.sendMessage(plugin.color("&8➤ &7Author: &f" + String.join(", ", plugin.getDescription().getAuthors())));
-        sender.sendMessage(plugin.color("&8➤ &7GitHub: &bhttps://github.com/redoxhere/RedeemCodes"));
-        sender.sendMessage(plugin.color(""));
-        sender.sendMessage(plugin.color("&8➤ &7Description: &f" + plugin.getDescription().getDescription()));
-        sender.sendMessage(plugin.color("&e&m--------------------------------------------------"));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, plugin.getMessagesConfig().getString("commands.info.divider", "&#1E90FF&m                                  "));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, plugin.getMessagesConfig().getString("commands.info.version", "&#00BFFFRedeemCodes &#E0E0E0v") + plugin.getDescription().getVersion());
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, "");
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, plugin.getMessagesConfig().getString("commands.info.author", "&#1E90FF➤ &#E0E0E0Author: &#00BFFF") + String.join(", ", plugin.getDescription().getAuthors()));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, plugin.getMessagesConfig().getString("commands.info.github", "<hover:&#E0E0E0Click to open><click:open_url:https://github.com/redoxhere/RedeemCodes>&#1E90FF➤ &#E0E0E0GitHub: &#00BFFFhttps://github.com/redoxhere/RedeemCodes</click></hover>"));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, "");
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, plugin.getMessagesConfig().getString("commands.info.description", "&#1E90FF➤ &#E0E0E0Description: &#00BFFF") + plugin.getDescription().getDescription());
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, plugin.getMessagesConfig().getString("commands.info.divider", "&#1E90FF&m                                  "));
         return true;
     }
 

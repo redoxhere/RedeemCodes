@@ -21,36 +21,34 @@ public class ListCommand implements Subcommand {
         this.plugin = plugin;
     }
 
-    @Override
     public boolean execute(CommandSender sender, String[] args) {
         FileConfiguration codes = plugin.getCodesConfig();
         
-        if (!codes.contains("Codes")) {
-            sender.sendMessage(plugin.color("&cNo codes found."));
+        if (!codes.contains("Codes") || codes.getConfigurationSection("Codes").getKeys(false).isEmpty()) {
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, sender, "commands.list.empty");
             return true;
         }
         
         Set<String> codeNames = codes.getConfigurationSection("Codes").getKeys(false);
-        sender.sendMessage(plugin.color("&d---- &bList of Existing Codes &d----"));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, plugin.getMessagesConfig().getString("commands.list.header", "&#1E90FF&m                                                                                &r &#00BFFFExisting Codes &r&#1E90FF&m                                                                                "));
+
+        String itemTemplate = plugin.getMessagesConfig().getString("commands.list.item", "<hover:&eClick to view details!\n&7Status: %status_formatted%\n&7Stock: &f%stock%><click:run_command:/rc show %code%>&#00BFFF➤ &#E0E0E0%code% %status_formatted%</click></hover>");
 
         for (String code : codeNames) {
             boolean enabled = codes.getBoolean("Codes." + code + ".enabled", true);
-            String status = enabled ? "&a(Enabled)" : "&c(Disabled)";
+            String status = enabled ? plugin.getMessagesConfig().getString("commands.list.status-enabled", "&#00FF7F(Enabled)") : plugin.getMessagesConfig().getString("commands.list.status-disabled", "&#FF4500(Disabled)");
             
-            if (sender instanceof Player) {
-                Player player = (Player) sender;
-                TextComponent component = new TextComponent(plugin.color((enabled ? "&a" : "&c") + "➤ " + code));
-                component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/redeemcodes show " + code));
-                
-                int globalLimit = codes.getInt("Codes." + code + ".redeem-limit.global", -1);
-                String stock = globalLimit == -1 ? "Infinite" : String.valueOf(globalLimit);
-                
-                component.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder(plugin.color("&eClick to view details!\n&7Status: " + status + "\n&7Stock: &f" + stock)).create()));
-                player.spigot().sendMessage(component);
-            } else {
-                sender.sendMessage(plugin.color((enabled ? "&a" : "&c") + "➤ " + code + " " + status));
-            }
+            int globalLimit = codes.getInt("Codes." + code + ".redeem-limit.global", -1);
+            String stock = globalLimit == -1 ? "Infinite" : String.valueOf(globalLimit);
+            
+            String line = itemTemplate.replace("%code%", code)
+                                      .replace("%status_formatted%", status)
+                                      .replace("%stock%", stock);
+                                      
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, line);
         }
+        
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, sender, plugin.getMessagesConfig().getString("commands.list.footer", "&#1E90FF&m                                                                                "));
         return true;
     }
     @Override

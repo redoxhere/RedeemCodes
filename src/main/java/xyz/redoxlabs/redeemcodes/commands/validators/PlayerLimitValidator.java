@@ -17,7 +17,7 @@ public class PlayerLimitValidator implements RedeemValidator {
             int playerUses = dataManager.getPlayerUses(code, player.getUniqueId());
             
             if (playerUses >= playerLimit) {
-                MessageUtil.sendMessage(plugin, player, "already-used");
+                MessageUtil.sendMessage(plugin, player, "general.already-used");
                 MessageUtil.playSound(plugin, player, "sounds.failure");
                 return false;
             }

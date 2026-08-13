@@ -17,7 +17,7 @@ public class StockValidator implements RedeemValidator {
             int globalUses = dataManager.getData().getInt("codes." + code + ".global-uses", 0);
             
             if (globalUses >= globalLimit) {
-                MessageUtil.sendMessage(plugin, player, "out-of-stock");
+                MessageUtil.sendMessage(plugin, player, "general.out-of-stock");
                 MessageUtil.playSound(plugin, player, "sounds.failure");
                 return false;
             }

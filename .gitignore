@@ -19,3 +19,6 @@ buildNumber.properties
 .vscode/*
 *.txt
 *.class
+*.py
+changelogs.md
+deploy_config.json

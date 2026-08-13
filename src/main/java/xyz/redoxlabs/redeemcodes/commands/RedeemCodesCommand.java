@@ -33,7 +33,7 @@ public class RedeemCodesCommand implements CommandExecutor, TabCompleter {
         subcommands.put("sack", new SackCommand(plugin));
         subcommands.put("premade", new PremadeCommand(plugin));
         subcommands.put("event", new EventCommand(plugin));
-        subcommands.put("reward", new RewardCommand(plugin));
+        subcommands.put("edit", new EditCommand(plugin));
         subcommands.put("help", new HelpCommand(plugin));
         subcommands.put("list", new ListCommand(plugin));
         subcommands.put("show", new ShowCommand(plugin));
@@ -44,13 +44,12 @@ public class RedeemCodesCommand implements CommandExecutor, TabCompleter {
     }
 
     private String getMessage(String key) {
-        return plugin.color(plugin.getPrefix() + plugin.getConfig().getString("messages." + key, "&cMessage not found: " + key));
+        return plugin.getMessagesConfig().getString(key, "&cMessage not found: " + key);
     }
 
-    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!sender.isOp() && !sender.hasPermission("redeemcodes.admin")) {
-            sender.sendMessage(getMessage("no-permission"));
+            MessageUtil.sendRawMessage(plugin, sender, getMessage("general.no-permission"));
             if (sender instanceof Player) MessageUtil.playSound(plugin, (Player) sender, "sounds.failure");
             return true;
         }
@@ -71,9 +70,10 @@ public class RedeemCodesCommand implements CommandExecutor, TabCompleter {
             case "reload":
                 plugin.reloadConfig();
                 plugin.reloadCodesConfig();
+                plugin.reloadMessagesConfig();
                 plugin.getPremadeManager().reloadPremades();
                 plugin.getEventManager().reloadEvents();
-                sender.sendMessage(getMessage("reload-success"));
+                MessageUtil.sendRawMessage(plugin, sender, getMessage("commands.reload.success"));
                 if (sender instanceof Player) MessageUtil.playSound(plugin, (Player) sender, "sounds.success");
                 return true;
             case "gui":
@@ -93,7 +93,7 @@ public class RedeemCodesCommand implements CommandExecutor, TabCompleter {
         if (subcommand != null) {
             return subcommand.execute(sender, args);
         } else {
-            sender.sendMessage(getMessage("unknown-action").replace("%action%", action));
+            MessageUtil.sendRawMessage(plugin, sender, getMessage("commands.unknown-action").replace("%action%", action));
             if (sender instanceof Player) MessageUtil.playSound(plugin, (Player) sender, "sounds.failure");
             return true;
         }
@@ -103,7 +103,7 @@ public class RedeemCodesCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
-            StringUtil.copyPartialMatches(args[0], Arrays.asList("reload", "create", "remove", "sack", "premade", "event", "reward", "help", "list", "show", "redeemed", "gui", "review", "info", "test"), completions);
+            StringUtil.copyPartialMatches(args[0], Arrays.asList("reload", "create", "remove", "sack", "premade", "event", "edit", "help", "list", "show", "redeemed", "gui", "review", "info", "test"), completions);
             return completions;
         } else if (args.length > 1) {
             Subcommand subcommand = subcommands.get(args[0].toLowerCase());

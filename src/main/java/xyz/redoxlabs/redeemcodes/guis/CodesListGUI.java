@@ -27,7 +27,7 @@ public class CodesListGUI {
    private static final int ROW_START = 1;
    private static final int ROW_END = 4;
    private static final int CODES_PER_PAGE = 28;
-   private static final String GUI_TITLE = ChatColor.translateAlternateColorCodes('&', "&8📜 ᴄᴏᴅᴇꜱ ʟɪꜱᴛ");
+   private static final String GUI_TITLE = ChatColor.translateAlternateColorCodes('&', "&8📜 ʀᴇᴅᴇᴇᴍ ᴄᴏᴅᴇꜱ");
    private static final String pro = "§x§2§D§9§D§F§F§l| ";
    private static final String titleColor = "§x§2§D§9§D§F§F";
    private static final String pro_expired = "§x§F§F§7§0§7§0§l| ";
@@ -76,6 +76,8 @@ public class CodesListGUI {
       if (end < codes.size()) {
          inv.setItem(53, HeadManager.getHead("NEXT_PAGE", ChatColor.GRAY + "Next Page"));
       }
+      
+      inv.setItem(48, HeadManager.getHead("CREATE", "§x§F§B§C§8§C§8C§x§F§B§C§E§C§Er§x§F§C§D§4§D§4e§x§F§C§D§A§D§Aa§x§F§D§E§0§E§0t§x§F§D§E§7§E§7e §x§F§E§E§D§E§DC§x§F§E§F§3§F§3o§x§F§F§F§9§F§9d§x§F§F§F§F§F§Fe", "§7ᴄʟɪᴄᴋ ᴛᴏ ᴄʀᴇᴀᴛᴇ ᴏʀ ᴄᴏᴘʏ ᴀ ᴄᴏᴅᴇ"));
 
       ItemStack pageDisplay = XMaterial.PAPER.parseItem();
       ItemMeta pageMeta = pageDisplay.getItemMeta();
@@ -84,7 +86,7 @@ public class CodesListGUI {
          pageMeta.setDisplayName("Page: §x§2§D§9§D§F§F" + (page + 1) + "/" + maxPage);
          pageDisplay.setItemMeta(pageMeta);
       }
-      inv.setItem(48, pageDisplay);
+      inv.setItem(50, pageDisplay);
 
       GUIUtils.applyFlags(inv);
 
@@ -122,6 +124,9 @@ public class CodesListGUI {
             ExpiredCodesListGUI expiredGUI = new ExpiredCodesListGUI(plugin, this);
             plugin.openExpiredCodeGUIs.put(player, expiredGUI);
             expiredGUI.open(player);
+         } else if (itemName.equals("Create Code")) {
+            SoundUtil.playClick(plugin, player);
+            CreateCodeGUI.open(player, plugin);
          } else {
 
             String matchedCode = null;

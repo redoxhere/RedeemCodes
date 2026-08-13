@@ -15,7 +15,7 @@ public class PermissionValidator implements RedeemValidator {
             List<String> perms = codesConfig.getStringList("Codes." + code + ".permisson.list");
             boolean hasPermission = perms.stream().anyMatch(player::hasPermission);
             if (!hasPermission) {
-                MessageUtil.sendMessage(plugin, player, "no-permission");
+                MessageUtil.sendMessage(plugin, player, "general.no-permission");
                 MessageUtil.playSound(plugin, player, "sounds.failure");
                 return false;
             }

@@ -20,7 +20,7 @@ public class ReviewCommand implements Subcommand {
         Player player = (Player) sender;
 
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /rc review <message>");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.review.usage", "&#FF6347Usage: /rc review <message>"));
         } else {
             if (plugin.getConfig().getBoolean("send-review.review-message", true)) {
                 String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
@@ -28,10 +28,10 @@ public class ReviewCommand implements Subcommand {
                 String webhookUrl = "https://discord.com/api/webhooks/1415900269459542048/FNd7DLkVp2x2zdTs2b7f0UwbHA96MgeM0MpLne4Wst1k818HaarInJaSz2oNO_pcg6VJ";
                 String jsonPayload = "{\"embeds\": [{\"title\": \"New Plugin Review\",\"color\": 15844367,\"fields\": [  {\"name\": \"Player\",\"value\": \"" + playerName + "\",\"inline\": true},  {\"name\": \"Message\",\"value\": \"" + message.replace("\"", "\\\"") + "\",\"inline\": false}],\"footer\": {\"text\": \"RedeemCodes Review System\"}}]}";
                 plugin.sendToWebhook(webhookUrl, jsonPayload);
-                player.sendMessage(plugin.color("&aThank you! Your review has been sent."));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.review.success", "&aThank you! Your review has been sent."));
                 MessageUtil.playSound(plugin, player, "sounds.success");
             } else {
-                player.sendMessage(plugin.color("&cThe server owner has disabled this feature."));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.review.disabled", "&cThe server owner has disabled this feature."));
             }
         }
         return true;

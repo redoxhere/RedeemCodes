@@ -1,5 +1,5 @@
 # Prefix displayed before every log from this plugin.
-prefix: "&d&l[&bRedeemCodes&d&l] &r"
+prefix: "&#00BFFF&lR&#1E90FF&lC &8» &f"
 
 # -------------------------------------------------------------------------
 # DO NOT MODIFY THIS VALUE. THIS IS USED FOR INTERNAL DATA MIGRATIONS.
@@ -17,25 +17,3 @@ sounds:
   error: ENTITY_VILLAGER_NO
   close: BLOCK_CHEST_CLOSE
 
-# Customizable message logs for the plugin. Feel free to modify these as needed.
-# PlaceholderAPI placeholders (e.g. %player_name%) are fully supported!
-messages:
-  usage: "&cUsage: /redeem <code>"
-  not-exist: "&cThis code doesn't exist!"
-  blacklisted: "&cYou are not allowed to redeem this code."
-  already-used: "&eYou have already redeemed this code."
-  redeem-success: "&aSuccessfully redeemed the code!"
-  reload-success: "&aAll configuration files reloaded!"
-  no-permission: "&cYou don't have permission to use this."
-  code-exists: "&cCode already exists!"
-  code-created: "&aCreated new code: %code%"
-  code-removed: "&aRemoved code: %code%"
-  reward-added: "&aAdded reward to %code% with ID %id%"
-  reward-removed: "&aRemoved reward ID %id%"
-  reward-not-found: "&cThat reward ID doesn't exist!"
-  invalid-reward-id: "&cInvalid reward ID!"
-  command-usage: "&cUsage: /redeemcodes <command> [arguments]"
-  unknown-action: "&cUnknown action: %action%"
-  code-disabled: "&cThis code is currently disabled."
-  out-of-stock: "&cThis code is out of stock!"
-  code-expired: "&cThis code has expired."

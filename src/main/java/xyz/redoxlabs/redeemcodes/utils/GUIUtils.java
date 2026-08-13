@@ -84,6 +84,46 @@ public class GUIUtils {
             lore.add(currentPro + gray + "ᴄᴏᴏʟᴅᴏᴡɴ: " + currentValueColor + plugin.getCodesConfig().getInt("Codes." + code + ".redeem-limit.Cooldown", 0) + " min");
             lore.add(currentPro + gray + "ʀᴇᴅᴇᴇᴍ ᴛʏᴘᴇ: " + currentValueColor + plugin.getCodesConfig().getString("Codes." + code + ".redeem-limit.Type", "PLAYER"));
             lore.add(currentPro + gray + "ʀᴇᴅᴇᴇᴍ ʟɪᴍɪᴛ: " + currentValueColor + plugin.getCodesConfig().getInt("Codes." + code + ".redeem-limit.Count", 1));
+            
+            lore.add(currentPro + gray + "ʀᴇᴡᴀʀᴅ ᴛʏᴘᴇ: " + currentValueColor + plugin.getCodesConfig().getString("Codes." + code + ".rewards.type", "ALL"));
+            lore.add(currentPro + currentTitleColor + "ʀᴇᴡᴀʀᴅꜱ:");
+            org.bukkit.configuration.ConfigurationSection commandsSection = plugin.getCodesConfig().getConfigurationSection("Codes." + code + ".rewards.commands");
+            boolean hasRewards = false;
+            if (commandsSection != null && !commandsSection.getKeys(false).isEmpty()) {
+                lore.add("  " + currentValueColor + "Command Packs " + gray + "(" + commandsSection.getKeys(false).size() + ")");
+                for (String pack : commandsSection.getKeys(false)) {
+                    lore.add("    " + gray + "- " + pack);
+                    hasRewards = true;
+                }
+            }
+            java.util.List<String> sacks = plugin.getCodesConfig().getStringList("Codes." + code + ".rewards.sacks");
+            if (!sacks.isEmpty()) {
+                lore.add("  " + currentValueColor + "Sacks " + gray + "(" + sacks.size() + ")");
+                for (String sack : sacks) {
+                    lore.add("    " + gray + "- " + sack.split(":")[0]);
+                    hasRewards = true;
+                }
+            }
+            java.util.List<String> premades = plugin.getCodesConfig().getStringList("Codes." + code + ".rewards.premades");
+            if (!premades.isEmpty()) {
+                lore.add("  " + currentValueColor + "Premades " + gray + "(" + premades.size() + ")");
+                for (String premade : premades) {
+                    lore.add("    " + gray + "- " + premade.split(":")[0]);
+                    hasRewards = true;
+                }
+            }
+            java.util.List<String> events = plugin.getCodesConfig().getStringList("Codes." + code + ".rewards.events");
+            if (!events.isEmpty()) {
+                lore.add("  " + currentValueColor + "Events " + gray + "(" + events.size() + ")");
+                for (String evt : events) {
+                    lore.add("    " + gray + "- " + evt);
+                    hasRewards = true;
+                }
+            }
+            if (!hasRewards) {
+                lore.add("  " + gray + "None");
+            }
+
             if (isExpired) {
                 lore.add(currentPro + "§cEXPIRED");
             }

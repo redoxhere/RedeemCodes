@@ -27,7 +27,7 @@ public class RewardProcessor {
         if (codes.contains(rewardPath) && codes.isList(rewardPath)) {
             for (String cmd : codes.getStringList(rewardPath)) {
                 if (dryRun) {
-                    player.sendMessage(plugin.color("&8[&aDRY RUN&8] &7Would execute legacy command: &f" + cmd));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getConfig().getString("messages.test-legacy-cmd", "  &#1E90FF▶ &#E0E0E0Would execute legacy command: &#00BFFF%cmd%").replace("%cmd%", cmd));
                 } else {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), parsePlaceholders(cmd, player));
                 }
@@ -124,12 +124,12 @@ public class RewardProcessor {
         switch (reward.type) {
             case COMMAND_PACK:
                 if (dryRun) {
-                    player.sendMessage(plugin.color("&8[&aDRY RUN&8] &7Selected command pack: &e" + reward.key));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getConfig().getString("messages.test-cmd-pack", "  &#1E90FF▶ &#E0E0E0Selected command pack: &#00BFFF%pack%").replace("%pack%", reward.key));
                 }
                 if (reward.commands != null) {
                     for (String cmd : reward.commands) {
                         if (dryRun) {
-                            player.sendMessage(plugin.color("&8[&aDRY RUN&8] &7Would execute command: &f" + cmd));
+                            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getConfig().getString("messages.test-cmd", "    &#E0E0E0Would execute command: &#00BFFF%cmd%").replace("%cmd%", cmd));
                         } else {
                             String parsed = parsePlaceholders(cmd, player);
                             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), parsed);
@@ -139,14 +139,14 @@ public class RewardProcessor {
                 break;
             case SACK:
                 if (dryRun) {
-                    player.sendMessage(plugin.color("&8[&aDRY RUN&8] &7Would give sack: &b" + reward.key));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getConfig().getString("messages.test-sack", "  &#1E90FF▶ &#E0E0E0Would give sack: &#00BFFF%sack%").replace("%sack%", reward.key));
                 } else {
                     plugin.getSackManager().giveSack(player, reward.key);
                 }
                 break;
             case PREMADE:
                 if (dryRun) {
-                    player.sendMessage(plugin.color("&8[&aDRY RUN&8] &7Would execute premade: &9" + reward.key));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getConfig().getString("messages.test-premade", "  &#1E90FF▶ &#E0E0E0Would execute premade: &#00BFFF%premade%").replace("%premade%", reward.key));
                 } else {
                     for (String cmd : plugin.getPremadeManager().getPremadeCommands(reward.key)) {
                         String parsed = parsePlaceholders(cmd, player);
@@ -156,7 +156,7 @@ public class RewardProcessor {
                 break;
             case EVENT:
                 if (dryRun) {
-                    player.sendMessage(plugin.color("&8[&aDRY RUN&8] &7Would play event: &6" + reward.key));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getConfig().getString("messages.test-event", "  &#1E90FF▶ &#E0E0E0Would play event: &#00BFFF%event%").replace("%event%", reward.key));
                 } else {
                     plugin.getEventManager().executeEvent(player, reward.key);
                 }

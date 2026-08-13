@@ -15,47 +15,46 @@ public class EventCommand implements Subcommand {
     public EventCommand(Main plugin) {
         this.plugin = plugin;
     }
-
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) return true;
         Player player = (Player) sender;
 
         if (args.length < 3) {
-            player.sendMessage(plugin.color("&cUsage: /rc event <create|remove|add|play> <name> [type]"));
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "commands.event.usage-create");
         } else {
             String sub = args[1].toLowerCase();
             String name = args[2];
             if (sub.equals("create")) {
                 if (plugin.getEventManager().createEvent(name)) {
-                    player.sendMessage(plugin.color("&aEvent '&e" + name + "&a' created."));
-                    MessageUtil.playSound(plugin, player, "sounds.success");
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendRawMessage(plugin, player, plugin.getMessagesConfig().getString("commands.event.created", "&aEvent '&e%event%&a' created.").replace("%event%", name));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.playSound(plugin, player, "sounds.success");
                 } else {
-                    player.sendMessage(plugin.color("&cEvent already exists."));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "commands.event.exists");
                 }
             } else if (sub.equals("remove")) {
                 if (plugin.getEventManager().deleteEvent(name)) {
-                    player.sendMessage(plugin.color("&aEvent '&e" + name + "&a' removed."));
-                    MessageUtil.playSound(plugin, player, "sounds.success");
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendRawMessage(plugin, player, plugin.getMessagesConfig().getString("commands.event.removed", "&aEvent '&e%event%&a' removed.").replace("%event%", name));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.playSound(plugin, player, "sounds.success");
                 } else {
-                    player.sendMessage(plugin.color("&cEvent not found."));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "commands.event.not-found");
                 }
             } else if (sub.equals("play")) {
                 if (!plugin.getEventManager().eventExists(name)) {
-                    player.sendMessage(plugin.color("&cEvent '&e" + name + "&c' does not exist."));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "commands.event.not-found");
                     return true;
                 }
 
                 plugin.getEventManager().executeEvent(player, name);
-                player.sendMessage(plugin.color("&aPlaying event '&e" + name + "&a'."));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendRawMessage(plugin, player, plugin.getMessagesConfig().getString("commands.event.playing", "&aPlaying event '&e%event%&a'.").replace("%event%", name));
             } else if (sub.equals("add")) {
                 if (args.length < 4) {
-                    player.sendMessage(plugin.color("&cUsage: /rc event add " + name + " <firework|command|sound>"));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendRawMessage(plugin, player, plugin.getMessagesConfig().getString("commands.event.usage-add", "&cUsage: /rc event add %event% <firework|command|sound>").replace("%event%", name));
                     return true;
                 }
 
                 if (!plugin.getEventManager().eventExists(name)) {
-                    player.sendMessage(plugin.color("&cEvent '&e" + name + "&c' does not exist. Create it first."));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "commands.event.not-found");
                     return true;
                 }
 
@@ -66,18 +65,18 @@ public class EventCommand implements Subcommand {
                     plugin.getEventGUI().openSoundList(player, name);
                 } else if (type.equals("command")) {
                     if (args.length < 5) {
-                        player.sendMessage(plugin.color("&cUsage: /rc event add " + name + " command <console command>"));
+                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendRawMessage(plugin, player, plugin.getMessagesConfig().getString("commands.event.usage-cmd", "&cUsage: /rc event add %event% command <console command>").replace("%event%", name));
                         return true;
                     }
 
-                    String cmdLine = String.join(" ", Arrays.copyOfRange(args, 4, args.length));
+                    String cmdLine = String.join(" ", java.util.Arrays.copyOfRange(args, 4, args.length));
                     FileConfiguration config = plugin.getEventManager().getEventConfig(name);
                     List<String> cmds = config.getStringList("commands");
                     cmds.add(cmdLine);
                     config.set("commands", cmds);
                     plugin.getEventManager().saveEvent(name);
-                    player.sendMessage(plugin.color("&aCommand added to event '&e" + name + "&a'."));
-                    MessageUtil.playSound(plugin, player, "sounds.success");
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendRawMessage(plugin, player, plugin.getMessagesConfig().getString("commands.event.cmd-added", "&aCommand added to event '&e%event%&a'.").replace("%event%", name));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.playSound(plugin, player, "sounds.success");
                 }
             }
         }

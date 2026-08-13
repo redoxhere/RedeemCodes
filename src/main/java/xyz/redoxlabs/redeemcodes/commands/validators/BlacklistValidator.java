@@ -26,7 +26,7 @@ public class BlacklistValidator implements RedeemValidator {
         }
 
         if (isBlacklisted) {
-            MessageUtil.sendMessage(plugin, player, "blacklisted");
+            MessageUtil.sendMessage(plugin, player, "general.blacklisted");
             MessageUtil.playSound(plugin, player, "sounds.failure");
             return false;
         }

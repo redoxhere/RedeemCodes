@@ -6,7 +6,7 @@
 
     <groupId>xyz.redoxlabs</groupId>
     <artifactId>redeemcodes</artifactId>
-    <version>26.1+Beta.3</version>
+    <version>26.1+Beta.5</version>
     <packaging>jar</packaging>
 
     <name>redeemcodes</name>

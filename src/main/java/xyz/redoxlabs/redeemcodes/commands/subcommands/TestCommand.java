@@ -24,25 +24,25 @@ public class TestCommand implements Subcommand {
         Player player = (Player) sender;
 
         if (args.length < 2) {
-            player.sendMessage(plugin.color("&cUsage: /rc test <code>"));
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "commands.test.usage");
             return true;
         }
 
         String code = args[1];
         if (!plugin.getCodesConfig().contains("Codes." + code)) {
-            player.sendMessage(plugin.color("&cThat code does not exist."));
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "general.not-exist");
             return true;
         }
 
-        player.sendMessage(plugin.color("&e&m--------------------------------------------------"));
-        player.sendMessage(plugin.color("&d&l[DRY RUN] &r&7Simulating code: &f" + code));
-        player.sendMessage(plugin.color("&7Checking rewards..."));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.test.header", "&#1E90FF&m        &r &#00BFFFDry Run &r&#1E90FF&m        "));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.test.start", "&#E0E0E0Simulating code: &#00BFFF%code%").replace("%code%", code));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.test.checking", "&#E0E0E0Checking rewards..."));
 
         RewardProcessor rewardProcessor = new RewardProcessor(plugin);
         rewardProcessor.processRewards(player, code, plugin.getCodesConfig(), true);
 
-        player.sendMessage(plugin.color("&a&l[DRY RUN COMPLETE]"));
-        player.sendMessage(plugin.color("&e&m--------------------------------------------------"));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.test.complete", "&#32CD32[DRY RUN COMPLETE]"));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.list.footer", "&#1E90FF&m                                  "));
 
         return true;
     }

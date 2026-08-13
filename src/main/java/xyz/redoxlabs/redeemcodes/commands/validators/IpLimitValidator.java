@@ -27,7 +27,7 @@ public class IpLimitValidator implements RedeemValidator {
             
             for (String ip : ipsToCheck) {
                 if (dataManager.getIpUses(code, ip) >= ipLimit) {
-                    MessageUtil.sendMessage(plugin, player, "already-used");
+                    MessageUtil.sendMessage(plugin, player, "general.already-used");
                     MessageUtil.playSound(plugin, player, "sounds.failure");
                     return false;
                 }

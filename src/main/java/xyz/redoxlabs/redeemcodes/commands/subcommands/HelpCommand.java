@@ -1,6 +1,7 @@
 package xyz.redoxlabs.redeemcodes.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.redoxlabs.redeemcodes.Main;
 
@@ -20,25 +21,26 @@ public class HelpCommand implements Subcommand {
         Player player = (Player) sender;
 
         List<String> helpCommands = Arrays.asList(
-                "&b/rc create <code> &7- Create a new code",
-                "&b/rc remove <code> &7- Remove a code",
-                "&b/rc reward <code> <action> &7- Manage rewards",
-                "&b/rc sack create <name> &7- Create sack",
-                "&b/rc sack edit <name> &7- Edit sack",
-                "&b/rc sack give <name> &7- Give sack",
-                "&b/rc event create <name> &7- Create event",
-                "&b/rc event add <name> <type> &7- Add actions to event",
-                "&b/rc event play <name> &7- Play/Test event",
-                "&b/rc premade add <name> <cmd> &7- Manage premades",
-                "&b/rc show <code> &7- Show details",
-                "&b/rc list &7- List codes",
-                "&b/rc redeemed <code> &7- List usage",
-                "&b/rc reload &7- Reload config",
-                "&b/rc gui &7- Open GUI",
-                "&b/rc test <code> &7- Dry run a code",
-                "&b/rc info &7- Plugin information"
+                "/rc create <code> - Create a new code",
+                "/rc remove <code> - Remove a code",
+                "/rc reward <code> <action> - Manage rewards",
+                "/rc sack create <name> - Create sack",
+                "/rc sack edit <name> - Edit sack",
+                "/rc sack give <name> - Give sack",
+                "/rc event create <name> - Create event",
+                "/rc event add <name> <type> - Add actions to event",
+                "/rc event play <name> - Play/Test event",
+                "/rc premade add <name> <cmd> - Manage premades",
+                "/rc show <code> - Show details",
+                "/rc list - List codes",
+                "/rc redeemed <code> - List usage",
+                "/rc reload - Reload config",
+                "/rc gui - Open GUI",
+                "/rc test <code> - Dry run a code",
+                "/rc info - Plugin information"
         );
         
+        FileConfiguration config = plugin.getMessagesConfig();
         int commandsPerPage = 6;
         int totalPages = (int) Math.ceil((double) helpCommands.size() / (double) commandsPerPage);
         int page = 1;
@@ -58,9 +60,11 @@ public class HelpCommand implements Subcommand {
             page = totalPages;
         }
 
-        player.sendMessage(plugin.color("&e&m                                                                       "));
-        player.sendMessage(plugin.color(" &d&lRedeemCodes Help &r&d- Page " + page + "/" + totalPages));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, config.getString("commands.help.header", "&#1E90FF&m                                                                                &r &#00BFFFRedeemCodes Help &r&#1E90FF&m                                                                                "));
+        
         int startIndex = (page - 1) * commandsPerPage;
+
+        String itemTemplate = config.getString("commands.help.item", "<hover:&eClick to auto-fill><click:suggest_command:%command%>&#00BFFF%command% &#E0E0E0%description%</click></hover>");
 
         for (int i = 0; i < commandsPerPage; ++i) {
             int commandIndex = startIndex + i;
@@ -68,10 +72,21 @@ public class HelpCommand implements Subcommand {
                 break;
             }
 
-            player.sendMessage(plugin.color(helpCommands.get(commandIndex)));
+            String[] split = helpCommands.get(commandIndex).split(" - ", 2);
+            String cmd = split[0];
+            String desc = split.length > 1 ? split[1] : "";
+
+            String line = itemTemplate.replace("%command%", cmd).replace("%description%", desc);
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, line);
         }
 
-        player.sendMessage(plugin.color("&e&m                                                                       "));
+        String pagination = config.getString("commands.help.pagination", "<hover:&ePrevious Page><click:run_command:/rc help %prev_page%>&#1E90FF[«]</click></hover> &#E0E0E0Page %page%/%max_page% <hover:&eNext Page><click:run_command:/rc help %next_page%>&#1E90FF[»]</click></hover>");
+        pagination = pagination.replace("%page%", String.valueOf(page))
+                               .replace("%max_page%", String.valueOf(totalPages))
+                               .replace("%prev_page%", String.valueOf(Math.max(1, page - 1)))
+                               .replace("%next_page%", String.valueOf(Math.min(totalPages, page + 1)));
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, pagination);
+        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, config.getString("commands.help.footer", "&#1E90FF&m                                                                                "));
         return true;
     }
     

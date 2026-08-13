@@ -86,16 +86,16 @@ Redeem a code and claim its reward.
 
 | Command | Description |
 | :--- | :--- |
-| `/rc create <code>` | Create a new code and initialize settings. |
+| `/rc create <new|copy> <name> [new-name]` | Create a new code or copy an existing one. |
 | `/rc remove <code>` | Delete a code completely. |
 | `/rc list` | List all existing codes with their active status. |
 | `/rc show <code>` | Show details and configured rewards of a code. |
+| `/rc edit <code>` | Edit a code and its properties |
 | `/rc redeemed <code> [page]`| View a paginated list of players who redeemed a code. |
 | `/rc reward` | Add, remove, or view code rewards. |
 | `/rc sack` | Add, remove, edit, or give Sack integrations. |
 | `/rc premade` | Add, remove, or view Premade reward sets. |
 | `/rc event` | Add, remove, or test Event hooks. |
-| `/rc gui` | Open the interactive RedeemCodes Admin Menu. |
 | `/rc reload` | Reload the configuration safely. |
 | `/rc version` | View the active plugin version. |
 | `/rc test <code>` | Dry run a code to safely test its rewards. |
@@ -275,26 +275,32 @@ sounds:
 ### Fully Customizable Messages
 
 ```yaml
-messages:
+general:
   usage: "&cUsage: /redeem <code>"
   not-exist: "&cThis code doesn't exist!"
+  no-permission: "&cYou don't have permission to use this."
+  code-disabled: "&cThis code is currently disabled."
+  out-of-stock: "&cThis code is out of stock!"
+  code-expired: "&cThis code has expired."
+
+handlers:
   blacklisted: "&cYou are not allowed to redeem this code."
   already-used: "&eYou have already redeemed this code."
   redeem-success: "&aSuccessfully redeemed the code!"
-  reload-success: "&aAll configuration files reloaded!"
-  no-permission: "&cYou don't have permission to use this."
-  code-exists: "&cCode already exists!"
-  code-created: "&aCreated new code: %code%"
-  code-removed: "&aRemoved code: %code%"
-  reward-added: "&aAdded reward to %code% with ID %id%"
-  reward-removed: "&aRemoved reward ID %id%"
-  reward-not-found: "&cThat reward ID doesn't exist!"
-  invalid-reward-id: "&cInvalid reward ID!"
-  command-usage: "&cUsage: /redeemcodes <command> [arguments]"
-  unknown-action: "&cUnknown action: %action%"
-  code-disabled: "&cThis code is currently disabled."
-  out-of-stock: "&cThis code is out of stock!"
-  code-expired: "&cThis code has expired." 
+
+commands:
+  create:
+    usage: "&cUsage: /rc create <new|copy> <name> [new-name]"
+    exists: "&cCode already exists!"
+    success: "&aCreated new code: %code%"
+  remove:
+    success: "&aRemoved code: %code%"
+  reload:
+    success: "&aAll configuration files reloaded!"
+
+guis:
+  code-editor:
+    invalid-number: "&cInvalid number."
 ```
 
 

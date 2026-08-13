@@ -2,6 +2,7 @@ package xyz.redoxlabs.redeemcodes.commands.subcommands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.redoxlabs.redeemcodes.Main;
 
@@ -20,31 +21,37 @@ public class RedeemedCommand implements Subcommand {
         if (!(sender instanceof Player)) return true;
         Player player = (Player) sender;
 
+        FileConfiguration config = plugin.getConfig();
+
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /rc redeemed <code> [page]");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.redeemed.usage", "&#FF6347Usage: /rc redeemed <code> [page]"));
         } else {
             String codeName = args[1];
             List<String> redeemedPlayersUuids = plugin.getRedeemDataManager().getRedeemedPlayers(codeName);
             if (redeemedPlayersUuids.isEmpty()) {
-                player.sendMessage(plugin.color("&cNo one has redeemed the code '&e" + codeName + "&c' yet."));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMessage(plugin, player, "commands.redeemed.empty");
             } else {
-                player.sendMessage(plugin.color("&dRedeemed count: " + redeemedPlayersUuids.size()));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.redeemed.header", "&d---- &bRedemptions: &f%code% &d----").replace("%code%", codeName));
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.redeemed.count", "&7Total Redemptions: &e%count%").replace("%count%", String.valueOf(redeemedPlayersUuids.size())));
+                
                 int limit = Math.min(redeemedPlayersUuids.size(), 10);
+                String itemTemplate = plugin.getMessagesConfig().getString("commands.redeemed.item", "  &b• &f%player%");
 
                 for (int i = 0; i < limit; ++i) {
                     String uuid = redeemedPlayersUuids.get(i);
 
                     try {
                         String name = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
-                        player.sendMessage(plugin.color("&7- " + (name != null ? name : uuid)));
+                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, itemTemplate.replace("%player%", (name != null ? name : uuid)));
                     } catch (Exception e) {
-                        player.sendMessage(plugin.color("&7- " + uuid));
+                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, itemTemplate.replace("%player%", uuid));
                     }
                 }
 
                 if (redeemedPlayersUuids.size() > 10) {
-                    player.sendMessage(plugin.color("&7... and " + (redeemedPlayersUuids.size() - 10) + " more."));
+                    xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.redeemed.more", "  &7... and %more% more.").replace("%more%", String.valueOf(redeemedPlayersUuids.size() - 10)));
                 }
+                xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("commands.list.footer", "&d------------------------"));
             }
         }
         return true;

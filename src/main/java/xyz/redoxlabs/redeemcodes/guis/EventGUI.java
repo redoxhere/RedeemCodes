@@ -83,7 +83,7 @@ public class EventGUI implements Listener {
 
       editingFirework.put(player.getUniqueId(), eventName);
       player.openInventory(inv);
-      player.sendMessage(ChatColor.GREEN + "Add Firework Rockets here. Close to save.");
+      xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.event.prompt-firework", "&#32CD32Add Firework Rockets here. Close to save."));
    }
 
    public void openSoundList(Player player, String eventName) {
@@ -203,7 +203,7 @@ public class EventGUI implements Listener {
                   FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
                   config.set("fireworks", content);
                   plugin.getEventManager().saveEvent(eventName);
-                  player.sendMessage(ChatColor.GREEN + "Fireworks saved for event '" + eventName + "'.");
+                  xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.event.firework-saved", "&#32CD32Fireworks saved for event \'&#00BFFF") + eventName + "&#32CD32\'.");
                }
             }
          }
@@ -261,14 +261,12 @@ public class EventGUI implements Listener {
                         SoundUtil.playClick(plugin, player);
                         plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                         awaitingDelayInput.put(player.getUniqueId(), new SoundEditSession(eventName, soundId));
-                        player.sendMessage(ChatColor.GREEN + "Type the wait time in ticks (integer) in chat:");
-                        player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
+                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.event.prompt-delay", "&#00BFFFType the wait time in ticks (integer) in chat:\n&#E0E0E0Type \'cancel\' to abort."));
                      } else if (event.isRightClick()) {
                         SoundUtil.playClick(plugin, player);
                         plugin.getFoliaLib().getImpl().runNextTick((task) -> player.closeInventory());
                         awaitingPitchInput.put(player.getUniqueId(), new SoundEditSession(eventName, soundId));
-                        player.sendMessage(ChatColor.GREEN + "Type the pitch (0.0 - 2.0) in chat:");
-                        player.sendMessage(ChatColor.GRAY + "Type 'cancel' to abort.");
+                        xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.event.prompt-pitch", "&#00BFFFType the pitch (0.0 - 2.0) in chat:\n&#E0E0E0Type \'cancel\' to abort."));
                      } else if (event.isShiftClick() && event.isLeftClick()) {
                         FileConfiguration config = plugin.getEventManager().getEventConfig(eventName);
                         config.set("sounds." + soundId, (Object)null);
@@ -319,16 +317,17 @@ public class EventGUI implements Listener {
       }
    }
 
-   @EventHandler
+   @EventHandler(priority = org.bukkit.event.EventPriority.LOWEST)
    public void onChat(AsyncPlayerChatEvent event) {
       Player player = event.getPlayer();
       UUID uuid = player.getUniqueId();
       if (awaitingDelayInput.containsKey(uuid)) {
          event.setCancelled(true);
+         event.getRecipients().clear();
          String msg = event.getMessage().trim();
          SoundEditSession session = (SoundEditSession)awaitingDelayInput.remove(uuid);
          if (msg.equalsIgnoreCase("cancel")) {
-            player.sendMessage(ChatColor.RED + "Cancelled.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.event.delay-cancelled", "&#FF6347Cancelled."));
             plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
             return;
          }
@@ -342,18 +341,19 @@ public class EventGUI implements Listener {
             FileConfiguration config = plugin.getEventManager().getEventConfig(session.eventName);
             config.set("sounds." + session.soundId + ".delay", delay);
             plugin.getEventManager().saveEvent(session.eventName);
-            player.sendMessage(ChatColor.GREEN + "Delay set to " + delay + " ticks.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.event.delay-set", "&#32CD32Delay set to &#00BFFF") + delay + " &#32CD32ticks.");
             plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
          } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Invalid number. Operation cancelled.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.event.invalid-number", "&#FF6347Invalid number. Operation cancelled."));
             plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
          }
       } else if (awaitingPitchInput.containsKey(uuid)) {
          event.setCancelled(true);
+         event.getRecipients().clear();
          String msg = event.getMessage().trim();
          SoundEditSession session = (SoundEditSession)awaitingPitchInput.remove(uuid);
          if (msg.equalsIgnoreCase("cancel")) {
-            player.sendMessage(ChatColor.RED + "Cancelled.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.event.pitch-cancelled", "&#FF6347Cancelled."));
             plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
             return;
          }
@@ -371,10 +371,10 @@ public class EventGUI implements Listener {
             FileConfiguration config = plugin.getEventManager().getEventConfig(session.eventName);
             config.set("sounds." + session.soundId + ".pitch", pitch);
             plugin.getEventManager().saveEvent(session.eventName);
-            player.sendMessage(ChatColor.GREEN + "Pitch set to " + pitch + ".");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.event.pitch-set", "&#32CD32Pitch set to &#00BFFF") + pitch + "&#32CD32.");
             plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
          } catch (NumberFormatException e) {
-            player.sendMessage(ChatColor.RED + "Invalid number. Operation cancelled.");
+            xyz.redoxlabs.redeemcodes.utils.MessageUtil.sendMenuMessage(plugin, player, plugin.getMessagesConfig().getString("guis.event.invalid-number", "&#FF6347Invalid number. Operation cancelled."));
             plugin.getFoliaLib().getImpl().runAtEntity(player, (task) -> openSoundList(player, session.eventName));
          }
       }

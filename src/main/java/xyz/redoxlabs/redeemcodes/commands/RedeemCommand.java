@@ -63,7 +63,7 @@ public class RedeemCommand implements CommandExecutor {
       }
       Player player = (Player) sender;
       if (args.length != 1) {
-         MessageUtil.sendMessage(plugin, player, "usage");
+         MessageUtil.sendMessage(plugin, player, "general.usage");
          MessageUtil.playSound(plugin, player, "sounds.failure");
          return true;
       } else {
@@ -71,15 +71,15 @@ public class RedeemCommand implements CommandExecutor {
          plugin.reloadCodesConfig();
          FileConfiguration codes = plugin.getCodesConfig();
          if (!codes.contains("Codes." + code)) {
-            MessageUtil.sendMessage(plugin, player, "not-exist");
+            MessageUtil.sendMessage(plugin, player, "general.not-exist");
             MessageUtil.playSound(plugin, player, "sounds.failure");
             return true;
          } else if (plugin.getExpirationManager().isExpired(code)) {
-            MessageUtil.sendMessage(plugin, player, "code-expired");
+            MessageUtil.sendMessage(plugin, player, "general.code-expired");
             MessageUtil.playSound(plugin, player, "sounds.failure");
             return true;
          } else if (!codes.getBoolean("Codes." + code + ".enabled", true)) {
-            MessageUtil.sendMessage(plugin, player, "code-disabled");
+            MessageUtil.sendMessage(plugin, player, "general.code-disabled");
             MessageUtil.playSound(plugin, player, "sounds.failure");
             return true;
          } else {
@@ -114,7 +114,7 @@ public class RedeemCommand implements CommandExecutor {
                 dataManager.addPlayerIp(code, player.getUniqueId(), currentIp);
             }
 
-            MessageUtil.sendMessage(plugin, player, "redeem-success");
+            MessageUtil.sendMessage(plugin, player, "general.redeem-success");
             MessageUtil.playSound(plugin, player, "sounds.success");
             return true;
          }
